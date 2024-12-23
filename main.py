@@ -5,34 +5,39 @@ from helpers import led_stripe
 import u64images
 
 import time
+import threading
 
-def clockwiseFunc():
+def ky040clockwiseFunc():
     print("clockwise")
 
-def counterclockwiseFunc():
+def ky040counterclockwiseFunc():
     print("counterclockwise")
 
-def switchFunc():
+def ky040switchFunc():
     if psu.is_on():
         print("psu off")
         psu.off()
         u64led.set_matrix(u64images.psu_off)
     else:
-        print("psu on")
         psu.on()
-        led_stripe.clear()
+        psuON.start()
+        print("psu on")
         u64led.set_matrix(u64images.psu_on)
+
+def psu_ON_actions():
+    time.sleep(.1)
+    led_stripe.clear()
 
 if __name__ == "__main__":
 
     psu.on()
     
-    time.sleep(1)
-    led_stripe.clear()
+    psuON = threading.Thread(target=psu_ON_actions)
+    psuON.start()
     
     u64led.set_matrix(u64images.psu_on)
     
-    ky040 = KY040(clockwiseFunc, counterclockwiseFunc, switchFunc)
+    ky040 = KY040(ky040clockwiseFunc, ky040counterclockwiseFunc, ky040switchFunc)
     
     try:
         while True:
