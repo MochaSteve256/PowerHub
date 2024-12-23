@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from .KY040_lib import KY040
+from .KY040_lib import KY040 as KY
 import os, time
 
 CLOCKPIN = 21
@@ -37,7 +37,7 @@ class KY040:
 
 if __name__ == "__main__":
 
-    ky040 = KY040(CLOCKPIN, DATAPIN, SWITCHPIN, rotaryChange, switchPressed)
+    ky040 = KY(CLOCKPIN, DATAPIN, SWITCHPIN, rotaryChange, switchPressed)
 
     ky040.start()
 
