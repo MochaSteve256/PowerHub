@@ -26,8 +26,9 @@ def ky040switchFunc():
         u64led.set_matrix(u64images.psu_on)
 
 def psu_ON_actions():
-    time.sleep(.1)
-    led_stripe.clear()
+    for i in range(100):
+        led_stripe.clear()
+        time.sleep(.005)
 
 if __name__ == "__main__":
 
