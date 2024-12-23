@@ -26,6 +26,7 @@ class KY040:
         ky040 = KY(CLOCKPIN, DATAPIN, SWITCHPIN, rotaryChange, switchPressed)
         ky040.start()
         
+        global clockwiseFunc, counterclockwiseFunc, switchFunc
         clockwiseFunc = clockwiseCallback
         counterclockwiseFunc = counterclockwiseCallback
         switchFunc = switchCallback
