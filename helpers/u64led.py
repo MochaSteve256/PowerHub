@@ -31,22 +31,30 @@ def rainbow_cycle(wait):
             pixels[i] = wheel(pixel_index & 255)
         pixels.show()
         time.sleep(wait)
-print('U64 LED Matrix Module test script')
-print('[Press CTRL + C to end the script!]')
-try:
-    while True:
-        pixels.fill((255, 0, 0))
-        pixels.show()
-        time.sleep(1)
-        pixels.fill((0, 255, 0))
-        pixels.show()
-        time.sleep(1)
-        pixels.fill((0, 0, 255))
-        pixels.show()
-        time.sleep(1)
-        rainbow_cycle(0.001)
-        pixels.fill((0, 0, 0))
-        pixels.show()
-        time.sleep(1)
-except KeyboardInterrupt:
-    print('\nScript end!')
+
+def set_matrix(matrix):
+    for j in range(8):
+        for i in range(8):
+            pixels[j * 8 + i] = matrix[j][i]
+    pixels.show()
+
+if __name__ == '__main__':
+    print('U64 LED Matrix Module test script')
+    print('[Press CTRL + C to end the script!]')
+    try:
+        while True:
+            pixels.fill((255, 0, 0))
+            pixels.show()
+            time.sleep(1)
+            pixels.fill((0, 255, 0))
+            pixels.show()
+            time.sleep(1)
+            pixels.fill((0, 0, 255))
+            pixels.show()
+            time.sleep(1)
+            rainbow_cycle(0.001)
+            pixels.fill((0, 0, 0))
+            pixels.show()
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print('\nScript end!')

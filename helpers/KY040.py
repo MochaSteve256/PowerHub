@@ -5,6 +5,8 @@ stuffaboutcode.com
 
 
 Additional code added by Conrad Storz 2015 and 2016
+
+Additional code added by Adrian Steyer 2024
 """
 
 import RPi.GPIO as GPIO
