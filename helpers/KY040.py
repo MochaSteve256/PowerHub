@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-from KY040_lib import KY040
+from .KY040_lib import KY040
 import os, time
 
 CLOCKPIN = 21
