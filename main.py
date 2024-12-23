@@ -26,6 +26,8 @@ def switchFunc():
 if __name__ == "__main__":
 
     psu.on()
+    
+    time.sleep(1)
     led_stripe.clear()
     
     u64led.set_matrix(u64images.psu_on)

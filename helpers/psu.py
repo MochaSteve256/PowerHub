@@ -3,7 +3,7 @@ from time import sleep
 
 gp.setmode(gp.BCM)
 
-pin = 23
+_pin = 23
 
 gp.setup(pin, gp.OUT)
 

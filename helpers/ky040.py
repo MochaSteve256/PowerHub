@@ -8,41 +8,30 @@ SWITCHPIN = 13
 
 GPIO.setmode(GPIO.BCM)
 
-clockwiseFunc = None
-counterclockwiseFunc = None
-switchFunc = None
+_clockwiseFunc = None
+_counterclockwiseFunc = None
+_switchFunc = None
 
-def rotaryChange(direction):
+def _rotaryChange(direction):
     if direction == 1:
-        clockwiseFunc()
+        _clockwiseFunc()
     else:
-        counterclockwiseFunc()
-def switchPressed():
-    switchFunc()
+        _counterclockwiseFunc()
+def _switchPressed():
+    _switchFunc()
 
 
 class KY040:
     def __init__(self, clockwiseCallback, counterclockwiseCallback, switchCallback):
-        self.ky040 = KY(CLOCKPIN, DATAPIN, SWITCHPIN, rotaryChange, switchPressed)
+        self.ky040 = KY(CLOCKPIN, DATAPIN, SWITCHPIN, _rotaryChange, _switchPressed)
         self.ky040.start()
         
-        global clockwiseFunc, counterclockwiseFunc, switchFunc
-        clockwiseFunc = clockwiseCallback
-        counterclockwiseFunc = counterclockwiseCallback
-        switchFunc = switchCallback
+        global _clockwiseFunc, _counterclockwiseFunc, _switchFunc
+        _clockwiseFunc = clockwiseCallback
+        _counterclockwiseFunc = counterclockwiseCallback
+        _switchFunc = switchCallback
     
     def stop(self):
         self.ky040.stop()
 
 
-if __name__ == "__main__":
-
-    ky040 = KY040(CLOCKPIN, DATAPIN, SWITCHPIN, rotaryChange, switchPressed)
-
-    ky040.start()
-
-    try:
-        while True:
-            time.sleep(0.05)
-    finally:
-        ky040.stop()
