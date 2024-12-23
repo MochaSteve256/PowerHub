@@ -7,16 +7,18 @@ import u64images
 import time
 
 def clockwiseFunc():
-    pass
+    print("clockwise")
 
 def counterclockwiseFunc():
-    pass
+    print("counterclockwise")
 
 def switchFunc():
     if psu.is_on():
+        print("psu off")
         psu.off()
         u64led.set_matrix(u64images.psu_off)
     else:
+        print("psu on")
         psu.on()
         led_stripe.clear()
         u64led.set_matrix(u64images.psu_on)

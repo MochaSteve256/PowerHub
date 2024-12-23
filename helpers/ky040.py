@@ -33,7 +33,6 @@ class KY040:
     
     def stop(self):
         self.ky040.stop()
-        GPIO.cleanup()
 
 
 if __name__ == "__main__":
