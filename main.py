@@ -1,4 +1,4 @@
-from helpers.KY040 import KY040
+from helpers.ky040 import KY040
 from helpers import psu
 from helpers import u64led
 from helpers import led_stripe
@@ -6,14 +6,20 @@ import u64images
 
 import time
 
-def rotaryChange(direction):
-    if direction == 1:
-        print("clockwise")
+def clockwiseFunc():
+    pass
+
+def counterclockwiseFunc():
+    pass
+
+def switchFunc():
+    if psu.is_on():
+        psu.off()
+        u64led.set_matrix(u64images.psu_off)
     else:
-        print("counterclockwise")
-def switchPressed():
-    psu.off()
-    u64led.set_matrix(u64images.psu_off)
+        psu.on()
+        led_stripe.clear()
+        u64led.set_matrix(u64images.psu_on)
 
 if __name__ == "__main__":
 
@@ -21,3 +27,11 @@ if __name__ == "__main__":
     led_stripe.clear()
     
     u64led.set_matrix(u64images.psu_on)
+    
+    ky040 = KY040(clockwiseFunc, counterclockwiseFunc, switchFunc)
+    
+    try:
+        while True:
+            time.sleep(0.05)
+    finally:
+        ky040.stop()
