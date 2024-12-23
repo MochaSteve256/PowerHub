@@ -15,7 +15,7 @@ class KY040:
 
     CLOCKWISE = 0
     ANTICLOCKWISE = 1
-    DEBOUNCE = 100
+    DEBOUNCE = 50
 
     def __init__(self, clockPin, dataPin, switchPin, rotaryCallback, switchCallback):
         #persist values
@@ -32,7 +32,7 @@ class KY040:
 
     def start(self):
         GPIO.add_event_detect(self.clockPin, GPIO.FALLING, callback=self._clockCallback, bouncetime=self.DEBOUNCE)
-        GPIO.add_event_detect(self.switchPin, GPIO.FALLING, callback=self.switchCallback, bouncetime=self.DEBOUNCE)
+        GPIO.add_event_detect(self.switchPin, GPIO.FALLING, callback=self._switchCallback, bouncetime=self.DEBOUNCE)
 
     def stop(self):
         GPIO.remove_event_detect(self.clockPin)
@@ -52,11 +52,11 @@ class KY040:
         """
 
     def _switchCallback(self, pin):
-        """
+        
         if GPIO.input(self.switchPin) == 0:
             self.switchCallback()
-        """
-        self.switchCallback()
+        
+        #self.switchCallback()
 
 #test
 if __name__ == "__main__":
