@@ -5,16 +5,16 @@ gp.setmode(gp.BCM)
 
 _pin = 23
 
-gp.setup(pin, gp.OUT)
+gp.setup(_pin, gp.OUT)
 
 def on():
-    gp.output(pin, True)
+    gp.output(_pin, True)
 
 def off():
-    gp.output(pin, False)
+    gp.output(_pin, False)
 
 def is_on():
-    return gp.input(pin)
+    return gp.input(_pin)
 
 if __name__ == "__main__":
     on()
