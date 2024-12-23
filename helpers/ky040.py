@@ -23,7 +23,7 @@ def switchPressed():
 
 class KY040:
     def __init__(self, clockwiseCallback, counterclockwiseCallback, switchCallback):
-        ky040 = KY040(CLOCKPIN, DATAPIN, SWITCHPIN, rotaryChange, switchPressed)
+        ky040 = KY(CLOCKPIN, DATAPIN, SWITCHPIN, rotaryChange, switchPressed)
         ky040.start()
         
         clockwiseFunc = clockwiseCallback
@@ -37,7 +37,7 @@ class KY040:
 
 if __name__ == "__main__":
 
-    ky040 = KY(CLOCKPIN, DATAPIN, SWITCHPIN, rotaryChange, switchPressed)
+    ky040 = KY040(CLOCKPIN, DATAPIN, SWITCHPIN, rotaryChange, switchPressed)
 
     ky040.start()
 
