@@ -20,6 +20,7 @@ def ky040switchFunc():
         u64led.set_matrix(u64images.psu_off)
     else:
         psu.on()
+        psuON = threading.Thread(target=psu_ON_actions)
         psuON.start()
         print("psu on")
         u64led.set_matrix(u64images.psu_on)
