@@ -7,8 +7,15 @@ import u64images
 import time
 import threading
 
+leds = False
+
 def ky040clockwiseFunc():
-    print("clockwise")
+    if leds:
+        led_stripe.set_all((0, 0, 0))
+        leds = False
+    else:
+        led_stripe.set_all((255, 255, 255))
+        leds = True
 
 def ky040counterclockwiseFunc():
     print("counterclockwise")
@@ -27,6 +34,7 @@ def ky040switchFunc():
 
 def psu_ON_actions():
     for i in range(100):
+        leds = True
         led_stripe.set_all((255, 255, 255))
         time.sleep(.005)
 
