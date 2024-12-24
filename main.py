@@ -27,7 +27,7 @@ def ky040switchFunc():
 
 def psu_ON_actions():
     for i in range(100):
-        led_stripe.clear()
+        led_stripe.set_all((255, 255, 255))
         time.sleep(.005)
 
 if __name__ == "__main__":
