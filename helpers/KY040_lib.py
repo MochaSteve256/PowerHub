@@ -54,15 +54,15 @@ class KY040:
 
     def start(self):
         GPIO.add_event_detect(self.clockPin, GPIO.FALLING, callback=self._clockCallback, bouncetime=self.DEBOUNCE)
-        self._switch_thread = threading.Thread(target=self._switch_thread)
+        self.switch_thread = threading.Thread(target=self._switch_thread)
         self.running = True
-        self._switch_thread.start()
+        self.switch_thread.start()
 
     def stop(self):
         GPIO.remove_event_detect(self.clockPin)
         GPIO.remove_event_detect(self.switchPin)
         self.running = False
-        self._switch_thread.join()
+        self.switch_thread.join()
     
     def _clockCallback(self, pin):
         if GPIO.input(self.clockPin) == 0:
