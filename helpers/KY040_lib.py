@@ -19,13 +19,14 @@ class KY040:
     ANTICLOCKWISE = 1
     DEBOUNCE = 50
 
-    def __init__(self, clockPin, dataPin, switchPin, rotaryCallback, switchCallback):
+    def __init__(self, clockPin, dataPin, switchPin, rotaryCallback, switchPressCallback, switchReleaseCallback):
         #persist values
         self.clockPin = clockPin
         self.dataPin = dataPin
         self.switchPin = switchPin
         self.rotaryCallback = rotaryCallback
-        self.switchCallback = switchCallback
+        self.switchPressCallback = switchPressCallback
+        self.switchReleaseCallback = switchReleaseCallback
 
         #setup pins
         GPIO.setup(clockPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -35,6 +36,7 @@ class KY040:
     def start(self):
         GPIO.add_event_detect(self.clockPin, GPIO.FALLING, callback=self._clockCallback, bouncetime=self.DEBOUNCE)
         GPIO.add_event_detect(self.switchPin, GPIO.FALLING, callback=self._switchCallback, bouncetime=self.DEBOUNCE)
+        GPIO.add_event_detect(self.switchPin, GPIO.RISING, callback=self._switchReleaseCallback, bouncetime=self.DEBOUNCE)
 
     def stop(self):
         GPIO.remove_event_detect(self.clockPin)
@@ -53,12 +55,11 @@ class KY040:
         self.rotaryCallback(GPIO.input(self.dataPin))
         """
 
-    def _switchCallback(self, pin):
-        
-        if GPIO.input(self.switchPin) == 0:
-            self.switchCallback()
-        
-        #self.switchCallback()
+    def _switchPressCallback(self, pin):    
+        self.switchPressCallback()
+    
+    def _switchReleaseCallback(self, pin):
+        self.switchReleaseCallback()
 
 #test
 if __name__ == "__main__":
