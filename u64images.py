@@ -20,7 +20,12 @@ psu_off = [ [(172, 50, 50), (172, 50, 50), (172, 50, 50),  (118, 66, 138), (118,
             [(0, 0, 0),     (0, 0, 0),     (0, 0, 0),      (172, 50, 50),  (0, 0, 0),      (172, 50, 50),  (0, 0, 0),     (0, 0, 0)     ]
         ]
 
-#divide psu_off by 2
+#divide stuff to be darker
+
+for i in range(len(psu_on)):
+    for j in range(len(psu_on[i])):
+        psu_on[i][j] = [x // 2 for x in psu_on[i][j]]
+
 for i in range(len(psu_off)):
     for j in range(len(psu_off[i])):
-        psu_off[i][j] = [x // 2 for x in psu_off[i][j]]
+        psu_off[i][j] = [x // 4 for x in psu_off[i][j]]
