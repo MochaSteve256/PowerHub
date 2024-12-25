@@ -10,6 +10,7 @@ import threading
 leds = False
 
 def ky040clockwiseFunc():
+    global leds
     if leds:
         led_stripe.clear()
         leds = False
