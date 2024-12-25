@@ -42,8 +42,10 @@ class KY040:
         while self.running:
             sleep(0.01)
             _switch_state = GPIO.input(self.switchPin)
+            print(_switch_state)
+            print(self._switch_state)
             if _switch_state != self._switch_state:
-                time.sleep(self.DEBOUNCE * 0.001)
+                sleep(self.DEBOUNCE * 0.001)
                 if _switch_state == 0:
                     self.switchPressCallback()
                 else:
