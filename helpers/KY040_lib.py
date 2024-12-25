@@ -45,9 +45,9 @@ class KY040:
             if switch_state != self._switch_state:
                 sleep(self.DEBOUNCE * 0.001)
                 if switch_state == GPIO.LOW:
-                    self.switchPressCallback(self.switchPin)
+                    self.switchPressCallback()
                 else:
-                    self.switchReleaseCallback(self.switchPin)
+                    self.switchReleaseCallback()
                 self._switch_state = switch_state
 
     def start(self):
