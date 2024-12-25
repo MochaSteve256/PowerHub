@@ -11,6 +11,7 @@ Additional code added by Adrian Steyer 2024
 
 import RPi.GPIO as GPIO
 from time import sleep
+import threading
 
 
 class KY040:
@@ -18,6 +19,7 @@ class KY040:
     CLOCKWISE = 0
     ANTICLOCKWISE = 1
     DEBOUNCE = 50
+    
 
     def __init__(self, clockPin, dataPin, switchPin, rotaryCallback, switchPressCallback, switchReleaseCallback):
         #persist values
@@ -27,20 +29,38 @@ class KY040:
         self.rotaryCallback = rotaryCallback
         self.switchPressCallback = switchPressCallback
         self.switchReleaseCallback = switchReleaseCallback
+        self._switch_state = False
+        self._switch_thread = None
+        self.running = False
 
         #setup pins
         GPIO.setup(clockPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(dataPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(switchPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        
+    def _switch_thread(self):
+        while self.running:
+            sleep(0.01)
+            _switch_state = GPIO.input(self.switchPin)
+            if _switch_state != self._switch_state:
+                time.sleep(self.DEBOUNCE * 0.001)
+                if _switch_state == 0:
+                    self.switchPressCallback()
+                else:
+                    self.switchReleaseCallback()
+            self._switch_state = _switch_state
 
     def start(self):
         GPIO.add_event_detect(self.clockPin, GPIO.FALLING, callback=self._clockCallback, bouncetime=self.DEBOUNCE)
-        GPIO.add_event_detect(self.switchPin, GPIO.FALLING, callback=self._switchPressCallback, bouncetime=self.DEBOUNCE)
-        GPIO.add_event_detect(self.switchPin, GPIO.RISING, callback=self._switchReleaseCallback, bouncetime=self.DEBOUNCE)
+        self._switch_thread = threading.Thread(target=self._switch_thread)
+        self.running = True
+        self._switch_thread.start()
 
     def stop(self):
         GPIO.remove_event_detect(self.clockPin)
         GPIO.remove_event_detect(self.switchPin)
+        self.running = False
+        self._switch_thread.join()
     
     def _clockCallback(self, pin):
         if GPIO.input(self.clockPin) == 0:
