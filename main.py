@@ -21,7 +21,10 @@ def ky040clockwiseFunc():
 def ky040counterclockwiseFunc():
     print("counterclockwise")
 
-def ky040switchFunc():
+def ky040switchPressFunc():
+    print("switch pressed")
+
+def ky040switchReleaseFunc():
     if psu.is_on():
         print("psu off")
         psu.off()
@@ -32,6 +35,7 @@ def ky040switchFunc():
         psuON.start()
         print("psu on")
         u64led.set_matrix(u64images.psu_on)
+
 
 def psu_ON_actions():
     for i in range(100):
@@ -48,7 +52,7 @@ if __name__ == "__main__":
     
     u64led.set_matrix(u64images.psu_on)
     
-    ky040 = KY040(ky040clockwiseFunc, ky040counterclockwiseFunc, ky040switchFunc)
+    ky040 = KY040(ky040clockwiseFunc, ky040counterclockwiseFunc, ky040switchPressFunc, ky040switchReleaseFunc)
     
     try:
         while True:

@@ -1,5 +1,8 @@
 import RPi.GPIO as GPIO
-from .KY040_lib import KY040 as KY
+if __name__ == "__main__":
+    from KY040_lib import KY040
+else:
+    from .KY040_lib import KY040 as KY
 import os, time
 
 CLOCKPIN = 21
