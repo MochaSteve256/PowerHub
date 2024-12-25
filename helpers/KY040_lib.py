@@ -28,7 +28,7 @@ class KY040:
         self.rotaryCallback = rotaryCallback
         self.switchPressCallback = switchPressCallback
         self.switchReleaseCallback = switchReleaseCallback
-        self._switch_state = GPIO.input(switchPin)
+        self._switch_state = True
         self.running = False
         self._switch_thread = None
 
