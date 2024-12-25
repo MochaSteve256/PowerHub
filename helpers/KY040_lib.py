@@ -35,7 +35,7 @@ class KY040:
 
     def start(self):
         GPIO.add_event_detect(self.clockPin, GPIO.FALLING, callback=self._clockCallback, bouncetime=self.DEBOUNCE)
-        GPIO.add_event_detect(self.switchPin, GPIO.FALLING, callback=self._switchCallback, bouncetime=self.DEBOUNCE)
+        GPIO.add_event_detect(self.switchPin, GPIO.FALLING, callback=self._switchPressCallback, bouncetime=self.DEBOUNCE)
         GPIO.add_event_detect(self.switchPin, GPIO.RISING, callback=self._switchReleaseCallback, bouncetime=self.DEBOUNCE)
 
     def stop(self):
