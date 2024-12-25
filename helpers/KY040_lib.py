@@ -39,6 +39,7 @@ class KY040:
         GPIO.setup(switchPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         
     def _switch_thread(self):
+        print("thread running")
         while self.running:
             sleep(0.01)
             _switch_state = GPIO.input(self.switchPin)
@@ -54,8 +55,8 @@ class KY040:
 
     def start(self):
         GPIO.add_event_detect(self.clockPin, GPIO.FALLING, callback=self._clockCallback, bouncetime=self.DEBOUNCE)
-        self.switch_thread = threading.Thread(target=self._switch_thread)
         self.running = True
+        self.switch_thread = threading.Thread(target=self._switch_thread)
         self.switch_thread.start()
 
     def stop(self):
@@ -107,7 +108,6 @@ if __name__ == "__main__":
     try:
         while True:
             sleep(10)
-            print('Ten seconds...')
     finally:
         print('Stopping GPIO monitoring...')
         ky040.stop()
