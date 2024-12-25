@@ -54,9 +54,10 @@ class KY040:
             self._switch_state = _switch_state
 
     def start(self):
+        print("starting")
         GPIO.add_event_detect(self.clockPin, GPIO.FALLING, callback=self._clockCallback, bouncetime=self.DEBOUNCE)
         self.running = True
-        self.switch_thread = threading.Thread(target=self._switch_thread)
+        self.switch_thread = threading.Thread(target=self._switch_thread, args=(self))
         self.switch_thread.start()
 
     def stop(self):

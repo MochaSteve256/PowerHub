@@ -61,7 +61,6 @@ if __name__ == "__main__":
     try:
         while True:
             time.sleep(10)
-            print('Ten seconds...')
     finally:
         print('Stopping GPIO monitoring...')
         ky040.stop()
