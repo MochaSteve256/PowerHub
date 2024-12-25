@@ -48,9 +48,9 @@ class KY040:
             if _switch_state != self._switch_state:
                 sleep(self.DEBOUNCE * 0.001)
                 if _switch_state == 0:
-                    self.switchPressCallback()
+                    self._switchPressCallback(self.switchPin)
                 else:
-                    self.switchReleaseCallback()
+                    self._switchReleaseCallback(self.switchPin)
             self._switch_state = _switch_state
 
     def start(self):
@@ -61,7 +61,6 @@ class KY040:
 
     def stop(self):
         GPIO.remove_event_detect(self.clockPin)
-        GPIO.remove_event_detect(self.switchPin)
         self.running = False
         self.switch_thread.join()
     
