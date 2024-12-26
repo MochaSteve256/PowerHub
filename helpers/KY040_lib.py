@@ -40,7 +40,7 @@ class KY040:
     def _switch_monitor(self):
         print("Switch monitoring thread running")
         while self.running:
-            sleep(0.01)
+            sleep(0.005)
             switch_state = GPIO.input(self.switchPin)
             if switch_state != self._switch_state:
                 sleep(self.DEBOUNCE * 0.001)
