@@ -43,14 +43,7 @@ led_text = [
 navbar_scroll = [black, black, blue,  blue,  blue,  blue,  black, black]
 navbar_back   = [blue,  black, black, black, black, black, black, black]
 navbar_select = [black, black, black, black, black, black, black, blue ]
-#overlay navbar elements
-navbar_full = [
-    [
-        navbar_scroll[i][j] + navbar_back[i][j] + navbar_select[i][j]
-        for j in range(len(navbar_scroll[0]))
-    ]
-    for i in range(len(navbar_scroll))
-]
+
 def add_navbar(matrix, select, back, scroll):
     if select and back and scroll:
         for i in range(8):
@@ -74,7 +67,7 @@ def add_navbar(matrix, select, back, scroll):
         for i in range(8):
             matrix[7][i] = navbar_scroll[i]
 
-
+    return matrix
 
 if __name__ == '__main__':
     import u64led
