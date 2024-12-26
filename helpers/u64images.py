@@ -2,11 +2,11 @@
 
 #colors
 black  = [0, 0, 0]
-pink   = [170, 50, 50]
-purple = [100, 60, 140]
-red    = [128, 0, 0]
-green  = [0, 128, 0]
-blue   = [0, 0, 128]
+pink   = [170 // 2, 50 // 2, 50 // 2]
+purple = [80 // 2, 60 // 2, 150 // 2]
+red    = [64, 0, 0]
+green  = [0, 64, 0]
+blue   = [0, 0, 64]
 
 
 #psu
@@ -17,9 +17,6 @@ psu_text = [
     [pink, black, black, black,  purple, pink,  black, pink],
     [pink, black, black, purple, purple, black, pink,  pink]
 ]
-for i in range(len(psu_text)):
-    for j in range(len(psu_text[i])):
-        psu_text[i][j] = [x // 2 for x in psu_text[i][j]]
 
 psu_on = [
     [black, green, green, green, green, green, green, black],
@@ -34,11 +31,12 @@ psu_off = [
 ]
 
 #led
-led_text = [[pink, black, purple, purple, purple, pink, pink,  black],
-            [pink, black, purple, black,  black,  pink, black, pink ],
-            [pink, black, purple, purple, purple, pink, black, pink ],
-            [pink, black, purple, black,  black,  pink, black, pink ],
-            [pink, pink,  purple, purple, purple, pink, pink,  black],
+led_text = [
+    [pink, black, purple, purple, purple, pink, pink,  black],
+    [pink, black, purple, black,  black,  pink, black, pink ],
+    [pink, black, purple, purple, purple, pink, black, pink ],
+    [pink, black, purple, black,  black,  pink, black, pink ],
+    [pink, pink,  purple, purple, purple, pink, pink,  black],
 ]
 
 #nav bar
@@ -53,7 +51,31 @@ navbar_full = [
     ]
     for i in range(len(navbar_scroll))
 ]
+def add_navbar(matrix, select, back, scroll):
+    if select and back and scroll:
+        for i in range(8):
+            matrix[7][i] = navbar_scroll[i] + navbar_back[i] + navbar_select[i]
+    elif select and back:
+        for i in range(8):
+            matrix[7][i] = navbar_back[i] + navbar_select[i]
+    elif select and scroll:
+        for i in range(8):
+            matrix[7][i] = navbar_scroll[i] + navbar_select[i]
+    elif back and scroll:
+        for i in range(8):
+            matrix[7][i] = navbar_scroll[i] + navbar_back[i]
+    elif select:
+        for i in range(8):
+            matrix[7][i] = navbar_select[i]
+    elif back:
+        for i in range(8):
+            matrix[7][i] = navbar_back[i]
+    elif scroll:
+        for i in range(8):
+            matrix[7][i] = navbar_scroll[i]
+
+
 
 if __name__ == '__main__':
     import u64led
-    u64led.set_matrix(psu_text + psu_on)
+    u64led.set_matrix(add_navbar(psu_text + psu_on, True, False, True))
