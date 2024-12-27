@@ -129,6 +129,8 @@ def number_to_matrix(number):
                     matrix[j][i + 1] = numbers[int(str(number)[z])][j][i]
                 else:
                     matrix[j][i + 1] = numbers[int(str(number)[z])][j][i]
+    
+    return matrix
 
 if __name__ == '__main__':
     import u64led
