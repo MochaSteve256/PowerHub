@@ -28,7 +28,7 @@ class UI:
     standby = False
     
     def __init__(self):
-        self.state.current = UIState.PSU
+        self.state = UIState.PSU
         self._update()
     
     def clockwise(self):
