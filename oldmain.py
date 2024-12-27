@@ -39,7 +39,6 @@ def ky040switchReleaseFunc():
 
 def psu_ON_actions():
     for i in range(100):
-        leds = True
         led_stripe.clear()
         time.sleep(.005)
 
