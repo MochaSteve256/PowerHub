@@ -4,6 +4,7 @@
 black  = [0, 0, 0]
 pink   = [170 // 2, 50 // 2, 50 // 2]
 purple = [80 // 2, 60 // 2, 150 // 2]
+orange = [150 // 2, 100 // 2, 0]
 red    = [64, 0, 0]
 green  = [0, 64, 0]
 blue   = [0, 0, 64]
@@ -30,6 +31,18 @@ psu_off = [
     [black, black, black, black, black, black, black, black ]
 ]
 
+#standby
+stby_text = [
+    [pink,  pink,  purple, purple, purple, orange, black,  orange]
+    [pink,  black, black,  purple, black,  orange, black,  orange],
+    [pink,  pink,  black,  pink,   pink,   black,  orange, orange],
+    [black, pink,  black,  pink,   black,  pink,   black,  orange],
+    [pink,  pink,  black,  pink,   pink,   black,  orange, black ],
+    [black, black, black,  pink,   black,  pink,   black,  black ],
+    [black, black, black,  pink,   pink,   black,  black,  black ],
+    [black, black, black,  black,  black,  black,  black,  black ]
+]
+
 #led
 led_text = [
     [pink, black, purple, purple, purple, pink, pink,  black],
@@ -37,6 +50,24 @@ led_text = [
     [pink, black, purple, purple, purple, pink, black, pink ],
     [pink, black, purple, black,  black,  pink, black, pink ],
     [pink, pink,  purple, purple, purple, pink, pink,  black],
+]
+
+
+nothing = [
+    [black, black, black, black, black, black, black, black],
+    [black, black, black, black, black, black, black, black],
+    [black, black, black, black, black, black, black, black]
+]
+
+blank = [
+    [black, black, black, black, black, black, black, black],
+    [black, black, black, black, black, black, black, black],
+    [black, black, black, black, black, black, black, black],
+    [black, black, black, black, black, black, black, black],
+    [black, black, black, black, black, black, black, black],
+    [black, black, black, black, black, black, black, black],
+    [black, black, black, black, black, black, black, black],
+    [black, black, black, black, black, black, black, black]
 ]
 
 #nav bar
