@@ -107,7 +107,30 @@ def add_navbar(matrix, select, back, scroll):
 
     return matrix
 
+numbers = [
+    [[black, pink, black], [pink, black, pink], [pink, black, pink], [pink, black, pink], [pink, black, pink], [black, pink, black]],
+    [[black, black, pink], [black, pink, pink], [pink, black, pink], [black, black, pink], [black, black, pink], [black, black, pink]],
+    [[black, pink, black], [pink, black, pink], [black, black, pink], [black, pink, black], [pink, black, black], [pink, pink, pink]],
+    [[pink, pink, pink], [black, black, pink], [black, pink, black], [black, black, pink], [pink, black, pink], [black, pink, black]],
+    [[black, pink, black], [black, pink, black], [pink, black, black], [pink, black, pink], [pink, pink, pink], [black, black, pink]],
+    [[pink, pink, pink], [pink, black, black], [pink, pink, black], [black, black, pink], [black, black, pink], [pink, pink, black]],
+    [[black, pink, black], [pink, black, pink], [pink, black, black], [pink, pink, black], [pink, black, pink], [black, pink, black]],
+    [[pink, pink, pink], [black, black, pink], [black, pink, black], [black, pink, black], [pink, black, black], [pink, black, black]],
+    [[black, pink, black], [pink, black, pink], [black, pink, black], [pink, black, pink], [pink, black, pink], [black, pink, black]],
+    [[black, pink, pink], [pink, black, pink], [black, pink, pink], [black, black, pink], [black, pink, black], [black, pink, black]]
+]
+
+def number_to_matrix(number):
+    matrix = blank
+    for z in range(2):
+        for i in range(3):
+            for j in range(6):
+                if z == 0:
+                    matrix[i + 1][j] = numbers[int(str(number)[z])][i][j]
+                else:
+                    matrix[i + 4][j] = numbers[int(str(number)[z])][i][j]
 
 if __name__ == '__main__':
     import u64led
-    u64led.set_matrix(add_navbar(psu_text + psu_on, True, False, True))
+    #u64led.set_matrix(add_navbar(psu_text + psu_on, True, False, True))
+    u64led.set_matrix(add_navbar(number_to_matrix(12), False, False, True))
