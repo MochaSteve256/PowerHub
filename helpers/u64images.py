@@ -33,7 +33,7 @@ psu_off = [
 
 #standby
 stby_text = [
-    [pink,  pink,  purple, purple, purple, orange, black,  orange]
+    [pink,  pink,  purple, purple, purple, orange, black,  orange],
     [pink,  black, black,  purple, black,  orange, black,  orange],
     [pink,  pink,  black,  pink,   pink,   black,  orange, orange],
     [black, pink,  black,  pink,   black,  pink,   black,  orange],
