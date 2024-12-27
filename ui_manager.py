@@ -79,7 +79,7 @@ class UI:
             self.state = UIState.LED_SLCT
             self._update()
         elif self.state == UIState.LED_SLCT:
-            led_stripe.set_color(0, 0, 0)#TODO
+            led_stripe.set_all((0, 0, 0))#TODO
             self.state = UIState.LED
             self._update()
         elif self.state == UIState.STBY:
