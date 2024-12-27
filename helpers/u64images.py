@@ -119,16 +119,25 @@ numbers = [
     [[black, pink, black], [pink, black, pink], [black, pink, black], [pink, black, pink], [pink, black, pink], [black, pink, black]],
     [[black, pink, pink], [pink, black, pink], [black, pink, pink], [black, black, pink], [black, pink, black], [black, pink, black]]
 ]
+purple_numbers = numbers
+for z in range(10):
+    for i in range(3):
+        for j in range(6):
+            if numbers[z][j][i] == pink:
+                purple_numbers[z][j][i] = purple
 
 def number_to_matrix(number):
     matrix = blank
+    if number < 0:
+        matrix[3][0] = orange
+        matrix[3][1] = orange
     for z in range(2):
         for i in range(3):
             for j in range(6):
                 if z == 0:
                     matrix[j][i + 1] = numbers[int(str(number)[z])][j][i]
                 else:
-                    matrix[j][i + 4] = numbers[int(str(number)[z])][j][i]
+                    matrix[j][i + 4] = purple_numbers[int(str(number)[z])][j][i]
     
     return matrix
 
