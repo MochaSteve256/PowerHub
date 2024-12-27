@@ -128,7 +128,7 @@ def number_to_matrix(number):
                 if z == 0:
                     matrix[j][i + 1] = numbers[int(str(number)[z])][j][i]
                 else:
-                    matrix[j][i + 1] = numbers[int(str(number)[z])][j][i]
+                    matrix[j][i + 4] = numbers[int(str(number)[z])][j][i]
     
     return matrix
 
