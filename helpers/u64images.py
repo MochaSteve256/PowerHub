@@ -123,7 +123,7 @@ purple_numbers = numbers
 for z in range(10):
     for i in range(3):
         for j in range(6):
-            if numbers[z][j][i] == pink:
+            if purple_numbers[z][j][i] == pink:
                 purple_numbers[z][j][i] = purple
 
 def number_to_matrix(number):
