@@ -1,3 +1,5 @@
+import copy
+
 ## RGB values for 8x8 matrix
 
 #colors
@@ -112,7 +114,7 @@ numbers = [
     [[black, pink, black], [pink, black, pink], [black, pink, black], [pink, black, pink], [pink, black, pink], [black, pink, black]],
     [[black, pink, pink], [pink, black, pink], [black, pink, pink], [black, black, pink], [black, pink, black], [black, pink, black]]
 ]
-purple_numbers = numbers.copy()
+purple_numbers = copy.deepcopy(numbers)
 for z in range(10):
     for i in range(3):
         for j in range(6):
@@ -134,7 +136,6 @@ def number_to_matrix(number):
     
     return matrix
 
-print(numbers)
 
 
 if __name__ == '__main__':
