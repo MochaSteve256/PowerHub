@@ -74,14 +74,7 @@ blank = [
 navbar_scroll = [black, black, blue,  blue,  blue,  blue,  black, black]
 navbar_back   = [blue,  black, black, black, black, black, black, black]
 navbar_select = [black, black, black, black, black, black, black, blue ]
-#overlay navbar elements
-navbar_full = [
-    [
-        navbar_scroll[i][j] + navbar_back[i][j] + navbar_select[i][j]
-        for j in range(len(navbar_scroll[0]))
-    ]
-    for i in range(len(navbar_scroll))
-]
+
 def add_navbar(matrix, select, back, scroll):
     if select and back and scroll:
         for i in range(8):
@@ -119,7 +112,7 @@ numbers = [
     [[black, pink, black], [pink, black, pink], [black, pink, black], [pink, black, pink], [pink, black, pink], [black, pink, black]],
     [[black, pink, pink], [pink, black, pink], [black, pink, pink], [black, black, pink], [black, pink, black], [black, pink, black]]
 ]
-purple_numbers = numbers
+purple_numbers = numbers.copy()
 for z in range(10):
     for i in range(3):
         for j in range(6):
@@ -140,6 +133,9 @@ def number_to_matrix(number):
                     matrix[j][i + 4] = purple_numbers[int(str(number)[z])][j][i]
     
     return matrix
+
+print(numbers)
+
 
 if __name__ == '__main__':
     import u64led
