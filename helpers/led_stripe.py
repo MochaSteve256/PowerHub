@@ -49,12 +49,12 @@ def set_pixel_color(i, color):
     pixels.set_pixel(i, color)
 
 def set_array(arr):
-    for i in arr:
+    for i in range(min(pixels.count(), len(arr))):
         pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color( arr[i][0], arr[i][1], arr[i][2] ))
     pixels.show()
 
 def set_array_color(arr):
-    for i in arr:
+    for i in range(min(pixels.count(), len(arr))):
         pixels.set_pixel(i, arr[i])
 
 def clear():
