@@ -63,11 +63,10 @@ class UI:
                     self.state = UIState.CLCK
                     self._update()
                     time.sleep(10)
-                    if not self.standby:
-                        break
-                    self.state = UIState.WETH
-                    self._update()
-                    time.sleep(10)
+                    if self.standby:
+                        self.state = UIState.WETH
+                        self._update()
+                        time.sleep(10)
                 else:
                     self.state = UIState.CLCK
                     self._update()
@@ -161,11 +160,16 @@ class UI:
             stby_ui()
         
         if self.standby:
+            divider = 0
+            if self._nighttime_check():
+                divider = 5
+            else:
+                divider = 2
             matrix = u64led.get_matrix()
             for i in range(8):
                 for j in range(8):
                     for k in range(3):
-                        matrix[i][j][k] = matrix[i][j][k] // 5
+                        matrix[i][j][k] = matrix[i][j][k] // divider
             u64led.set_matrix(matrix)
         
         u64led.show_matrix()
