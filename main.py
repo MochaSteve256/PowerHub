@@ -16,15 +16,17 @@ def press():
 
 def update():  # Call this in your main loop
     global back_triggered, is_pressed
+    # Only check for back trigger if button is still pressed
     if is_pressed and time.time() - press_time >= 0.5 and not back_triggered:
         back_triggered = True
         ui.back()
 
 def release():
-    global is_pressed
-    if is_pressed and time.time() - press_time < 0.5:
-        ui.select()
-    is_pressed = False  # Button is no longer pressed
+    global is_pressed, back_triggered
+    if is_pressed:
+        if time.time() - press_time < 0.5 and not back_triggered:
+            ui.select()
+        is_pressed = False  # Button is no longer pressed
 
 if __name__ == "__main__":
     
