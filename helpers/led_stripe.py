@@ -25,6 +25,17 @@ def wheel(pos):
         pos -= 170
         return Adafruit_WS2801.RGB_to_color(0, pos * 3, 255 - pos * 3)
 
+def brightness_decrease(pixels, wait=0.01):
+    for j in range(int(256 // 1)):
+        for i in range(pixels.count()):
+            r, g, b = pixels.get_pixel_rgb(i)
+            r = int(max(0, r - 1))
+            g = int(max(0, g - 1))
+            b = int(max(0, b - 1))
+            pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color( r, g, b ))
+        pixels.show()
+        time.sleep(wait)
+
 def set_all(color):
     for i in range(pixels.count()):
         pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color( color[0], color[1], color[2] ))
@@ -158,26 +169,25 @@ def fade_cx_rgb(x, start, time):
         return fade_black_rgb(x, time - 1)
 
 if __name__ == '__main__':
-    try:
-        for i in range(pixels.count()):
-            pixels.set_pixel(i, wheel(((i * 256 // pixels.count())) % 256) )
-            pixels.show()
-            time.sleep(0.03)
-
-        while 1:
-            for j in range(256):
-                for i in range(pixels.count()):
-                    pixels.set_pixel(i, wheel(((i * 256 // pixels.count()) + j) % 256) )
-                pixels.show()
-                time.sleep(0.0001)
-
-    except KeyboardInterrupt:
-        for j in range(int(256 // 1)):
-            for i in range(pixels.count()):
-                r, g, b = pixels.get_pixel_rgb(i)
-                r = int(max(0, r - 1))
-                g = int(max(0, g - 1))
-                b = int(max(0, b - 1))
-                pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color( r, g, b ))
-            pixels.show()
-            time.sleep(0.01)
+    set_all((0, 0, 0))
+    time.sleep(2)
+    t = time.time()
+    while time.time() - t < 20:
+        if time.time() - t < 1:
+            arr = [fade_cx_cy(i, (0, 0, 0), (255, 255, 220), (time.time() - t)) for i in range(pixels.count())]
+            set_array(arr)
+        elif time.time() - t < 3 and time.time() - t > 1:
+            arr = [fade_cx_argb(i, (255, 255, 220), (time.time() - t - 1)) for i in range(pixels.count())]
+            set_array(arr)
+        elif time.time() - t < 10 and time.time() - t > 3:
+            arr = [argb_cycle(i, time.time() - t - 3) for i in range(pixels.count())]
+            set_array(arr)
+        elif time.time() - t < 12 and time.time() - t > 10:
+            arr = [fade_cx_rgb(i, pixels.get_pixel_rgb(i), (time.time() - t - 10)) for i in range(pixels.count())]
+            set_array(arr)
+        elif time.time() - t < 19 and time.time() - t > 12:
+            arr = [rgb_cycle(i, time.time() - t - 12) for i in range(pixels.count())]
+            set_array(arr)
+        elif time.time() - t > 19:
+            arr = [fade_cx_cy(i, pixels.get_pixel_rgb(i), (0, 0, 0), (time.time() - t - 19)) for i in range(pixels.count())]
+        time.sleep(0.01)
