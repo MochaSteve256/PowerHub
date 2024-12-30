@@ -35,10 +35,8 @@ class UI:
         self.last_click = time.time()
         bg_thread = threading.Thread(target=self._background_task)
         bg_thread.start()
-        stby_thread = threading.Thread(target=self._stby_task)
-        stby_thread.start()
         self._update()
-        watchpoints.watch(self.standby)
+        watchpoints.watch(self.standby, self._stby_callback)
     
     def _background_task(self):
         while True:
@@ -56,21 +54,19 @@ class UI:
             return True
         return False
     
-    def _stby_task(self):
-        while True:
-            if self.standby:
-                if not self._nighttime_check():
-                    self.state = UIState.CLCK
-                    self._update()
-                    time.sleep(10)
-                    if self.standby:
-                        self.state = UIState.WETH
-                        self._update()
-                        time.sleep(10)
-                else:
-                    self.state = UIState.CLCK
-                    self._update()
-                    time.sleep(60)
+    def _stby_callback(self):
+        while self.standby:
+            if not self._nighttime_check():
+                self.state = UIState.CLCK
+                self._update()
+                time.sleep(10)
+                self.state = UIState.WETH
+                self._update()
+                time.sleep(10)
+            else:
+                self.state = UIState.CLCK
+                self._update()
+                time.sleep(60)
 
     def _nighttime_check(self):
         if datetime.datetime.now().hour < 6 or datetime.datetime.now().hour > 22:
