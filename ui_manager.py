@@ -149,6 +149,8 @@ class UI:
                     for k in range(3):
                         matrix[i][j][k] = matrix[i][j][k] // 5
             u64led.set_matrix(matrix)
+        
+        u64led.show_matrix()
 
 def psu_ui():
     if psu.is_on():

@@ -36,6 +36,8 @@ def set_matrix(matrix):
     for j in range(8):
         for i in range(8):
             pixels[j * 8 + i] = matrix[j][i]
+
+def show_matrix():
     pixels.show()
 
 def get_matrix():
