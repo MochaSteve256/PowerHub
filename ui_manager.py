@@ -41,9 +41,10 @@ class UI:
     def _background_task(self):
         while True:
             if time.time() - self.last_click > 10:
+                if not self.standby:
+                    threading.Thread(target=self._stby_task).start()
+                    self._update()
                 self.standby = True
-                threading.Thread(target=self._stby_task).start()
-                self._update()
     
     def _stby_check(self):
         self.last_click = time.time()
