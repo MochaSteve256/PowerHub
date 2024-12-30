@@ -31,9 +31,15 @@ class UI:
         self.state = UIState.PSU
         self._update()
     
-    def clockwise(self):
+    def _stby_check(self):
         if self.standby:
             self.standby = False
+            self._update()
+            return True
+        return False
+    
+    def clockwise(self):
+        if self._stby_check():
             return
         if self.state == UIState.PSU:
             self.state = UIState.LED
@@ -53,8 +59,7 @@ class UI:
             self.state = UIState.PSU
             self._update()
     def counterclockwise(self):
-        if self.standby:
-            self.standby = False
+        if self._stby_check():
             return
         if self.state == UIState.PSU:
             self.state = UIState.STBY
@@ -74,8 +79,7 @@ class UI:
             self.state = UIState.CLCK
             self._update()
     def select(self):
-        if self.standby:
-            self.standby = False
+        if self._stby_check():
             return
         if self.state == UIState.PSU:
             if psu.is_on():
