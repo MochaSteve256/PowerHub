@@ -38,6 +38,14 @@ def set_matrix(matrix):
             pixels[j * 8 + i] = matrix[j][i]
     pixels.show()
 
+def get_matrix():
+    matrix = []
+    for j in range(8):
+        matrix.append([])
+        for i in range(8):
+            matrix[j].append(pixels[j * 8 + i])
+    return matrix
+
 if __name__ == '__main__':
     print('U64 LED Matrix Module test script')
     print('[Press CTRL + C to end the script!]')

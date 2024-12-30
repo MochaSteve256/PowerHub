@@ -32,6 +32,9 @@ class UI:
         self._update()
     
     def clockwise(self):
+        if self.standby:
+            self.standby = False
+            return
         if self.state == UIState.PSU:
             self.state = UIState.LED
             self._update()
@@ -50,6 +53,9 @@ class UI:
             self.state = UIState.PSU
             self._update()
     def counterclockwise(self):
+        if self.standby:
+            self.standby = False
+            return
         if self.state == UIState.PSU:
             self.state = UIState.STBY
             self._update()
@@ -68,6 +74,9 @@ class UI:
             self.state = UIState.CLCK
             self._update()
     def select(self):
+        if self.standby:
+            self.standby = False
+            return
         if self.state == UIState.PSU:
             if psu.is_on():
                 psu.off()
@@ -83,7 +92,7 @@ class UI:
             self.state = UIState.LED
             self._update()
         elif self.state == UIState.STBY:
-            self.standby = True
+            self.standby = not self.standby
     def back(self):
         if self.state == UIState.LED_SLCT:
             self.state = UIState.LED
@@ -105,3 +114,11 @@ class UI:
             u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.clck))#TODO
         elif self.state == UIState.STBY:
             u64led.set_matrix(u64images.add_navbar(u64images.stby_text + u64images.nothing, *NavOpts.stby))
+        
+        if self.standby:
+            matrix = u64led.get_matrix()
+            for i in range(8):
+                for j in range(8):
+                    for k in range(3):
+                        matrix[i][j][k] = matrix[i][j][k] // 3
+            u64led.set_matrix(matrix)
