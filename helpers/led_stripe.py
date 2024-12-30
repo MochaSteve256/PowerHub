@@ -71,7 +71,7 @@ def fade_cx_cy(x, start, end, time):
     Returns:
         tuple: The RGB color of the pixel at this time.
     """
-    return Adafruit_WS2801.RGB_to_color((start[0] + (end[0] - start[0]) * time, start[1] + (end[1] - start[1]) * time, start[2] + (end[2] - start[2]) * time))
+    return Adafruit_WS2801.RGB_to_color(start[0] + (end[0] - start[0]) * time, start[1] + (end[1] - start[1]) * time, start[2] + (end[2] - start[2]) * time)
 
 def argb_cycle(x, time):
     """
@@ -100,7 +100,7 @@ def fade_black_argb(x, time):
     if x / pixels.count() < time:
         return wheel(((x * 256 // pixels.count())) % 256)
     else:
-        return Adafruit_WS2801.RGB_to_color((0, 0, 0))
+        return Adafruit_WS2801.RGB_to_color(0, 0, 0)
 
 def fade_cx_argb(x, start, time):
     #first cx to black, then black to argb
@@ -146,7 +146,7 @@ def fade_black_rgb(x, time):
     Returns:
         tuple: The RGB color of the pixel at this time.
     """
-    return Adafruit_WS2801.RGB_to_color(fade_cx_cy(x, (0, 0, 0), wheel(((1 * 256 // pixels.count())) % 256), time))
+    return fade_cx_cy(x, (0, 0, 0), wheel(((1 * 256 // pixels.count())) % 256), time)
 
 def fade_cx_rgb(x, start, time):
     #first cx to black, then black to rgb
