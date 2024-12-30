@@ -65,6 +65,8 @@ class UI:
                 self.state = UIState.CLCK
                 self._update()
                 time.sleep(10)
+                if not self.standby:
+                    return
                 self.state = UIState.WETH
                 self._update()
                 time.sleep(10)

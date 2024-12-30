@@ -4,21 +4,23 @@ from helpers import led_stripe
 
 import time
 
-
 press_time = 0
-release_time = 0
+back_triggered = False
 
 def press():
-    global press_time
+    global press_time, back_triggered
     press_time = time.time()
+    back_triggered = False
+
+def update():  # Call this in your main loop
+    global back_triggered
+    if time.time() - press_time >= 0.5 and not back_triggered:
+        back_triggered = True
+        ui.back()
 
 def release():
-    global press_time, release_time
-    release_time = time.time()
-    if release_time - press_time < 0.5:
+    if time.time() - press_time < 0.5:
         ui.select()
-    else:
-        ui.back()
 
 if __name__ == "__main__":
     
@@ -28,6 +30,7 @@ if __name__ == "__main__":
 
     try:
         while True:
-            time.sleep(1)
+            time.sleep(.01)
+            update()
     finally:
         ky040.stop()
