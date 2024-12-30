@@ -35,6 +35,8 @@ class UI:
         self.last_click = time.time()
         bg_thread = threading.Thread(target=self._background_task)
         bg_thread.start()
+        stby_thread = threading.Thread(target=self._stby_task)
+        stby_thread.start()
         self._update()
         watchpoints.watch(self.standby)
     
