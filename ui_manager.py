@@ -44,7 +44,7 @@ class UI:
                 if not self.standby:
                     threading.Thread(target=self._stby_task).start()
                     self._update()
-                self.standby = True
+                    self.standby = True
     
     def _stby_check(self):
         self.last_click = time.time()
@@ -136,6 +136,8 @@ class UI:
                 threading.Thread(target=self._stby_task).start()
             self._update()
     def back(self):
+        if self._stby_check():
+            return
         if self.state == UIState.LED_SLCT:
             self.state = UIState.LED
             self._update()
