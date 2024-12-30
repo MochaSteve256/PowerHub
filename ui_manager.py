@@ -36,6 +36,8 @@ class UI:
     def __init__(self):
         self.state = UIState.PSU
         self._update()
+        bg_thread = threading.Thread(target=self._background_task)
+        bg_thread.start()
     
     def _background_task(self):
         while True:
