@@ -125,5 +125,5 @@ class UI:
             for i in range(8):
                 for j in range(8):
                     for k in range(3):
-                        matrix[i][j][k] = matrix[i][j][k] // 3
+                        matrix[i][j][k] = matrix[i][j][k] // 5
             u64led.set_matrix(matrix)
