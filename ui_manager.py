@@ -31,7 +31,6 @@ class UI:
     state = UIState.PSU
     standby = False
     last_click = time.time()
-    current_click = time.time()
     
     def __init__(self):
         self.state = UIState.PSU
@@ -41,14 +40,13 @@ class UI:
     
     def _background_task(self):
         while True:
-            if self.current_click - self.last_click > 10:
+            if time.time() - self.last_click > 10:
                 self.standby = True
                 threading.Thread(target=self._stby_task).start()
                 self._update()
     
     def _stby_check(self):
-        self.last_click = self.current_click
-        self.current_click = time.time()
+        self.last_click = time.time()
         if self.standby:
             self.standby = False
             self._update()
