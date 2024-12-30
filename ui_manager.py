@@ -7,6 +7,7 @@ from helpers import led_stripe
 import time
 import datetime
 import threading
+import watchpoints
 
 class UIState():
     PSU = 0
@@ -29,13 +30,13 @@ class NavOpts():
 
 class UI:
     standby = False
-    
     def __init__(self):
         self.state = UIState.PSU
         self.last_click = time.time()
         bg_thread = threading.Thread(target=self._background_task)
         bg_thread.start()
         self._update()
+        watchpoints.watch(self.standby)
     
     def _background_task(self):
         while True:
@@ -146,6 +147,7 @@ class UI:
             self._update()
     
     def _update(self):
+        print("ui update")
         if self.state == UIState.PSU:
             psu_ui()
         elif self.state == UIState.LED:
