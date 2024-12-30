@@ -55,6 +55,7 @@ class UI:
         return False
     
     def _stby_callback(self):
+        print("standby callback")
         while self.standby:
             if not self._nighttime_check():
                 self.state = UIState.CLCK
