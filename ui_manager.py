@@ -28,15 +28,14 @@ class NavOpts():
     stby = [True, False, True]
 
 class UI:
-    state = UIState.PSU
     standby = False
-    last_click = time.time()
     
     def __init__(self):
         self.state = UIState.PSU
-        self._update()
+        self.last_click = time.time()
         bg_thread = threading.Thread(target=self._background_task)
         bg_thread.start()
+        self._update()
     
     def _background_task(self):
         while True:
