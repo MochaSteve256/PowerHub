@@ -47,6 +47,7 @@ def set_pixel(i, rgb):
 
 def set_pixel_color(i, color):
     pixels.set_pixel(i, color)
+    pixels.show()
 
 def set_array(arr):
     for i in range(min(pixels.count(), len(arr))):
@@ -56,6 +57,7 @@ def set_array(arr):
 def set_array_color(arr):
     for i in range(min(pixels.count(), len(arr))):
         pixels.set_pixel(i, arr[i])
+    pixels.show()
 
 def clear():
     for i in range(pixels.count()):
@@ -170,7 +172,7 @@ def fade_cx_rgb(x, start, time):
     """
     #cx to black
     if time < 1:
-        return fade_cx_cy(x, start, (0, 0, 0), time)
+        return fade_cx_cy(x, Adafruit_WS2801.color_to_RGB(start), (0, 0, 0), time)
     #black to rgb
     else:
         return fade_black_rgb(x, time - 1)
