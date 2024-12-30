@@ -6,21 +6,25 @@ import time
 
 press_time = 0
 back_triggered = False
+is_pressed = False  # Track whether the button is currently pressed
 
 def press():
-    global press_time, back_triggered
+    global press_time, back_triggered, is_pressed
     press_time = time.time()
     back_triggered = False
+    is_pressed = True  # Button is now pressed
 
 def update():  # Call this in your main loop
-    global back_triggered
-    if time.time() - press_time >= 0.5 and not back_triggered:
+    global back_triggered, is_pressed
+    if is_pressed and time.time() - press_time >= 0.5 and not back_triggered:
         back_triggered = True
         ui.back()
 
 def release():
-    if time.time() - press_time < 0.5:
+    global is_pressed
+    if is_pressed and time.time() - press_time < 0.5:
         ui.select()
+    is_pressed = False  # Button is no longer pressed
 
 if __name__ == "__main__":
     
