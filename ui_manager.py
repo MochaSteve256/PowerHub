@@ -4,6 +4,10 @@ from helpers import u64images
 from helpers import psu
 from helpers import led_stripe
 
+import time
+import datetime
+import threading
+
 class UIState():
     PSU = 0
     LED = 1
@@ -35,6 +39,25 @@ class UI:
         if self.standby:
             self.standby = False
             self._update()
+            return True
+        return False
+    
+    def _stby_task(self):
+        while self.standby:
+            if not self._nighttime_check():
+                self.state = UIState.CLCK
+                self._update()
+                time.sleep(10)
+                self.state = UIState.WETH
+                self._update()
+                time.sleep(10)
+            else:
+                self.state = UIState.CLCK
+                self._update()
+                time.sleep(60)
+
+    def _nighttime_check(self):
+        if datetime.datetime.now().hour < 6 or datetime.datetime.now().hour > 22:
             return True
         return False
     
@@ -97,6 +120,8 @@ class UI:
             self._update()
         elif self.state == UIState.STBY:
             self.standby = not self.standby
+            if self.standby:
+                threading.Thread(target=self._stby_task).start()
             self._update()
     def back(self):
         if self.state == UIState.LED_SLCT:
@@ -105,20 +130,17 @@ class UI:
     
     def _update(self):
         if self.state == UIState.PSU:
-            if psu.is_on():
-                u64led.set_matrix(u64images.add_navbar(u64images.psu_text + u64images.psu_on, *NavOpts.psu))
-            else:
-                u64led.set_matrix(u64images.add_navbar(u64images.psu_text + u64images.psu_off, *NavOpts.psu))
+            psu_ui()
         elif self.state == UIState.LED:
-            u64led.set_matrix(u64images.add_navbar(u64images.led_text + u64images.nothing, *NavOpts.led))
+            led_ui()
         elif self.state == UIState.LED_SLCT:
-            u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.led_slct))#TODO
+            led_slct_ui()
         elif self.state == UIState.WETH:
-            u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.weth))#TODO
+            weth_ui()
         elif self.state == UIState.CLCK:
-            u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.clck))#TODO
+            clck_ui()
         elif self.state == UIState.STBY:
-            u64led.set_matrix(u64images.add_navbar(u64images.stby_text + u64images.nothing, *NavOpts.stby))
+            stby_ui()
         
         if self.standby:
             matrix = u64led.get_matrix()
@@ -127,3 +149,24 @@ class UI:
                     for k in range(3):
                         matrix[i][j][k] = matrix[i][j][k] // 5
             u64led.set_matrix(matrix)
+
+def psu_ui():
+    if psu.is_on():
+        u64led.set_matrix(u64images.add_navbar(u64images.psu_text + u64images.psu_on, *NavOpts.psu))
+    else:
+        u64led.set_matrix(u64images.add_navbar(u64images.psu_text + u64images.psu_off, *NavOpts.psu))
+
+def led_ui():
+    u64led.set_matrix(u64images.add_navbar(u64images.led_text + u64images.nothing, *NavOpts.led))
+
+def led_slct_ui():
+    u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.led_slct))#TODO
+
+def weth_ui():
+    u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.weth))#TODO
+
+def clck_ui():
+    u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.clck))#TODO
+
+def stby_ui():
+    u64led.set_matrix(u64images.add_navbar(u64images.stby_text + u64images.nothing, *NavOpts.stby))
