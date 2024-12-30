@@ -34,23 +34,22 @@ class UI:
     
     def __init__(self):
         self.state = UIState.PSU
-        self._ui_update()
+        self._update()
         bg_thread = threading.Thread(target=self._background_task)
         bg_thread.start()
     
     def _background_task(self):
         while True:
             if time.time() - self.last_click > 10:
-                if not self.standby:
-                    threading.Thread(target=self._stby_task).start()
-                    self._ui_update()
                 self.standby = True
+                threading.Thread(target=self._stby_task).start()
+                self._update()
     
     def _stby_check(self):
         self.last_click = time.time()
         if self.standby:
             self.standby = False
-            self._ui_update()
+            self._update()
             return True
         return False
     
@@ -58,14 +57,14 @@ class UI:
         while self.standby:
             if not self._nighttime_check():
                 self.state = UIState.CLCK
-                self._ui_update()
+                self._update()
                 time.sleep(10)
                 self.state = UIState.WETH
-                self._ui_update()
+                self._update()
                 time.sleep(10)
             else:
                 self.state = UIState.CLCK
-                self._ui_update()
+                self._update()
                 time.sleep(60)
 
     def _nighttime_check(self):
@@ -73,7 +72,74 @@ class UI:
             return True
         return False
     
-    def _ui_update(self):
+    def clockwise(self):
+        if self._stby_check():
+            return
+        if self.state == UIState.PSU:
+            self.state = UIState.LED
+            self._update()
+        elif self.state == UIState.LED:
+            self.state = UIState.WETH
+            self._update()
+        elif self.state == UIState.LED_SLCT:
+            pass#TODO
+        elif self.state == UIState.WETH:
+            self.state = UIState.CLCK
+            self._update()
+        elif self.state == UIState.CLCK:
+            self.state = UIState.STBY
+            self._update()
+        elif self.state == UIState.STBY:
+            self.state = UIState.PSU
+            self._update()
+    def counterclockwise(self):
+        if self._stby_check():
+            return
+        if self.state == UIState.PSU:
+            self.state = UIState.STBY
+            self._update()
+        elif self.state == UIState.LED:
+            self.state = UIState.PSU
+            self._update()
+        elif self.state == UIState.LED_SLCT:
+            pass#TODO
+        elif self.state == UIState.WETH:
+            self.state = UIState.LED
+            self._update()
+        elif self.state == UIState.CLCK:
+            self.state = UIState.WETH
+            self._update()
+        elif self.state == UIState.STBY:
+            self.state = UIState.CLCK
+            self._update()
+    def select(self):
+        if self._stby_check():
+            return
+        if self.state == UIState.PSU:
+            if psu.is_on():
+                psu.off()
+                self._update()
+            else:
+                psu.on()
+                self._update()
+        elif self.state == UIState.LED:
+            self.state = UIState.LED_SLCT
+            self._update()
+        elif self.state == UIState.LED_SLCT:
+            led_stripe.set_all((0, 0, 0))#TODO
+            self.state = UIState.LED
+            self._update()
+        elif self.state == UIState.STBY:
+            self.standby = not self.standby
+            if self.standby:
+                threading.Thread(target=self._stby_task).start()
+            self._update()
+    def back(self):
+        if self.state == UIState.LED_SLCT:
+            self.state = UIState.LED
+            self._update()
+    
+    def _update(self):
         if self.state == UIState.PSU:
             psu_ui()
         elif self.state == UIState.LED:
@@ -96,64 +162,6 @@ class UI:
             u64led.set_matrix(matrix)
         
         u64led.show_matrix()
-    
-    def clockwise(self):
-        if self._stby_check():
-            return
-        if self.state == UIState.PSU:
-            self.state = UIState.LED
-        elif self.state == UIState.LED:
-            self.state = UIState.WETH
-        elif self.state == UIState.LED_SLCT:
-            pass#TODO
-        elif self.state == UIState.WETH:
-            self.state = UIState.CLCK
-        elif self.state == UIState.CLCK:
-            self.state = UIState.STBY
-        elif self.state == UIState.STBY:
-            self.state = UIState.PSU
-        self._ui_update()
-    
-    def counterclockwise(self):
-        if self._stby_check():
-            return
-        if self.state == UIState.PSU:
-            self.state = UIState.STBY
-        elif self.state == UIState.LED:
-            self.state = UIState.PSU
-        elif self.state == UIState.LED_SLCT:
-            pass#TODO
-        elif self.state == UIState.WETH:
-            self.state = UIState.LED
-        elif self.state == UIState.CLCK:
-            self.state = UIState.WETH
-        elif self.state == UIState.STBY:
-            self.state = UIState.CLCK
-        self._ui_update()
-    
-    def select(self):
-        if self._stby_check():
-            return
-        if self.state == UIState.PSU:
-            if psu.is_on():
-                psu.off()
-            else:
-                psu.on()
-        elif self.state == UIState.LED:
-            self.state = UIState.LED_SLCT
-        elif self.state == UIState.LED_SLCT:
-            led_stripe.set_all((0, 0, 0))#TODO
-            self.state = UIState.LED
-        elif self.state == UIState.STBY:
-            self.standby = not self.standby
-            if self.standby:
-                threading.Thread(target=self._stby_task).start()
-        self._ui_update()
-    
-    def back(self):
-        if self.state == UIState.LED_SLCT:
-            self.state = UIState.LED
-        self._ui_update()
 
 def psu_ui():
     if psu.is_on():
@@ -175,4 +183,3 @@ def clck_ui():
 
 def stby_ui():
     u64led.set_matrix(u64images.add_navbar(u64images.stby_text + u64images.nothing, *NavOpts.stby))
-
