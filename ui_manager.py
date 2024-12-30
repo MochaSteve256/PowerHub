@@ -44,8 +44,8 @@ class UI:
                 if not self.standby:
                     stby = threading.Thread(target=self._stby_task)
                     stby.start()
-                    self._update()
                     self.standby = True
+                    self._update()
             time.sleep(1)
     
     def _stby_check(self):
