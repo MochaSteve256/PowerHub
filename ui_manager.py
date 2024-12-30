@@ -93,6 +93,7 @@ class UI:
             self._update()
         elif self.state == UIState.STBY:
             self.standby = not self.standby
+            self._update()
     def back(self):
         if self.state == UIState.LED_SLCT:
             self.state = UIState.LED
