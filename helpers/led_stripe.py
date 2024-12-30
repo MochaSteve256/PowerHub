@@ -41,14 +41,21 @@ def set_all(color):
         pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color( color[0], color[1], color[2] ))
     pixels.show()
 
-def set_pixel(i, color):
-    pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color( color[0], color[1], color[2] ))
+def set_pixel(i, rgb):
+    pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color( rgb[0], rgb[1], rgb[2] ))
     pixels.show()
+
+def set_pixel_color(i, color):
+    pixels.set_pixel(i, color)
 
 def set_array(arr):
     for i in arr:
         pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color( arr[i][0], arr[i][1], arr[i][2] ))
     pixels.show()
+
+def set_array_color(arr):
+    for i in arr:
+        pixels.set_pixel(i, arr[i])
 
 def clear():
     for i in range(pixels.count()):
@@ -175,19 +182,20 @@ if __name__ == '__main__':
     while time.time() - t < 20:
         if time.time() - t < 1:
             arr = [fade_cx_cy(i, (0, 0, 0), (255, 255, 220), (time.time() - t)) for i in range(pixels.count())]
-            set_array(arr)
+            set_array_color(arr)
         elif time.time() - t < 3 and time.time() - t > 1:
             arr = [fade_cx_argb(i, (255, 255, 220), (time.time() - t - 1)) for i in range(pixels.count())]
-            set_array(arr)
+            set_array_color(arr)
         elif time.time() - t < 10 and time.time() - t > 3:
             arr = [argb_cycle(i, time.time() - t - 3) for i in range(pixels.count())]
-            set_array(arr)
+            set_array_color(arr)
         elif time.time() - t < 12 and time.time() - t > 10:
             arr = [fade_cx_rgb(i, pixels.get_pixel_rgb(i), (time.time() - t - 10)) for i in range(pixels.count())]
-            set_array(arr)
+            set_array_color(arr)
         elif time.time() - t < 19 and time.time() - t > 12:
             arr = [rgb_cycle(i, time.time() - t - 12) for i in range(pixels.count())]
-            set_array(arr)
+            set_array_color(arr)
         elif time.time() - t > 19:
             arr = [fade_cx_cy(i, pixels.get_pixel_rgb(i), (0, 0, 0), (time.time() - t - 19)) for i in range(pixels.count())]
+            set_array_color(arr)
         time.sleep(0.01)
