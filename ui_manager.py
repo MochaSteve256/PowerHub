@@ -42,8 +42,6 @@ class UI:
         while True:
             if time.time() - self.last_click > 10:
                 if not self.standby:
-                    stby = threading.Thread(target=self._stby_task)
-                    stby.start()
                     self.standby = True
                     self._update()
             time.sleep(1)
@@ -57,20 +55,21 @@ class UI:
         return False
     
     def _stby_task(self):
-        while self.standby:
-            if not self._nighttime_check():
-                self.state = UIState.CLCK
-                self._update()
-                time.sleep(10)
-                if not self.standby:
-                    break
-                self.state = UIState.WETH
-                self._update()
-                time.sleep(10)
-            else:
-                self.state = UIState.CLCK
-                self._update()
-                time.sleep(60)
+        while True:
+            while self.standby:
+                if not self._nighttime_check():
+                    self.state = UIState.CLCK
+                    self._update()
+                    time.sleep(10)
+                    if not self.standby:
+                        break
+                    self.state = UIState.WETH
+                    self._update()
+                    time.sleep(10)
+                else:
+                    self.state = UIState.CLCK
+                    self._update()
+                    time.sleep(60)
 
     def _nighttime_check(self):
         if datetime.datetime.now().hour < 6 or datetime.datetime.now().hour > 22:
@@ -136,8 +135,6 @@ class UI:
             self._update()
         elif self.state == UIState.STBY:
             self.standby = not self.standby
-            if self.standby:
-                threading.Thread(target=self._stby_task).start()
             self._update()
     def back(self):
         if self._stby_check():
