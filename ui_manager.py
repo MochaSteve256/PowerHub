@@ -56,7 +56,7 @@ class UI:
     
     def _stby_task(self):
         while True:
-            while self.standby:
+            if self.standby:
                 if not self._nighttime_check():
                     self.state = UIState.CLCK
                     self._update()
