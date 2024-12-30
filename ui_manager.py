@@ -42,9 +42,11 @@ class UI:
         while True:
             if time.time() - self.last_click > 10:
                 if not self.standby:
-                    threading.Thread(target=self._stby_task).start()
+                    stby = threading.Thread(target=self._stby_task)
+                    stby.start()
                     self._update()
                     self.standby = True
+            time.sleep(1)
     
     def _stby_check(self):
         self.last_click = time.time()
@@ -80,15 +82,15 @@ class UI:
             self.state = UIState.LED
             self._update()
         elif self.state == UIState.LED:
-            self.state = UIState.WETH
+            self.state = UIState.CLCK
             self._update()
         elif self.state == UIState.LED_SLCT:
             pass#TODO
         elif self.state == UIState.WETH:
-            self.state = UIState.CLCK
+            self.state = UIState.STBY
             self._update()
         elif self.state == UIState.CLCK:
-            self.state = UIState.STBY
+            self.state = UIState.WETH
             self._update()
         elif self.state == UIState.STBY:
             self.state = UIState.PSU
@@ -105,13 +107,13 @@ class UI:
         elif self.state == UIState.LED_SLCT:
             pass#TODO
         elif self.state == UIState.WETH:
-            self.state = UIState.LED
+            self.state = UIState.CLCK
             self._update()
         elif self.state == UIState.CLCK:
-            self.state = UIState.WETH
+            self.state = UIState.LED
             self._update()
         elif self.state == UIState.STBY:
-            self.state = UIState.CLCK
+            self.state = UIState.WETH
             self._update()
     def select(self):
         if self._stby_check():
