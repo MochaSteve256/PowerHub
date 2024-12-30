@@ -36,7 +36,7 @@ class UI:
         bg_thread = threading.Thread(target=self._background_task)
         bg_thread.start()
         self._update()
-        watchpoints.watch(self.standby, self._stby_callback)
+        watchpoints.watch(self.standby, callback=self._stby_callback, when=lambda x: x == True)
     
     def _background_task(self):
         while True:
@@ -54,8 +54,12 @@ class UI:
             return True
         return False
     
-    def _stby_callback(self):
+    def _stby_callback(self, *_args):
         print("standby callback")
+        task = threading.Thread(target=self._stby_task)
+        task.start()
+    
+    def _stby_task(self):
         while self.standby:
             if not self._nighttime_check():
                 self.state = UIState.CLCK
