@@ -34,7 +34,7 @@ class UI:
         self.state = UIState.PSU
         self.last_click = time.time()
         bg_thread = threading.Thread(target=self._background_task)
-        bg_thread.start()
+        #bg_thread.start()
         self._update()
         watchpoints.watch(self.standby, callback=self._stby_callback, when=lambda x: x == True)
     
