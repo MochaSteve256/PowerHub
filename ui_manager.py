@@ -33,14 +33,14 @@ class UI:
     def __init__(self):
         self.state = UIState.PSU
         self.last_click = time.time()
-        self._update()
+        self.update()
         watchpoints.watch(self.standby, callback=self._stby_callback, when=lambda x: x == True)
 
     def _stby_check(self):
         self.last_click = time.time()
         if self.standby:
             self.standby = False
-            self._update()
+            self.update()
             return True
         return False
     
@@ -58,69 +58,69 @@ class UI:
             return
         if self.state == UIState.PSU:
             self.state = UIState.LED
-            self._update()
+            self.update()
         elif self.state == UIState.LED:
             self.state = UIState.CLCK
-            self._update()
+            self.update()
         elif self.state == UIState.LED_SLCT:
             pass#TODO
         elif self.state == UIState.WETH:
             self.state = UIState.STBY
-            self._update()
+            self.update()
         elif self.state == UIState.CLCK:
             self.state = UIState.WETH
-            self._update()
+            self.update()
         elif self.state == UIState.STBY:
             self.state = UIState.PSU
-            self._update()
+            self.update()
     def counterclockwise(self):
         if self._stby_check():
             return
         if self.state == UIState.PSU:
             self.state = UIState.STBY
-            self._update()
+            self.update()
         elif self.state == UIState.LED:
             self.state = UIState.PSU
-            self._update()
+            self.update()
         elif self.state == UIState.LED_SLCT:
             pass#TODO
         elif self.state == UIState.WETH:
             self.state = UIState.CLCK
-            self._update()
+            self.update()
         elif self.state == UIState.CLCK:
             self.state = UIState.LED
-            self._update()
+            self.update()
         elif self.state == UIState.STBY:
             self.state = UIState.WETH
-            self._update()
+            self.update()
     def select(self):
         if self._stby_check():
             return
         if self.state == UIState.PSU:
             if psu.is_on():
                 psu.off()
-                self._update()
+                self.update()
             else:
                 psu.on()
-                self._update()
+                self.update()
         elif self.state == UIState.LED:
             self.state = UIState.LED_SLCT
-            self._update()
+            self.update()
         elif self.state == UIState.LED_SLCT:
             led_stripe.set_all((0, 0, 0))#TODO
             self.state = UIState.LED
-            self._update()
+            self.update()
         elif self.state == UIState.STBY:
             self.standby = not self.standby
-            self._update()
+            self.update()
     def back(self):
         if self._stby_check():
             return
         if self.state == UIState.LED_SLCT:
             self.state = UIState.LED
-            self._update()
+            self.update()
     
-    def _update(self):
+    def update(self):
         print("ui update")
         
         # auto standby
@@ -133,18 +133,18 @@ class UI:
             if not self._nighttime_check():
                 if time.time() - self._last_standby_switch > 10:
                     self.state = UIState.CLCK
-                    self._update()
+                    self.update()
                     self._last_standby_switch = time.time()
                 if not self.standby:
                     return
                 if time.time() - self._last_standby_switch > 20:
                     self.state = UIState.WETH
-                    self._update()
+                    self.update()
                     self._last_standby_switch = time.time()
             else:
                 if time.time() - self._last_standby_switch > 60:
                     self.state = UIState.CLCK
-                    self._update()
+                    self.update()
                     self._last_standby_switch = time.time()
         
         # ui functions
