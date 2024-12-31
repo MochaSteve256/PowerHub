@@ -97,7 +97,7 @@ def argb_cycle(x, time):
     Returns:
         color: Int Formatted color
     """
-    return wheel(((x * 256 // PIXEL_COUNT) + int(-time * 256)) % 256)
+    return wheel(((x * 256 // PIXEL_COUNT) + int(-(time / 3) * 256)) % 256)
 
 def fade_black_argb(x, time):
     """
@@ -146,7 +146,7 @@ def rgb_cycle(x, time):
     Returns:
         color: Int Formatted color
     """
-    return wheel(((1 * 256 // PIXEL_COUNT) + int(time * 256)) % 256)
+    return wheel(((1 * 256 // PIXEL_COUNT) + int(time / 3 * 256)) % 256)
 
 def fade_black_rgb(x, time):
     """
@@ -256,7 +256,7 @@ if __name__ == '__main__':
             set_array_color(arr)
         time.sleep(0.01)
     """
-    """
+    #"""
     while time.time() - t < 60:
         if time.time() - t < 30:
             arr = [sunrise(i, time.time() - t) for i in range(PIXEL_COUNT)]
@@ -265,9 +265,11 @@ if __name__ == '__main__':
             arr = [sunrise(i, - (time.time() - t - 30) + 30) for i in range(PIXEL_COUNT)]
             set_array_color(arr)
         time.sleep(0.01)
+    #"""
     """
     while time.time() - t < 10:
         arr = [alarm_cycle(i, time.time() - t) for i in range(PIXEL_COUNT)]
         set_array_color(arr)
         time.sleep(0.1)
+    """
     set_all((0, 0, 0))
