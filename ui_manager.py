@@ -34,7 +34,7 @@ class UI:
         self.state = UIState.PSU
         self.last_click = time.time()
         self.update()
-        watchpoints.watch(self.standby, callback=self._stby_callback, when=lambda x: x == True)
+        #watchpoints.watch(self.standby, callback=self._stby_callback, when=lambda x: x == True)
 
     def _stby_check(self):
         self.last_click = time.time()
@@ -113,6 +113,8 @@ class UI:
             self.update()
         elif self.state == UIState.STBY:
             self.standby = not self.standby
+            if self.standby:
+                self._last_standby_switch = time.time()
             self.update()
     def back(self):
         if self._stby_check():
@@ -127,13 +129,13 @@ class UI:
         if time.time() - self.last_click > 10:
             if not self.standby:
                 self.standby = True
+                self._last_standby_switch = time.time()
         
         # standby logic
         if self.standby:
             if not self._nighttime_check():
-                if time.time() - self._last_standby_switch > 0 and time.time() - self._last_standby_switch < 10:
-                    self.state = UIState.CLCK
-                elif time.time() - self._last_standby_switch > 10:
+                self.state = UIState.CLCK
+                if time.time() - self._last_standby_switch > 10:
                     self.state = UIState.WETH
                 elif time.time() - self._last_standby_switch >= 20:
                     self._last_standby_switch = time.time()

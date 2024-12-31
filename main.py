@@ -29,5 +29,6 @@ if __name__ == "__main__":
     try:
         while True:
             ui.update()
+            time.sleep(.001)
     finally:
         ky040.stop()
