@@ -33,19 +33,9 @@ class UI:
     def __init__(self):
         self.state = UIState.PSU
         self.last_click = time.time()
-        bg_thread = threading.Thread(target=self._background_task)
-        #bg_thread.start()
         self._update()
         watchpoints.watch(self.standby, callback=self._stby_callback, when=lambda x: x == True)
-    
-    def _background_task(self):
-        while True:
-            if time.time() - self.last_click > 10:
-                if not self.standby:
-                    self.standby = True
-                    self._update()
-            time.sleep(1)
-    
+
     def _stby_check(self):
         self.last_click = time.time()
         if self.standby:
@@ -56,24 +46,7 @@ class UI:
     
     def _stby_callback(self, *_args):
         print("standby callback")
-        task = threading.Thread(target=self._stby_task)
-        task.start()
     
-    def _stby_task(self):
-        while self.standby:
-            if not self._nighttime_check():
-                self.state = UIState.CLCK
-                self._update()
-                time.sleep(10)
-                if not self.standby:
-                    return
-                self.state = UIState.WETH
-                self._update()
-                time.sleep(10)
-            else:
-                self.state = UIState.CLCK
-                self._update()
-                time.sleep(60)
 
     def _nighttime_check(self):
         if datetime.datetime.now().hour < 6 or datetime.datetime.now().hour > 22:
@@ -149,6 +122,32 @@ class UI:
     
     def _update(self):
         print("ui update")
+        
+        # auto standby
+        if time.time() - self.last_click > 10:
+            if not self.standby:
+                self.standby = True
+        
+        if self.standby:
+            self._last_standby_switch = time.time()
+            if not self._nighttime_check():
+                if time.time() - self._last_standby_switch > 10:
+                    self.state = UIState.CLCK
+                    self._update()
+                    self._last_standby_switch = time.time()
+                if not self.standby:
+                    return
+                if time.time() - self._last_standby_switch > 20:
+                    self.state = UIState.WETH
+                    self._update()
+                    self._last_standby_switch = time.time()
+            else:
+                if time.time() - self._last_standby_switch > 60:
+                    self.state = UIState.CLCK
+                    self._update()
+                    self._last_standby_switch = time.time()
+        
+        # ui functions
         if self.state == UIState.PSU:
             psu_ui()
         elif self.state == UIState.LED:
@@ -162,6 +161,7 @@ class UI:
         elif self.state == UIState.STBY:
             stby_ui()
         
+        # brightness adjustment at standby
         if self.standby:
             divider = 0
             if self._nighttime_check():
