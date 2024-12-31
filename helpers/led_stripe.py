@@ -228,7 +228,8 @@ if __name__ == '__main__':
     while time.time() - t < 60:
         if time.time() - t < 30:
             arr = [sunrise(i, time.time() - t) for i in range(pixels.count())]
-            set_array(arr)
+            set_array_color(arr)
         elif time.time() - t < 60 and time.time() - t > 30:
             arr = [sunrise(i, - (time.time() - t - 30) + 30) for i in range(pixels.count())]
+            set_array_color(arr)
         time.sleep(0.01)
