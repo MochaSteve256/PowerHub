@@ -27,7 +27,7 @@ def wheel(pos):
 
 def brightness_decrease(pixels, wait=0.01):
     for j in range(int(256 // 1)):
-        for i in range(pixels.count()):
+        for i in range(PIXEL_COUNT):
             r, g, b = pixels.get_pixel_rgb(i)
             r = int(max(0, r - 1))
             g = int(max(0, g - 1))
@@ -37,7 +37,7 @@ def brightness_decrease(pixels, wait=0.01):
         time.sleep(wait)
 
 def set_all(color):
-    for i in range(pixels.count()):
+    for i in range(PIXEL_COUNT):
         pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color( color[0], color[1], color[2] ))
     pixels.show()
 
@@ -50,18 +50,18 @@ def set_pixel_color(i, color):
     pixels.show()
 
 def set_array(arr):
-    for i in range(min(pixels.count(), len(arr))):
+    for i in range(min(PIXEL_COUNT, len(arr))):
         pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color( arr[i][0], arr[i][1], arr[i][2] ))
     pixels.show()
 
 def set_array_color(arr):
-    for i in range(min(pixels.count(), len(arr))):
+    for i in range(min(PIXEL_COUNT, len(arr))):
         if arr[i] is not None:
             pixels.set_pixel(i, arr[i])
     pixels.show()
 
 def clear():
-    for i in range(pixels.count()):
+    for i in range(PIXEL_COUNT):
         pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color( 0, 0, 0 ))
     pixels.show()
 
@@ -94,7 +94,7 @@ def argb_cycle(x, time):
     Returns:
         color: Int Formatted color
     """
-    return wheel(((x * 256 // pixels.count()) + int(-time * 256)) % 256)
+    return wheel(((x * 256 // PIXEL_COUNT) + int(-time * 256)) % 256)
 
 def fade_black_argb(x, time):
     """
@@ -107,8 +107,8 @@ def fade_black_argb(x, time):
     Returns:
         color: Int Formatted color
     """
-    if x / pixels.count() < time:
-        return wheel(((x * 256 // pixels.count())) % 256)
+    if x / PIXEL_COUNT < time:
+        return wheel(((x * 256 // PIXEL_COUNT)) % 256)
     else:
         return Adafruit_WS2801.RGB_to_color(0, 0, 0)
 
@@ -143,7 +143,7 @@ def rgb_cycle(x, time):
     Returns:
         color: Int Formatted color
     """
-    return wheel(((1 * 256 // pixels.count()) + int(time * 256)) % 256)
+    return wheel(((1 * 256 // PIXEL_COUNT) + int(time * 256)) % 256)
 
 def fade_black_rgb(x, time):
     """
@@ -156,7 +156,7 @@ def fade_black_rgb(x, time):
     Returns:
         color: Int Formatted color
     """
-    return fade_cx_cy(x, (0, 0, 0), Adafruit_WS2801.color_to_RGB(wheel(((1 * 256 // pixels.count())) % 256)), time)
+    return fade_cx_cy(x, (0, 0, 0), Adafruit_WS2801.color_to_RGB(wheel(((1 * 256 // PIXEL_COUNT)) % 256)), time)
 
 def fade_cx_rgb(x, start, time):
     #first cx to black, then black to rgb
@@ -205,30 +205,30 @@ if __name__ == '__main__':
     """
     while time.time() - t < 20:
         if time.time() - t < 1:
-            arr = [fade_cx_cy(i, (0, 0, 0), (255, 255, 220), (time.time() - t)) for i in range(pixels.count())]
+            arr = [fade_cx_cy(i, (0, 0, 0), (255, 255, 220), (time.time() - t)) for i in range(PIXEL_COUNT)]
             set_array_color(arr)
         elif time.time() - t < 3 and time.time() - t > 1:
-            arr = [fade_cx_argb(i, (255, 255, 220), (time.time() - t - 1)) for i in range(pixels.count())]
+            arr = [fade_cx_argb(i, (255, 255, 220), (time.time() - t - 1)) for i in range(PIXEL_COUNT)]
             set_array_color(arr)
         elif time.time() - t < 10 and time.time() - t > 3:
-            arr = [argb_cycle(i, time.time() - t - 3) for i in range(pixels.count())]
+            arr = [argb_cycle(i, time.time() - t - 3) for i in range(PIXEL_COUNT)]
             set_array_color(arr)
         elif time.time() - t < 12 and time.time() - t > 10:
-            arr = [fade_cx_rgb(i, pixels.get_pixel_rgb(i), (time.time() - t - 10)) for i in range(pixels.count())]
+            arr = [fade_cx_rgb(i, pixels.get_pixel_rgb(i), (time.time() - t - 10)) for i in range(PIXEL_COUNT)]
             set_array_color(arr)
         elif time.time() - t < 19 and time.time() - t > 12:
-            arr = [rgb_cycle(i, time.time() - t - 12) for i in range(pixels.count())]
+            arr = [rgb_cycle(i, time.time() - t - 12) for i in range(PIXEL_COUNT)]
             set_array_color(arr)
         elif time.time() - t > 19:
-            arr = [fade_cx_cy(i, pixels.get_pixel_rgb(i), (0, 0, 0), (time.time() - t - 19)) for i in range(pixels.count())]
+            arr = [fade_cx_cy(i, pixels.get_pixel_rgb(i), (0, 0, 0), (time.time() - t - 19)) for i in range(PIXEL_COUNT)]
             set_array_color(arr)
         time.sleep(0.01)
     """
     while time.time() - t < 60:
         if time.time() - t < 30:
-            arr = [sunrise(i, time.time() - t) for i in range(pixels.count())]
+            arr = [sunrise(i, time.time() - t) for i in range(PIXEL_COUNT)]
             set_array_color(arr)
         elif time.time() - t < 60 and time.time() - t > 30:
-            arr = [sunrise(i, - (time.time() - t - 30) + 30) for i in range(pixels.count())]
+            arr = [sunrise(i, - (time.time() - t - 30) + 30) for i in range(PIXEL_COUNT)]
             set_array_color(arr)
         time.sleep(0.01)

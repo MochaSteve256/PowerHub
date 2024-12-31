@@ -54,8 +54,11 @@ led_text = [
     [pink, pink,  purple, purple, purple, pink, pink,  black],
 ]
 
+nothing1 = [
+    [black, black, black, black, black, black, black, black]
+]
 
-nothing = [
+nothing3 = [
     [black, black, black, black, black, black, black, black],
     [black, black, black, black, black, black, black, black],
     [black, black, black, black, black, black, black, black]

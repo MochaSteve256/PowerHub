@@ -9,7 +9,7 @@ import datetime
 import threading
 import watchpoints
 
-class UIState():
+class uiState():
     PSU = 0
     LED = 1
     LED_SLCT = 2
@@ -31,7 +31,7 @@ class NavOpts():
 class UI:
     standby = False
     def __init__(self):
-        self.state = UIState.PSU
+        self.state = uiState.PSU
         self.last_click = time.time()
         self.update()
         #watchpoints.watch(self.standby, callback=self._stby_callback, when=lambda x: x == True)
@@ -57,61 +57,61 @@ class UI:
     def clockwise(self):
         if self._stby_check():
             return
-        if self.state == UIState.PSU:
-            self.state = UIState.LED
+        if self.state == uiState.PSU:
+            self.state = uiState.LED
             self.update()
-        elif self.state == UIState.LED:
-            self.state = UIState.CLCK
+        elif self.state == uiState.LED:
+            self.state = uiState.CLCK
             self.update()
-        elif self.state == UIState.LED_SLCT:
+        elif self.state == uiState.LED_SLCT:
             pass#TODO
-        elif self.state == UIState.WETH:
-            self.state = UIState.STBY
+        elif self.state == uiState.WETH:
+            self.state = uiState.STBY
             self.update()
-        elif self.state == UIState.CLCK:
-            self.state = UIState.WETH
+        elif self.state == uiState.CLCK:
+            self.state = uiState.WETH
             self.update()
-        elif self.state == UIState.STBY:
-            self.state = UIState.PSU
+        elif self.state == uiState.STBY:
+            self.state = uiState.PSU
             self.update()
     def counterclockwise(self):
         if self._stby_check():
             return
-        if self.state == UIState.PSU:
-            self.state = UIState.STBY
+        if self.state == uiState.PSU:
+            self.state = uiState.STBY
             self.update()
-        elif self.state == UIState.LED:
-            self.state = UIState.PSU
+        elif self.state == uiState.LED:
+            self.state = uiState.PSU
             self.update()
-        elif self.state == UIState.LED_SLCT:
+        elif self.state == uiState.LED_SLCT:
             pass#TODO
-        elif self.state == UIState.WETH:
-            self.state = UIState.CLCK
+        elif self.state == uiState.WETH:
+            self.state = uiState.CLCK
             self.update()
-        elif self.state == UIState.CLCK:
-            self.state = UIState.LED
+        elif self.state == uiState.CLCK:
+            self.state = uiState.LED
             self.update()
-        elif self.state == UIState.STBY:
-            self.state = UIState.WETH
+        elif self.state == uiState.STBY:
+            self.state = uiState.WETH
             self.update()
     def select(self):
         if self._stby_check():
             return
-        if self.state == UIState.PSU:
+        if self.state == uiState.PSU:
             if psu.is_on():
                 psu.off()
                 self.update()
             else:
                 psu.on()
                 self.update()
-        elif self.state == UIState.LED:
-            self.state = UIState.LED_SLCT
+        elif self.state == uiState.LED:
+            self.state = uiState.LED_SLCT
             self.update()
-        elif self.state == UIState.LED_SLCT:
+        elif self.state == uiState.LED_SLCT:
             led_stripe.set_all((0, 0, 0))#TODO
-            self.state = UIState.LED
+            self.state = uiState.LED
             self.update()
-        elif self.state == UIState.STBY:
+        elif self.state == uiState.STBY:
             self.standby = not self.standby
             if self.standby:
                 self._last_standby_switch = time.time()
@@ -119,8 +119,8 @@ class UI:
     def back(self):
         if self._stby_check():
             return
-        if self.state == UIState.LED_SLCT:
-            self.state = UIState.LED
+        if self.state == uiState.LED_SLCT:
+            self.state = uiState.LED
             self.update()
     
     def update(self):
@@ -133,28 +133,28 @@ class UI:
         # standby logic
         if self.standby:
             if not self._nighttime_check():
-                self.state = UIState.CLCK
+                self.state = uiState.CLCK
                 if time.time() - self._last_standby_switch > 10:
-                    self.state = UIState.WETH
+                    self.state = uiState.WETH
                 if time.time() - self._last_standby_switch > 20:
                     self._last_standby_switch = time.time()
             else:
-                self.state = UIState.CLCK
+                self.state = uiState.CLCK
                 if time.time() - self._last_standby_switch > 60:
                     self._last_standby_switch = time.time()
         
         # ui functions
-        if self.state == UIState.PSU:
+        if self.state == uiState.PSU:
             psu_ui()
-        elif self.state == UIState.LED:
+        elif self.state == uiState.LED:
             led_ui()
-        elif self.state == UIState.LED_SLCT:
+        elif self.state == uiState.LED_SLCT:
             led_slct_ui()
-        elif self.state == UIState.WETH:
+        elif self.state == uiState.WETH:
             weth_ui()
-        elif self.state == UIState.CLCK:
+        elif self.state == uiState.CLCK:
             clck_ui()
-        elif self.state == UIState.STBY:
+        elif self.state == uiState.STBY:
             stby_ui()
         
         # brightness adjustment at standby
@@ -163,7 +163,7 @@ class UI:
             if self._nighttime_check():
                 divider = 5
             else:
-                divider = 2
+                divider = 2.5
             matrix = u64led.get_matrix()
             for i in range(8):
                 for j in range(8):
@@ -180,7 +180,7 @@ def psu_ui():
         u64led.set_matrix(u64images.add_navbar(u64images.psu_text + u64images.psu_off, *NavOpts.psu))
 
 def led_ui():
-    u64led.set_matrix(u64images.add_navbar(u64images.led_text + u64images.nothing, *NavOpts.led))
+    u64led.set_matrix(u64images.add_navbar(u64images.led_text + u64images.nothing3, *NavOpts.led))
 
 def led_slct_ui():
     u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.led_slct))#TODO
@@ -192,4 +192,4 @@ def clck_ui():
     u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.clck))#TODO
 
 def stby_ui():
-    u64led.set_matrix(u64images.add_navbar(u64images.stby_text + u64images.nothing, *NavOpts.stby))
+    u64led.set_matrix(u64images.add_navbar(u64images.stby_text + u64images.nothing3, *NavOpts.stby))
