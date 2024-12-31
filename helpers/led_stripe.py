@@ -49,6 +49,9 @@ def set_pixel_color(i, color):
     pixels.set_pixel(i, color)
     pixels.show()
 
+def get_pixel_rgb(i):
+    return pixels.get_pixel_rgb(i)
+
 def set_array(arr):
     for i in range(min(PIXEL_COUNT, len(arr))):
         pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color( arr[i][0], arr[i][1], arr[i][2] ))
@@ -184,7 +187,7 @@ def sunrise(x, time):
 
     Args:
         x (int): The position of the pixel.
-        time (float btwn 0 and 30): The time to interpolate over.
+        time: The time to interpolate over.
 
     Returns:
         color: Int Formatted color
@@ -195,9 +198,38 @@ def sunrise(x, time):
         return fade_cx_cy(x, (150, 15, 0), (255, 90, 0), (time - 6) / 6)
     elif time < 24 and time > 12:
         return fade_cx_cy(x, (255, 90, 0), (255, 255, 128), (time - 12) / 12)
-    elif time < 30 and time > 24:
+    else:
         return fade_cx_cy(x, (255, 255, 128), (255, 255, 255), (time - 24) / 6)
 
+def alarm_cycle(x, time):
+    """
+    Alarm blinking pattern to wake someone up.
+
+    Args:
+        x (int): The position of the pixel.
+        time: The time to interpolate over.
+
+    Returns:
+        color: Int Formatted color
+    """
+    time = time % 4
+    if time < .5:
+        return Adafruit_WS2801.RGB_to_color(255, 255, 255)
+    elif time < 1 and time > .5:
+        return Adafruit_WS2801.RGB_to_color(0, 0, 0)
+    elif time < 1.5 and time > 1:
+        return Adafruit_WS2801.RGB_to_color(255, 0, 0)
+    elif time < 2 and time > 1.5:
+        return Adafruit_WS2801.RGB_to_color(0, 0, 0)
+    elif time < 2.5 and time > 2:
+        return Adafruit_WS2801.RGB_to_color(0, 255, 0)
+    elif time < 3 and time > 2.5:
+        return Adafruit_WS2801.RGB_to_color(0, 0, 0)
+    elif time < 3.5 and time > 3:
+        return Adafruit_WS2801.RGB_to_color(0, 0, 255)
+    else:
+        return Adafruit_WS2801.RGB_to_color(0, 0, 0)
+    
 if __name__ == '__main__':
     set_all((0, 0, 0))
     time.sleep(1)
@@ -224,6 +256,7 @@ if __name__ == '__main__':
             set_array_color(arr)
         time.sleep(0.01)
     """
+    """
     while time.time() - t < 60:
         if time.time() - t < 30:
             arr = [sunrise(i, time.time() - t) for i in range(PIXEL_COUNT)]
@@ -232,3 +265,9 @@ if __name__ == '__main__':
             arr = [sunrise(i, - (time.time() - t - 30) + 30) for i in range(PIXEL_COUNT)]
             set_array_color(arr)
         time.sleep(0.01)
+    """
+    while time.time() - t < 10:
+        arr = [alarm_cycle(i, time.time() - t) for i in range(PIXEL_COUNT)]
+        set_array_color(arr)
+        time.sleep(0.1)
+    set_all((0, 0, 0))
