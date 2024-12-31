@@ -78,7 +78,7 @@ def fade_cx_cy(x, start, end, time):
         time (float btwn 0 and 1): The time to interpolate over.
 
     Returns:
-        tuple: The RGB color of the pixel at this time.
+        color: Int Formatted color
     """
     return Adafruit_WS2801.RGB_to_color(int(start[0] + (end[0] - start[0]) * time), int(start[1] + (end[1] - start[1]) * time), int(start[2] + (end[2] - start[2]) * time))
 
@@ -91,7 +91,7 @@ def argb_cycle(x, time):
         time (ever-increasing float): The time to interpolate over.
 
     Returns:
-        tuple: The RGB color of the pixel at this time.
+        color: Int Formatted color
     """
     return wheel(((x * 256 // pixels.count()) + int(-time * 256)) % 256)
 
@@ -104,7 +104,7 @@ def fade_black_argb(x, time):
         time (float btwn 0 and 1): The time to interpolate over.
 
     Returns:
-        tuple: The RGB color of the pixel at this time.
+        color: Int Formatted color
     """
     if x / pixels.count() < time:
         return wheel(((x * 256 // pixels.count())) % 256)
@@ -122,7 +122,7 @@ def fade_cx_argb(x, start, time):
         time (float btwn 0 and 2): The time to interpolate over.
 
     Returns:
-        tuple: The RGB color of the pixel at this time.
+        color: Int Formatted color
     """
     #cx to black
     if time < 1:
@@ -140,7 +140,7 @@ def rgb_cycle(x, time):
         time (ever-increasing float): The time to interpolate over.
 
     Returns:
-        tuple: The RGB color of the pixel at this time.
+        color: Int Formatted color
     """
     return wheel(((1 * 256 // pixels.count()) + int(time * 256)) % 256)
 
@@ -153,7 +153,7 @@ def fade_black_rgb(x, time):
         time (float btwn 0 and 1): The time to interpolate over.
 
     Returns:
-        tuple: The RGB color of the pixel at this time.
+        color: Int Formatted color
     """
     return fade_cx_cy(x, (0, 0, 0), Adafruit_WS2801.color_to_RGB(wheel(((1 * 256 // pixels.count())) % 256)), time)
 
@@ -168,7 +168,7 @@ def fade_cx_rgb(x, start, time):
         time (float btwn 0 and 2): The time to interpolate over.
 
     Returns:
-        tuple: The RGB color of the pixel at this time.
+        color: Int Formatted color
     """
     #cx to black
     if time < 1:
@@ -177,10 +177,33 @@ def fade_cx_rgb(x, start, time):
     else:
         return fade_black_rgb(x, time - 1)
 
+def sunrise(x, time):
+    """
+    Simulate colors of a sunrise, starting from black.
+
+    Args:
+        x (int): The position of the pixel.
+        time (float btwn 0 and 30): The time to interpolate over.
+
+    Returns:
+        color: Int Formatted color
+    """
+    if time < 6:
+        return fade_cx_cy(x, (0, 0, 0), (60, 20, 0), time / 6)
+    elif time < 12 and time > 6:
+        return fade_cx_cy(x, (60, 20, 0), (255, 128, 0), (time - 6) / 6)
+    elif time < 18 and time > 12:
+        return fade_cx_cy(x, (255, 128, 0), (255, 200, 0), (time - 12) / 6)
+    elif time < 24 and time > 18:
+        return fade_cx_cy(x, (255, 200, 0), (255, 255, 128), (time - 18) / 6)
+    elif time < 30 and time > 24:
+        return fade_cx_cy(x, (255, 255, 128), (255, 255, 255), (time - 24) / 6)
+
 if __name__ == '__main__':
     set_all((0, 0, 0))
     time.sleep(2)
     t = time.time()
+    """
     while time.time() - t < 20:
         if time.time() - t < 1:
             arr = [fade_cx_cy(i, (0, 0, 0), (255, 255, 220), (time.time() - t)) for i in range(pixels.count())]
@@ -200,4 +223,12 @@ if __name__ == '__main__':
         elif time.time() - t > 19:
             arr = [fade_cx_cy(i, pixels.get_pixel_rgb(i), (0, 0, 0), (time.time() - t - 19)) for i in range(pixels.count())]
             set_array_color(arr)
+        time.sleep(0.01)
+    """
+    while time.time() - t < 60:
+        if time.time() - t < 30:
+            arr = [sunrise(i, time.time() - t) for i in range(pixels.count())]
+            set_array(arr)
+        elif time.time() - t < 60 and time.time() - t > 30:
+            arr = [sunrise(i, - (time.time() - t - 30) + 30) for i in range(pixels.count())]
         time.sleep(0.01)
