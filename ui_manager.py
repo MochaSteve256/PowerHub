@@ -121,22 +121,18 @@ class UI:
             self.update()
     
     def update(self):
-        print("ui update")
         # auto standby
         if time.time() - self.last_click > 10:
             if not self.standby:
                 self.standby = True
         
         # standby logic
+        self._last_standby_switch = time.time()
         if self.standby:
-            self._last_standby_switch = time.time()
             if not self._nighttime_check():
                 if time.time() - self._last_standby_switch > 10:
                     self.state = UIState.CLCK
-                    self._last_standby_switch = time.time()
-                if not self.standby:
-                    return
-                if time.time() - self._last_standby_switch > 20:
+                elif time.time() - self._last_standby_switch > 20:
                     self.state = UIState.WETH
                     self._last_standby_switch = time.time()
             else:
