@@ -56,7 +56,8 @@ def set_array(arr):
 
 def set_array_color(arr):
     for i in range(min(pixels.count(), len(arr))):
-        pixels.set_pixel(i, arr[i])
+        if arr[i] is not None:
+            pixels.set_pixel(i, arr[i])
     pixels.show()
 
 def clear():
