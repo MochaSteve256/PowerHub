@@ -5,6 +5,7 @@ import Adafruit_WS2801 # type: ignore
 
 import threading
 import time
+import copy
 
 class LedState:
     # Properties
@@ -115,7 +116,7 @@ class Effects:
                 arr = [led_stripe.alarm_cycle(i, t) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.STATIC_COLOR:
                 arr = [self.target_color_save for _ in range(led_stripe.PIXEL_COUNT)]
-        self.current_colors_rgb = arr
+        self.current_colors_rgb = copy.deepcopy(arr)
         return arr
 
 
