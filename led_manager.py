@@ -159,7 +159,10 @@ class LED_Stripe:
             print('t_offset updated, t=', self.t, self.effects.ledState.current, self.effects.ledState.target, self.were_last_equal)
         self.t = t - self.t_offset
         self.arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
-        led_stripe.set_array(self.arr)
+        if type(self.arr[0]) == tuple:
+            led_stripe.set_array(self.arr)
+        elif type(self.arr[0]) == int:
+            led_stripe.set_array_color(self.arr)
         self.were_last_equal = self.effects.ledState.current == self.effects.ledState.target
 
 
