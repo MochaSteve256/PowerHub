@@ -1,11 +1,10 @@
-from turtle import st
 from helpers import led_stripe
-
-import Adafruit_WS2801 # type: ignore
-
 import threading
 import time
 import copy
+
+import Adafruit_WS2801 # type: ignore
+
 
 class LedState:
     # Properties

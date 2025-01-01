@@ -1,8 +1,8 @@
+import time
+
 import ui_manager
 from helpers import ky040
 from helpers import led_stripe
-
-import time
 
 
 press_time = 0

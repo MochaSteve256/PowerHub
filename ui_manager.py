@@ -1,13 +1,12 @@
+import time
+import datetime
+
 from helpers import u64led
 from helpers import u64images
 
 from helpers import psu
 from helpers import led_stripe
 
-import time
-import datetime
-import threading
-import watchpoints
 
 class uiState():
     PSU = 0
