@@ -52,7 +52,7 @@ class Effects:
     def _generate_array(self, t:float, ledState:LedState, target_color=None, start_colors=current_colors_rgb):
         arr = start_colors
         self.target_color = target_color
-        if ledState.current != ledState.target:
+        if (ledState.current != ledState.target) or (target_color is not None):
             if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
                 self.target_color_save = target_color
                 if ledState.current == ledState.STATIC_COLOR:
@@ -114,7 +114,6 @@ class Effects:
             elif ledState.current == ledState.ALARM:
                 arr = [led_stripe.alarm_cycle(i, t) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.STATIC_COLOR:
-                print('target_color_save', self.target_color_save)
                 arr = [self.target_color_save for _ in range(led_stripe.PIXEL_COUNT)]
         self.current_colors_rgb = arr
         return arr
