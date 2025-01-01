@@ -1,4 +1,5 @@
 from math import e
+from turtle import st
 from helpers import led_stripe
 
 import Adafruit_WS2801 # type: ignore
@@ -50,9 +51,9 @@ class Effects:
     def set_effect(self, effect:int):
         self.ledState.target = effect
     
-    def _generate_array(self, t:float, ledState:LedState, target_color=None, start_colors=current_colors_rgb):
+    def _generate_array(self, t:float, ledState:LedState, target_color=None):
+        start_colors = copy.deepcopy(self.current_colors_rgb)
         arr = copy.deepcopy(start_colors)
-        print(self.current_colors_rgb, start_colors)
         self.target_color = copy.deepcopy(target_color)
         if (ledState.current != ledState.target) or (target_color is not None):
             if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
