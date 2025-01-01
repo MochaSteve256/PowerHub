@@ -22,7 +22,7 @@ class LedState:
 
 class Effects:
     arr = []
-    current_colors_rgb = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
+    current_colors_rgb = []
     
     def __init__(self) -> None:
         self.ledState = LedState()
@@ -92,7 +92,6 @@ class Effects:
                         arr = [led_stripe.fade_black_argb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
             if t >= self.end:
-                self.current_colors_rgb = arr#! maybe a problem
                 ledState.current = ledState.target
         else:
             if ledState.current == ledState.RGB_CYCLE:
@@ -105,6 +104,8 @@ class Effects:
                 arr = [led_stripe.sunrise(i, -t + 30) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.ALARM:
                 arr = [led_stripe.alarm_cycle(i, t) for i in range(led_stripe.PIXEL_COUNT)]
+            
+        self.current_colors_rgb = arr
         return arr
 
 
