@@ -47,7 +47,7 @@ class Effects:
     
     def _generate_array(self, t:float, ledState:LedState, target_color=None, start_colors=current_colors_rgb):
         arr = start_colors
-        if ledState.current != ledState.target:
+        if ledState.current != ledState.target or ledState.current == ledState.STATIC_COLOR:
             end = 0
             if ledState.target == ledState.STATIC_COLOR:
                 if ledState.current == ledState.STATIC_COLOR:
@@ -156,7 +156,7 @@ class LED_Stripe:
     def update(self, t):
         if self.were_last_equal != self.effects.ledState.current == self.effects.ledState.target:
             self.t_offset = t#! maybe a problem
-            print('t_offset updated, t=', self.t, self.effects.ledState.current, self.effects.ledState.target)
+            print('t_offset updated, t=', self.t, self.effects.ledState.current, self.effects.ledState.target, self.were_last_equal)
         self.t = t - self.t_offset
         self.arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
         led_stripe.set_array(self.arr)
