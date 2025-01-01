@@ -53,7 +53,7 @@ class Effects:
                 if ledState.current == ledState.STATIC_COLOR:
                     arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 1
-                    print(start_colors, target_color)
+                    print(start_colors, target_color, ledState.current, ledState.target)
                 elif ledState.current == ledState.RGB_CYCLE:
                     arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 1
