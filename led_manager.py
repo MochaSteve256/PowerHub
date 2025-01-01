@@ -51,53 +51,52 @@ class Effects:
     
     def _generate_array(self, t:float, ledState:LedState, target_color=None):
         start_colors = copy.deepcopy(self.current_colors_rgb)
-        arr = copy.deepcopy(start_colors)
         self.target_color = copy.deepcopy(target_color)
         if (ledState.current != ledState.target) or (target_color is not None):
             if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
                 self.target_color_save = target_color
                 if ledState.current == ledState.STATIC_COLOR:
                     print(start_colors[0], target_color)
-                    arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
+                    self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 1
                     #print(start_colors, target_color, ledState.current, ledState.target)
                 elif ledState.current == ledState.RGB_CYCLE:
-                    arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
+                    self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 1
                 elif ledState.current == ledState.ARGB_CYCLE:
                     if target_color == (0, 0, 0):
-                        arr = [led_stripe.fade_black_argb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_black_argb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
                         self.end = 1
                     else:
-                        arr = [led_stripe.fade_cx_argb(i, start_colors[i], -t + 2) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_cx_argb(i, start_colors[i], -t + 2) for i in range(led_stripe.PIXEL_COUNT)]
                         self.end = 2
             elif ledState.target == ledState.RGB_CYCLE:
                 if ledState.current == ledState.STATIC_COLOR:
                     if start_colors[0] == (0, 0, 0):
-                        arr = [led_stripe.fade_black_rgb(i, t) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_black_rgb(i, t) for i in range(led_stripe.PIXEL_COUNT)]
                         self.end = 1
                     else:
-                        arr = [led_stripe.fade_cx_rgb(i, start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)] 
+                        self.arr =[led_stripe.fade_cx_rgb(i, start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)] 
                         self.end = 2
                 elif ledState.current == ledState.ARGB_CYCLE:
                     if t < 1:
-                        arr = [led_stripe.fade_black_argb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_black_argb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
                     else:
-                        arr = [led_stripe.fade_black_rgb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_black_rgb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
             elif ledState.target == ledState.ARGB_CYCLE:
                 if ledState.current == ledState.STATIC_COLOR:
                     if start_colors[0] == (0, 0, 0):
-                        arr = [led_stripe.fade_black_argb(i, t) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_black_argb(i, t) for i in range(led_stripe.PIXEL_COUNT)]
                         self.end = 1
                     else:
-                        arr = [led_stripe.fade_cx_argb(i, start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_cx_argb(i, start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)]
                         self.end = 2
                 elif ledState.current == ledState.RGB_CYCLE:
                     if t < 1:
-                        arr = [led_stripe.fade_black_rgb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_black_rgb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
                     else:
-                        arr = [led_stripe.fade_black_argb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_black_argb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
             if t >= self.end:
                 ledState.current = ledState.target
@@ -106,20 +105,20 @@ class Effects:
                 self.overtime = False
         else:
             if ledState.current == ledState.RGB_CYCLE:
-                arr = [led_stripe.rgb_cycle(i, t - self.end) for i in range(led_stripe.PIXEL_COUNT)]
+                self.arr =[led_stripe.rgb_cycle(i, t - self.end) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.ARGB_CYCLE:
-                arr = [led_stripe.argb_cycle(i, t - self.end) for i in range(led_stripe.PIXEL_COUNT)]
+                self.arr =[led_stripe.argb_cycle(i, t - self.end) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.SUNRISE:
-                arr = [led_stripe.sunrise(i, t) for i in range(led_stripe.PIXEL_COUNT)]
+                self.arr =[led_stripe.sunrise(i, t) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.SUNSET:
-                arr = [led_stripe.sunrise(i, -t + 30) for i in range(led_stripe.PIXEL_COUNT)]
+                self.arr =[led_stripe.sunrise(i, -t + 30) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.ALARM:
-                arr = [led_stripe.alarm_cycle(i, t) for i in range(led_stripe.PIXEL_COUNT)]
+                self.arr =[led_stripe.alarm_cycle(i, t) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.STATIC_COLOR:
-                arr = [self.target_color_save for _ in range(led_stripe.PIXEL_COUNT)]
-        self.current_colors_rgb = copy.deepcopy(arr)
-        print(arr)
-        return arr
+                self.arr =[self.target_color_save for _ in range(led_stripe.PIXEL_COUNT)]
+        self.current_colors_rgb = copy.deepcopy(self.arr)
+        print(self.arr)
+        return self.arr
 
 
 class LED_Stripe:
