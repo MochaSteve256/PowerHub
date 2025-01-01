@@ -96,7 +96,7 @@ class Effects:
                         arr = [led_stripe.fade_black_argb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
             if t >= self.end:
-                start_colors = arr#! maybe a problem
+                self.current_colors_rgb = arr#! maybe a problem
                 ledState.current = ledState.target
         else:
             if ledState.current == ledState.RGB_CYCLE:
@@ -210,7 +210,7 @@ if __name__ == '__main__':
             elif x == 'alarm':
                 stripe.alarm()
             elif x == 'print':
-                print(stripe.arr)
+                print(stripe.arr, stripe.effects.current_colors_rgb)
             elif x == 'q':
                 break
             else:
