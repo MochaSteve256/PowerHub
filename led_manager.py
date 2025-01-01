@@ -52,9 +52,9 @@ class Effects:
     def _generate_array(self, t:float, ledState:LedState, target_color=None, start_colors=current_colors_rgb):
         arr = start_colors
         self.target_color = target_color
-        self.target_color_save = target_color
         if (ledState.current != ledState.target or ledState.current == ledState.STATIC_COLOR):
             if ledState.target == ledState.STATIC_COLOR and target_color is not None:
+                self.target_color_save = target_color
                 if ledState.current == ledState.STATIC_COLOR:
                     arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 1
