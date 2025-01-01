@@ -29,6 +29,7 @@ class Effects:
         self.end = 1
         self.overtime = False
         self.target_color = None
+        self.target_color_save = (0, 0, 0)#!
     
     def _generate_8px_rgb(self, array):
         line = [[0, 0, 0] for _ in range(8)]
@@ -98,6 +99,8 @@ class Effects:
             if t >= self.end:
                 ledState.current = ledState.target
                 self.overtime = True
+                if ledState.current == ledState.STATIC_COLOR:
+                    self.target_color_save = target_color
             else:
                 self.overtime = False
         else:
@@ -111,7 +114,8 @@ class Effects:
                 arr = [led_stripe.sunrise(i, -t + 30) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.ALARM:
                 arr = [led_stripe.alarm_cycle(i, t) for i in range(led_stripe.PIXEL_COUNT)]
-            
+            elif ledState.current == ledState.STATIC_COLOR:
+                arr = [self.target_color_save for _ in range(led_stripe.PIXEL_COUNT)]
         self.current_colors_rgb = arr
         return arr
 
