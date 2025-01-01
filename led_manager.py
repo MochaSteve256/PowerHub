@@ -96,7 +96,6 @@ class Effects:
                         arr = [led_stripe.fade_black_argb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
             if t >= self.end:
-                print(t)
                 ledState.current = ledState.target
                 self.overtime = True
             else:
@@ -126,46 +125,50 @@ class LED_Stripe:
         self.effects = Effects()
         self.arr = [None for _ in range(led_stripe.PIXEL_COUNT)]
     
-    def new_color(self, rgb):
+    def _callback(self):
         self.t_offset = time.time()
+        self.effects.overtime = False
+    
+    def new_color(self, rgb):
+        self._callback()
         self.target_color = rgb
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def rgb_cycle(self):
-        self.t_offset = time.time()
+        self._callback()
         self.effects.ledState.target = self.effects.ledState.RGB_CYCLE
     
     def argb_cycle(self):
-        self.t_offset = time.time()
+        self._callback()
         self.effects.ledState.target = self.effects.ledState.ARGB_CYCLE
     
     def warm_white(self):
-        self.t_offset = time.time()
+        self._callback()
         self.target_color = (255, 210, 90)
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def white(self):
-        self.t_offset = time.time()
+        self._callback()
         self.target_color = (255, 230, 130)
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def cold_white(self):
-        self.t_offset = time.time()
+        self._callback()
         self.target_color = (255, 255, 255)
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def sunrise(self):
-        self.t_offset = time.time()
+        self._callback()
         self.effects.ledState.current = self.effects.ledState.SUNRISE
         self.effects.ledState.target = self.effects.ledState.SUNRISE
     
     def sunset(self):
-        self.t_offset = time.time()
+        self._callback()
         self.effects.ledState.current = self.effects.ledState.SUNSET
         self.effects.ledState.target = self.effects.ledState.SUNSET
     
     def alarm(self):
-        self.t_offset = time.time()
+        self._callback()
         self.effects.ledState.current = self.effects.ledState.ALARM
         self.effects.ledState.target = self.effects.ledState.ALARM
     
