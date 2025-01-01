@@ -53,8 +53,9 @@ class Effects:
         arr = start_colors
         self.target_color = target_color
         if (ledState.current != ledState.target or ledState.current == ledState.STATIC_COLOR):
-            if ledState.target == ledState.STATIC_COLOR and target_color is not None:
+            if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
                 self.target_color_save = target_color
+                print('target_color_save', self.target_color_save)
                 if ledState.current == ledState.STATIC_COLOR:
                     arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 1
