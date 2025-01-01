@@ -154,7 +154,7 @@ class LED_Stripe:
         self.effects.ledState.current = self.effects.ledState.ALARM
     
     def update(self, t):
-        if self.were_last_equal != self.effects.ledState.current == self.effects.ledState.target:
+        if self.were_last_equal != (self.effects.ledState.current == self.effects.ledState.target):
             self.t_offset = t#! maybe a problem
             print('t_offset updated, t=', self.t, self.effects.ledState.current, self.effects.ledState.target, self.were_last_equal)
         self.t = t - self.t_offset
