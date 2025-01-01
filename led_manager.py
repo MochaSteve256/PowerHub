@@ -156,9 +156,8 @@ class LED_Stripe:
     def update(self, t):
         if self.were_last_equal != self.effects.ledState.current == self.effects.ledState.target:
             self.t_offset = t#! maybe a problem
-            print('t_offset updated')
+            print('t_offset updated, t=', self.t, self.effects.ledState.current, self.effects.ledState.target)
         self.t = t - self.t_offset
-        print(self.t)
         self.arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
         led_stripe.set_array(self.arr)
         self.were_last_equal = self.effects.ledState.current == self.effects.ledState.target
@@ -203,7 +202,7 @@ if __name__ == '__main__':
             elif x == 'alarm':
                 stripe.alarm()
             elif x == 'print':
-                print(stripe.effects.ledState.current, stripe.effects.ledState.target, stripe.arr)
+                print(stripe.arr)
             elif x == 'q':
                 break
             else:
