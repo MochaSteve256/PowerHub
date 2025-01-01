@@ -26,7 +26,7 @@ class Effects:
     
     def __init__(self) -> None:
         self.ledState = LedState()
-        self.end = 0
+        self.end = 1
         self.overtime = False
     
     def _generate_8px_rgb(self, array):
