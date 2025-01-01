@@ -180,11 +180,11 @@ class LED_Stripe:
         self.t = time.time() - self.t_offset
         if self.effects.overtime:
             self.target_color = None
-        self.arr = self.effects._generate_array(self.t, self.effects.ledState, target_color=self.target_color)
-        if type(self.arr[0]) == tuple:
-            led_stripe.set_array(self.arr)
-        elif type(self.arr[0]) == int:
-            led_stripe.set_array_color(self.arr)
+        arr = self.effects._generate_array(self.t, self.effects.ledState, target_color=self.target_color)
+        if type(arr[0]) == tuple:
+            led_stripe.set_array(arr)
+        elif type(arr[0]) == int:
+            led_stripe.set_array_color(arr)
 
 
 if __name__ == '__main__':
