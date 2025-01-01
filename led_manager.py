@@ -52,6 +52,7 @@ class Effects:
     
     def _generate_array(self, t:float, ledState:LedState, target_color=None, start_colors=current_colors_rgb):
         arr = copy.deepcopy(start_colors)
+        print(self.current_colors_rgb, start_colors)
         self.target_color = copy.deepcopy(target_color)
         if (ledState.current != ledState.target) or (target_color is not None):
             if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
@@ -59,7 +60,7 @@ class Effects:
                 if ledState.current == ledState.STATIC_COLOR:
                     arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 1
-                    print(start_colors, target_color, ledState.current, ledState.target)
+                    #print(start_colors, target_color, ledState.current, ledState.target)
                 elif ledState.current == ledState.RGB_CYCLE:
                     arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 1
@@ -117,7 +118,6 @@ class Effects:
             elif ledState.current == ledState.STATIC_COLOR:
                 arr = [self.target_color_save for _ in range(led_stripe.PIXEL_COUNT)]
         self.current_colors_rgb = copy.deepcopy(arr)
-        print(self.current_colors_rgb)
         return arr
 
 
