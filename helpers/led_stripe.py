@@ -237,7 +237,7 @@ if __name__ == '__main__':
     set_all((0, 0, 0))
     time.sleep(1)
     t = time.time()
-    """
+    #"""
     while time.time() - t < 20:
         if time.time() - t < 1:
             arr = [fade_cx_cy(i, (0, 0, 0), (255, 255, 220), (time.time() - t)) for i in range(PIXEL_COUNT)]
@@ -258,8 +258,8 @@ if __name__ == '__main__':
             arr = [fade_cx_cy(i, pixels.get_pixel_rgb(i), (0, 0, 0), (time.time() - t - 19)) for i in range(PIXEL_COUNT)]
             set_array_color(arr)
         time.sleep(0.01)
-    """
     #"""
+    """
     while time.time() - t < 60:
         if time.time() - t < 30:
             arr = [sunrise(i, time.time() - t) for i in range(PIXEL_COUNT)]
@@ -268,7 +268,7 @@ if __name__ == '__main__':
             arr = [sunrise(i, - (time.time() - t - 30) + 30) for i in range(PIXEL_COUNT)]
             set_array_color(arr)
         time.sleep(0.01)
-    #"""
+    """
     """
     while time.time() - t < 10:
         arr = [alarm_cycle(i, time.time() - t) for i in range(PIXEL_COUNT)]

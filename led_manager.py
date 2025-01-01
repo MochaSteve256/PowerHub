@@ -133,11 +133,11 @@ class LED_Stripe:
         self.effects.ledState.target = self.effects.ledState.ARGB_CYCLE
     
     def warm_white(self):
-        self.target_color = (255, 255, 180)
+        self.target_color = (255, 255, 130)
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def white(self):
-        self.target_color = (255, 255, 210)
+        self.target_color = (255, 255, 170)
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def cold_white(self):
@@ -146,17 +146,21 @@ class LED_Stripe:
     
     def sunrise(self):
         self.effects.ledState.current = self.effects.ledState.SUNRISE
+        self.effects.ledState.target = self.effects.ledState.SUNRISE
     
     def sunset(self):
         self.effects.ledState.current = self.effects.ledState.SUNSET
+        self.effects.ledState.target = self.effects.ledState.SUNSET
     
     def alarm(self):
         self.effects.ledState.current = self.effects.ledState.ALARM
+        self.effects.ledState.target = self.effects.ledState.ALARM
     
     def update(self, t):
         if self.were_last_equal != (self.effects.ledState.current == self.effects.ledState.target):
-            self.t_offset = t#! maybe a problem
-            print('t_offset updated, t=', self.t, self.effects.ledState.current, self.effects.ledState.target, self.were_last_equal)
+            if not (self.effects.ledState.target == LedState.RGB_CYCLE) or (self.effects.ledState.target == LedState.ARGB_CYCLE):
+                self.t_offset = t#! maybe a problem
+                print('\nt_offset updated, t=', self.t, self.effects.ledState.current, self.effects.ledState.target, self.were_last_equal)
         self.t = t - self.t_offset
         self.arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
         if type(self.arr[0]) == tuple:
@@ -174,7 +178,7 @@ if __name__ == '__main__':
         while True:
             t = time.time()
             stripe.update(t)
-            time.sleep(0.1)
+            time.sleep(0.01)
             
     t = threading.Thread(target=thread)
     t.start()
