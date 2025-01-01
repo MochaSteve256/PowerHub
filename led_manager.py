@@ -167,13 +167,10 @@ class LED_Stripe:
         self.effects.ledState.target = self.effects.ledState.ALARM
     
     def update(self):
-        """
-        if self.states_were_last_equal != (self.effects.ledState.current == self.effects.ledState.target) or self.target_color != self.last_target_color:
-            if (self.effects.ledState.target == LedState.RGB_CYCLE or self.effects.ledState.target == LedState.ARGB_CYCLE) and self.t >= self.effects.end:
-                return
-            self.t_offset = time.time()#! maybe a problem
-            print('\nt_offset updated, t=', self.t, self.effects.ledState.current, self.effects.ledState.target, self.states_were_last_equal)
-        """
+        #reset t_offset to current time if target is reached
+        if self.states_were_last_equal != self.effects.ledState.current == self.effects.ledState.target:
+            if self.effects.ledState.current == self.effects.ledState.target:
+                self.t_offset = time.time()
         self.t = time.time() - self.t_offset
         self.arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
         if type(self.arr[0]) == tuple:

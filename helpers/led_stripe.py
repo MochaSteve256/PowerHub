@@ -195,7 +195,7 @@ def sunrise(x, time):
     Returns:
         color: Int Formatted color
     """
-    if time < 6:
+    if time < 6 and time > 0:
         return fade_cx_cy(x, (0, 0, 0), (150, 15, 0), time / 6)
     elif time < 12 and time > 6:
         return fade_cx_cy(x, (150, 15, 0), (255, 90, 0), (time - 6) / 6)
