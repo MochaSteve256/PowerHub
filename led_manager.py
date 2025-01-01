@@ -22,7 +22,7 @@ class LedState:
 
 class Effects:
     arr = []
-    current_colors_rgb = []
+    current_colors_rgb = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
     
     def __init__(self) -> None:
         self.ledState = LedState()
