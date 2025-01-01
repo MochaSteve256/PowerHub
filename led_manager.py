@@ -54,12 +54,8 @@ class Effects:
                     arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 1
                 elif ledState.current == ledState.RGB_CYCLE:
-                    if target_color == (0, 0, 0):
-                        arr = [led_stripe.fade_black_rgb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
-                        self.end = 1
-                    else:
-                        arr = [led_stripe.fade_cx_rgb(i, led_stripe.get_pixel_rgb(i), -t + 2) for i in range(led_stripe.PIXEL_COUNT)]
-                        self.end = 2
+                    arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
+                    self.end = 1
                 elif ledState.current == ledState.ARGB_CYCLE:
                     if target_color == (0, 0, 0):
                         arr = [led_stripe.fade_black_argb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
@@ -166,7 +162,7 @@ class LED_Stripe:
     
     def update(self):
         self.t = time.time() - self.t_offset
-        self.arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
+        self.arr = self.effects._generate_array(self.t, self.effects.ledState, target_color=self.target_color)
         if type(self.arr[0]) == tuple:
             led_stripe.set_array(self.arr)
         elif type(self.arr[0]) == int:
