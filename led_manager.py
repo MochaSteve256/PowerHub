@@ -52,6 +52,7 @@ class Effects:
     def _generate_array(self, t:float, ledState:LedState, target_color=None, start_colors=current_colors_rgb):
         arr = start_colors
         self.target_color = target_color
+        self.target_color_save = target_color
         if (ledState.current != ledState.target or ledState.current == ledState.STATIC_COLOR):
             if ledState.target == ledState.STATIC_COLOR and target_color is not None:
                 if ledState.current == ledState.STATIC_COLOR:
@@ -99,8 +100,6 @@ class Effects:
             if t >= self.end:
                 ledState.current = ledState.target
                 self.overtime = True
-                if ledState.current == ledState.STATIC_COLOR:
-                    self.target_color_save = target_color
             else:
                 self.overtime = False
         else:
