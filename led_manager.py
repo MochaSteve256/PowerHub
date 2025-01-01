@@ -171,6 +171,7 @@ class LED_Stripe:
         if self.states_were_last_equal != self.effects.ledState.current == self.effects.ledState.target:
             if self.effects.ledState.current == self.effects.ledState.target:
                 self.t_offset = time.time()
+                print('target reached')
         self.t = time.time() - self.t_offset
         self.arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
         if type(self.arr[0]) == tuple:
