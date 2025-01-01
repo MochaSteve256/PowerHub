@@ -1,3 +1,4 @@
+from turtle import st
 from helpers import led_stripe
 
 import Adafruit_WS2801 # type: ignore
@@ -59,7 +60,6 @@ class Effects:
             if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
                 self.target_color_save = target_color
                 if ledState.current == ledState.STATIC_COLOR:
-                    print(start_colors[0], target_color)
                     self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 1
                     #print(start_colors, target_color, ledState.current, ledState.target)
@@ -67,12 +67,8 @@ class Effects:
                     self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 1
                 elif ledState.current == ledState.ARGB_CYCLE:
-                    if target_color == (0, 0, 0):
-                        self.arr =[led_stripe.fade_black_argb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
-                        self.end = 1
-                    else:
-                        self.arr =[led_stripe.fade_cx_argb(i, start_colors[i], -t + 2) for i in range(led_stripe.PIXEL_COUNT)]
-                        self.end = 2
+                    self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
+                    self.end = 1
             elif ledState.target == ledState.RGB_CYCLE:
                 if ledState.current == ledState.STATIC_COLOR:
                     if start_colors[0] == (0, 0, 0):
@@ -83,7 +79,7 @@ class Effects:
                         self.end = 2
                 elif ledState.current == ledState.ARGB_CYCLE:
                     if t < 1:
-                        self.arr =[led_stripe.fade_black_argb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], (0, 0, 0), -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
                     else:
                         self.arr =[led_stripe.fade_black_rgb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
@@ -97,7 +93,7 @@ class Effects:
                         self.end = 2
                 elif ledState.current == ledState.RGB_CYCLE:
                     if t < 1:
-                        self.arr =[led_stripe.fade_black_rgb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], (0, 0, 0), -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
                     else:
                         self.arr =[led_stripe.fade_black_argb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
@@ -195,7 +191,7 @@ if __name__ == '__main__':
     def thread():
         while True:
             stripe.update()
-            time.sleep(0.05)
+            time.sleep(0.01)
             
     t = threading.Thread(target=thread)
     t.start()
