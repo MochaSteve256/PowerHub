@@ -29,7 +29,7 @@ class Effects:
         self.end = 1
         self.overtime = False
         self.target_color = None
-        self.target_color_save = (0, 0, 0)#!
+        self.target_color_save = None
     
     def _generate_8px_rgb(self, array):
         line = [[0, 0, 0] for _ in range(8)]
