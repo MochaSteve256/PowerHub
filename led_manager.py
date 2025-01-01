@@ -51,8 +51,8 @@ class Effects:
         self.ledState.target = effect
     
     def _generate_array(self, t:float, ledState:LedState, target_color=None, start_colors=current_colors_rgb):
-        arr = start_colors
-        self.target_color = target_color
+        arr = copy.deepcopy(start_colors)
+        self.target_color = copy.deepcopy(target_color)
         if (ledState.current != ledState.target) or (target_color is not None):
             if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
                 self.target_color_save = target_color
