@@ -21,8 +21,8 @@ class LedState:
     
 
 class Effects:
-    arr = []
-    current_colors_rgb = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
+    arr = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
+    current_colors_rgb = copy.deepcopy(arr)
     
     def __init__(self) -> None:
         self.ledState = LedState()
