@@ -94,6 +94,7 @@ class Effects:
                     self.end = 2
             if t >= self.end:
                 ledState.current = ledState.target
+                target_color = None
         else:
             if ledState.current == ledState.RGB_CYCLE:
                 arr = [led_stripe.rgb_cycle(i, t - self.end) for i in range(led_stripe.PIXEL_COUNT)]
