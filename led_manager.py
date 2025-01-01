@@ -128,7 +128,6 @@ class LED_Stripe:
     
     def __init__(self) -> None:
         self.effects = Effects()
-        self.arr = [None for _ in range(led_stripe.PIXEL_COUNT)]
     
     def _callback(self):
         self.t_offset = time.time()
@@ -225,7 +224,7 @@ if __name__ == '__main__':
             elif x == 'alarm':
                 stripe.alarm()
             elif x == 'print':
-                print(stripe.arr, stripe.effects.current_colors_rgb)
+                print(stripe.effects.arr, stripe.effects.current_colors_rgb)
             elif x == 'q':
                 break
             else:
