@@ -100,9 +100,9 @@ class Effects:
                 ledState.current = ledState.target
         else:
             if ledState.current == ledState.RGB_CYCLE:
-                arr = [led_stripe.rgb_cycle(i, t) for i in range(led_stripe.PIXEL_COUNT)]
+                arr = [led_stripe.rgb_cycle(i, t - self.end) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.ARGB_CYCLE:
-                arr = [led_stripe.argb_cycle(i, t) for i in range(led_stripe.PIXEL_COUNT)]
+                arr = [led_stripe.argb_cycle(i, t - self.end) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.SUNRISE:
                 arr = [led_stripe.sunrise(i, t) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.SUNSET:
@@ -115,9 +115,7 @@ class Effects:
 class LED_Stripe:
     t_offset = 0
     t = 0
-    states_were_last_equal = False
     target_color = None
-    last_target_color = None
     
     def __init__(self) -> None:
         self.effects = Effects()
@@ -167,19 +165,12 @@ class LED_Stripe:
         self.effects.ledState.target = self.effects.ledState.ALARM
     
     def update(self):
-        #reset t_offset to current time if target is reached
-        if self.states_were_last_equal != self.effects.ledState.current == self.effects.ledState.target:
-            if self.effects.ledState.current == self.effects.ledState.target:
-                self.t_offset = time.time()
-                print('target reached')
         self.t = time.time() - self.t_offset
         self.arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
         if type(self.arr[0]) == tuple:
             led_stripe.set_array(self.arr)
         elif type(self.arr[0]) == int:
             led_stripe.set_array_color(self.arr)
-        self.states_were_last_equal = self.effects.ledState.current == self.effects.ledState.target
-        self.last_target_color = self.target_color
 
 
 if __name__ == '__main__':
