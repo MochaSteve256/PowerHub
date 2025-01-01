@@ -113,7 +113,7 @@ class Effects:
 
 
 class LED_Stripe:
-    t_offset = 0
+    t_offset = time.time()
     t = 0
     target_color = None
     
