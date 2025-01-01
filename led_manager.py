@@ -134,11 +134,11 @@ class LED_Stripe:
         self.effects.ledState.target = self.effects.ledState.ARGB_CYCLE
     
     def warm_white(self):
-        self.target_color = (255, 255, 130)
+        self.target_color = (255, 210, 90)
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def white(self):
-        self.target_color = (255, 255, 170)
+        self.target_color = (255, 230, 130)
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def cold_white(self):
@@ -157,13 +157,13 @@ class LED_Stripe:
         self.effects.ledState.current = self.effects.ledState.ALARM
         self.effects.ledState.target = self.effects.ledState.ALARM
     
-    def update(self, t):
+    def update(self):
         if self.states_were_last_equal != (self.effects.ledState.current == self.effects.ledState.target) or self.target_color != self.last_target_color:
             if (self.effects.ledState.target == LedState.RGB_CYCLE or self.effects.ledState.target == LedState.ARGB_CYCLE) and self.t >= self.effects.end:
                 return
-            self.t_offset = t#! maybe a problem
+            self.t_offset = time.time()#! maybe a problem
             print('\nt_offset updated, t=', self.t, self.effects.ledState.current, self.effects.ledState.target, self.states_were_last_equal)
-        self.t = t - self.t_offset
+        self.t = time.time() - self.t_offset
         self.arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
         if type(self.arr[0]) == tuple:
             led_stripe.set_array(self.arr)
@@ -177,10 +177,8 @@ if __name__ == '__main__':
     stripe = LED_Stripe()
     
     def thread():
-        t = time.time()
         while True:
-            t = time.time()
-            stripe.update(t)
+            stripe.update()
             time.sleep(0.01)
             
     t = threading.Thread(target=thread)
