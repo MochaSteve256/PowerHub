@@ -22,7 +22,7 @@ class LedState:
 
 class Effects:
     arr = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
-    current_colors_rgb = copy.deepcopy(arr)
+    current_colors_rgb = [[0, 0, 0] for _ in range(led_stripe.PIXEL_COUNT)]
     
     def __init__(self) -> None:
         self.ledState = LedState()
@@ -57,6 +57,7 @@ class Effects:
             if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
                 self.target_color_save = target_color
                 if ledState.current == ledState.STATIC_COLOR:
+                    print(start_colors[0], target_color)
                     arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 1
                     #print(start_colors, target_color, ledState.current, ledState.target)
