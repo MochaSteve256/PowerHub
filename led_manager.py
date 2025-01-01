@@ -27,6 +27,7 @@ class Effects:
     def __init__(self) -> None:
         self.ledState = LedState()
         self.end = 0
+        self.overtime = False
     
     def _generate_8px_rgb(self, array):
         line = [[0, 0, 0] for _ in range(8)]
@@ -48,7 +49,7 @@ class Effects:
     
     def _generate_array(self, t:float, ledState:LedState, target_color=None, start_colors=current_colors_rgb):
         arr = start_colors
-        if ledState.current != ledState.target or ledState.current == ledState.STATIC_COLOR:
+        if (ledState.current != ledState.target or ledState.current == ledState.STATIC_COLOR) and not self.overtime:
             if ledState.target == ledState.STATIC_COLOR and target_color is not None:
                 if ledState.current == ledState.STATIC_COLOR:
                     arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
@@ -95,7 +96,9 @@ class Effects:
             if t >= self.end:
                 print(t)
                 ledState.current = ledState.target
-                target_color = None
+                self.overtime = True
+            else:
+                self.overtime = False
         else:
             if ledState.current == ledState.RGB_CYCLE:
                 arr = [led_stripe.rgb_cycle(i, t - self.end) for i in range(led_stripe.PIXEL_COUNT)]
