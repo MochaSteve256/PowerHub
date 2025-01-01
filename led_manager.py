@@ -49,9 +49,6 @@ class Effects:
     def _generate_array(self, t:float, ledState:LedState, target_color=None, start_colors=current_colors_rgb):
         arr = start_colors
         if ledState.current != ledState.target or ledState.current == ledState.STATIC_COLOR:
-            if t >= self.end:
-                ledState.current = ledState.target
-                target_color = None
             if ledState.target == ledState.STATIC_COLOR and target_color is not None:
                 if ledState.current == ledState.STATIC_COLOR:
                     arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
@@ -95,6 +92,10 @@ class Effects:
                     else:
                         arr = [led_stripe.fade_black_argb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
+            if t >= self.end:
+                print(t)
+                ledState.current = ledState.target
+                target_color = None
         else:
             if ledState.current == ledState.RGB_CYCLE:
                 arr = [led_stripe.rgb_cycle(i, t - self.end) for i in range(led_stripe.PIXEL_COUNT)]
@@ -178,7 +179,7 @@ if __name__ == '__main__':
     def thread():
         while True:
             stripe.update()
-            time.sleep(0.01)
+            time.sleep(0.05)
             
     t = threading.Thread(target=thread)
     t.start()
