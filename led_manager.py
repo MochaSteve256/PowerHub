@@ -29,7 +29,7 @@ class Effects:
         self.end = 1
         self.overtime = False
         self.target_color = None
-        self.target_color_save = None
+        self.target_color_save = (0, 0, 0)
     
     def _generate_8px_rgb(self, array):
         line = [[0, 0, 0] for _ in range(8)]
@@ -50,8 +50,7 @@ class Effects:
         self.ledState.target = effect
     
     def _generate_array(self, t:float, ledState:LedState, target_color=None):
-        if self.current_colors_rgb[0] is not None:
-            start_colors = copy.deepcopy(self.current_colors_rgb)
+        start_colors = copy.deepcopy(self.current_colors_rgb)
         self.target_color = copy.deepcopy(target_color)
         if (ledState.current != ledState.target) or (target_color is not None):
             if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
@@ -117,8 +116,7 @@ class Effects:
                 self.arr =[led_stripe.alarm_cycle(i, t) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.STATIC_COLOR:
                 self.arr =[self.target_color_save for _ in range(led_stripe.PIXEL_COUNT)]
-        if self.arr[0] is not None:
-            self.current_colors_rgb = copy.deepcopy(self.arr)
+        self.current_colors_rgb = copy.deepcopy(self.arr)
         print(self.arr)
         return self.arr
 
