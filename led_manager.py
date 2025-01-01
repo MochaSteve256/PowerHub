@@ -120,7 +120,6 @@ class Effects:
             elif ledState.current == ledState.STATIC_COLOR:
                 self.arr =[self.target_color_save for _ in range(led_stripe.PIXEL_COUNT)]
         self.current_colors_rgb = copy.deepcopy(self.arr)
-        print(self.arr)
         return self.arr
 
 
