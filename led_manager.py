@@ -1,5 +1,3 @@
-from math import e
-from turtle import st
 from helpers import led_stripe
 
 import Adafruit_WS2801 # type: ignore
