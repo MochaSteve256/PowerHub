@@ -1,17 +1,15 @@
+from math import e
 from helpers import led_stripe
 
 import Adafruit_WS2801 # type: ignore
 
+import threading
 import time
 
-class ledState:
-    #cycling = False
-    static = True
-    transitioning = False
-    
+class LedState:
+    # Properties
     current = 0
     target = 0
-    action = 0
     
     # States
     STATIC_COLOR = 0
@@ -21,23 +19,13 @@ class ledState:
     SUNSET = 4
     ALARM = 5
     
-    # Actions
-    Nothing = -1
-    Fade_Cx_Cy = 0
-    Fade_Cx_Rgb = 1
-    Fade_Cx_Argb = 2
-    Rgb_Cycle = 3
-    Argb_Cycle = 4
-    Sunrise = 5
-    Sunset = 6
-    Alarm = 7
-    
+
 class Effects:
     arr = []
-    current_static_color_rgb = (0, 0, 0)
+    current_colors_rgb = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
     
     def __init__(self) -> None:
-        pass
+        self.ledState = LedState()
     
     def _generate_8px_rgb(self, array):
         line = [[0, 0, 0] for _ in range(8)]
@@ -49,41 +37,67 @@ class Effects:
     def current_8px_rgb(self):
         return self._generate_8px_rgb(self.arr)
     
-    def preview_effect_8px(self):
-        pass
+    def preview_effect_8px(self, t:float, effect:int, target_color=None):
+        ledState = self.ledState
+        ledState.target = effect
+        return self._generate_8px_rgb(self._generate_array(t, ledState, target_color))
     
     def set_effect(self, effect:int):
-        pass
+        self.ledState.target = effect
     
-    def _generate_array(self, t, target_color=None, start_color=current_static_color_rgb):
-        arr = []
+    def _generate_array(self, t:float, ledState:LedState, target_color=None, start_colors=current_colors_rgb):
+        arr = start_colors
         if ledState.current != ledState.target:
+            end = 0
             if ledState.target == ledState.STATIC_COLOR:
                 if ledState.current == ledState.STATIC_COLOR:
-                    arr = [led_stripe.fade_cx_cy(i, start_color, target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
+                    arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
+                    end = 1
                 elif ledState.current == ledState.RGB_CYCLE:
                     if target_color == (0, 0, 0):
                         arr = [led_stripe.fade_black_rgb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
+                        end = 1
                     else:
                         arr = [led_stripe.fade_cx_rgb(i, led_stripe.get_pixel_rgb(i), -t + 2) for i in range(led_stripe.PIXEL_COUNT)]
+                        end = 2
                 elif ledState.current == ledState.ARGB_CYCLE:
-                    arr = [led_stripe.fade_cx_argb(i, start_color, -t + 2) for i in range(led_stripe.PIXEL_COUNT)]
+                    if target_color == (0, 0, 0):
+                        arr = [led_stripe.fade_black_argb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
+                        end = 1
+                    else:
+                        arr = [led_stripe.fade_cx_argb(i, start_colors[i], -t + 2) for i in range(led_stripe.PIXEL_COUNT)]
+                        end = 2
             elif ledState.target == ledState.RGB_CYCLE:
                 if ledState.current == ledState.STATIC_COLOR:
-                    arr = [led_stripe.fade_cx_rgb(i, start_color, t) for i in range(led_stripe.PIXEL_COUNT)] 
+                    if start_colors[0] == (0, 0, 0):
+                        arr = [led_stripe.fade_black_rgb(i, t) for i in range(led_stripe.PIXEL_COUNT)]
+                        end = 1
+                    else:
+                        arr = [led_stripe.fade_cx_rgb(i, start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)] 
+                        end = 2
                 elif ledState.current == ledState.ARGB_CYCLE:
                     if t < 1:
                         arr = [led_stripe.fade_black_argb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
                     else:
                         arr = [led_stripe.fade_black_rgb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
+                    end = 2
             elif ledState.target == ledState.ARGB_CYCLE:
                 if ledState.current == ledState.STATIC_COLOR:
-                    arr = [led_stripe.fade_cx_argb(i, start_color, t) for i in range(led_stripe.PIXEL_COUNT)] 
+                    if start_colors[0] == (0, 0, 0):
+                        arr = [led_stripe.fade_black_argb(i, t) for i in range(led_stripe.PIXEL_COUNT)]
+                        end = 1
+                    else:
+                        arr = [led_stripe.fade_cx_argb(i, start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)]
+                        end = 2
                 elif ledState.current == ledState.RGB_CYCLE:
                     if t < 1:
                         arr = [led_stripe.fade_black_rgb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
                     else:
                         arr = [led_stripe.fade_black_argb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
+                    end = 2
+            if t >= end:
+                start_colors = arr#! maybe a problem
+                ledState.current = ledState.target
         else:
             if ledState.current == ledState.RGB_CYCLE:
                 arr = [led_stripe.rgb_cycle(i, t) for i in range(led_stripe.PIXEL_COUNT)]
@@ -95,39 +109,99 @@ class Effects:
                 arr = [led_stripe.sunrise(i, -t + 30) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.ALARM:
                 arr = [led_stripe.alarm_cycle(i, t) for i in range(led_stripe.PIXEL_COUNT)]
-        led_stripe.set_array_color(arr)
+        return arr
 
 
 class LED_Stripe:
+    t_offset = 0
+    t = 0
+    were_last_equal = False
+    target_color = None
+    
     def __init__(self) -> None:
-        pass
+        self.effects = Effects()
     
     def new_color(self, rgb):
-        pass
+        self.target_color = rgb
+        self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def rgb_cycle(self):
-        pass
+        self.effects.ledState.target = self.effects.ledState.RGB_CYCLE
     
     def argb_cycle(self):
-        pass
+        self.effects.ledState.target = self.effects.ledState.ARGB_CYCLE
     
     def warm_white(self):
-        pass
+        self.target_color = (255, 255, 180)
+        self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def white(self):
-        pass
+        self.target_color = (255, 255, 210)
+        self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def cold_white(self):
-        pass
+        self.target_color = (255, 255, 255)
+        self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def sunrise(self):
-        pass
+        self.effects.ledState.current = self.effects.ledState.SUNRISE
     
     def sunset(self):
-        pass
+        self.effects.ledState.current = self.effects.ledState.SUNSET
     
     def alarm(self):
-        pass
+        self.effects.ledState.current = self.effects.ledState.ALARM
     
     def update(self, t):
+        if self.were_last_equal != self.effects.ledState.current == self.effects.ledState.target:
+            self.t_offset = t#! maybe a problem
+        self.t = t - self.t_offset
+        arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
+        led_stripe.set_array_color(arr)
+        self.were_last_equal = self.effects.ledState.current == self.effects.ledState.target
+
+
+if __name__ == '__main__':
+    stripe = LED_Stripe()
+    
+    def thread():
+        t = time.time()
+        while True:
+            t = time.time()
+            stripe.update(t)
+            time.sleep(0.01)
+            
+    t = threading.Thread(target=thread)
+    t.start()
+    
+    try:
+        while True:
+            x = input()
+            if x == 'w':
+                stripe.white()
+            elif x == 'cw':
+                stripe.cold_white()
+            elif x == 'ww':
+                stripe.warm_white()
+            elif x == 'red':
+                stripe.new_color((255, 0, 0))
+            elif x == 'green':
+                stripe.new_color((0, 255, 0))
+            elif x == 'blue':
+                stripe.new_color((0, 0, 255))
+            elif x == 'rgb':
+                stripe.rgb_cycle()
+            elif x == 'argb':
+                stripe.argb_cycle()
+            elif x == 'sunrise':
+                stripe.sunrise()
+            elif x == 'sunset':
+                stripe.sunset()
+            elif x == 'alarm':
+                stripe.alarm()
+            elif x == 'q':
+                break
+            else:
+                print('unknown command')
+    except KeyboardInterrupt:
         pass

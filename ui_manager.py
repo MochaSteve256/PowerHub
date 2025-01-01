@@ -168,7 +168,7 @@ class UI:
             for i in range(8):
                 for j in range(8):
                     for k in range(3):
-                        matrix[i][j][k] = matrix[i][j][k] // divider
+                        matrix[i][j][k] = int(matrix[i][j][k] / divider)
             u64led.set_matrix(matrix)
         
         u64led.show_matrix()
