@@ -26,6 +26,7 @@ class Effects:
     
     def __init__(self) -> None:
         self.ledState = LedState()
+        self.end = 0
     
     def _generate_8px_rgb(self, array):
         line = [[0, 0, 0] for _ in range(8)]
@@ -48,54 +49,53 @@ class Effects:
     def _generate_array(self, t:float, ledState:LedState, target_color=None, start_colors=current_colors_rgb):
         arr = start_colors
         if ledState.current != ledState.target or ledState.current == ledState.STATIC_COLOR:
-            end = 0
             if ledState.target == ledState.STATIC_COLOR and target_color is not None:
                 if ledState.current == ledState.STATIC_COLOR:
                     arr = [led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
-                    end = 1
+                    self.end = 1
                 elif ledState.current == ledState.RGB_CYCLE:
                     if target_color == (0, 0, 0):
                         arr = [led_stripe.fade_black_rgb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
-                        end = 1
+                        self.end = 1
                     else:
                         arr = [led_stripe.fade_cx_rgb(i, led_stripe.get_pixel_rgb(i), -t + 2) for i in range(led_stripe.PIXEL_COUNT)]
-                        end = 2
+                        self.end = 2
                 elif ledState.current == ledState.ARGB_CYCLE:
                     if target_color == (0, 0, 0):
                         arr = [led_stripe.fade_black_argb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
-                        end = 1
+                        self.end = 1
                     else:
                         arr = [led_stripe.fade_cx_argb(i, start_colors[i], -t + 2) for i in range(led_stripe.PIXEL_COUNT)]
-                        end = 2
+                        self.end = 2
             elif ledState.target == ledState.RGB_CYCLE:
                 if ledState.current == ledState.STATIC_COLOR:
                     if start_colors[0] == (0, 0, 0):
                         arr = [led_stripe.fade_black_rgb(i, t) for i in range(led_stripe.PIXEL_COUNT)]
-                        end = 1
+                        self.end = 1
                     else:
                         arr = [led_stripe.fade_cx_rgb(i, start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)] 
-                        end = 2
+                        self.end = 2
                 elif ledState.current == ledState.ARGB_CYCLE:
                     if t < 1:
                         arr = [led_stripe.fade_black_argb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
                     else:
                         arr = [led_stripe.fade_black_rgb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
-                    end = 2
+                    self.end = 2
             elif ledState.target == ledState.ARGB_CYCLE:
                 if ledState.current == ledState.STATIC_COLOR:
                     if start_colors[0] == (0, 0, 0):
                         arr = [led_stripe.fade_black_argb(i, t) for i in range(led_stripe.PIXEL_COUNT)]
-                        end = 1
+                        self.end = 1
                     else:
                         arr = [led_stripe.fade_cx_argb(i, start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)]
-                        end = 2
+                        self.end = 2
                 elif ledState.current == ledState.RGB_CYCLE:
                     if t < 1:
                         arr = [led_stripe.fade_black_rgb(i, -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
                     else:
                         arr = [led_stripe.fade_black_argb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
-                    end = 2
-            if t >= end:
+                    self.end = 2
+            if t >= self.end:
                 start_colors = arr#! maybe a problem
                 ledState.current = ledState.target
         else:
@@ -115,8 +115,9 @@ class Effects:
 class LED_Stripe:
     t_offset = 0
     t = 0
-    were_last_equal = False
+    states_were_last_equal = False
     target_color = None
+    last_target_color = None
     
     def __init__(self) -> None:
         self.effects = Effects()
@@ -157,17 +158,19 @@ class LED_Stripe:
         self.effects.ledState.target = self.effects.ledState.ALARM
     
     def update(self, t):
-        if self.were_last_equal != (self.effects.ledState.current == self.effects.ledState.target):
-            if not (self.effects.ledState.target == LedState.RGB_CYCLE) or (self.effects.ledState.target == LedState.ARGB_CYCLE):
-                self.t_offset = t#! maybe a problem
-                print('\nt_offset updated, t=', self.t, self.effects.ledState.current, self.effects.ledState.target, self.were_last_equal)
+        if self.states_were_last_equal != (self.effects.ledState.current == self.effects.ledState.target) or self.target_color != self.last_target_color:
+            if (self.effects.ledState.target == LedState.RGB_CYCLE or self.effects.ledState.target == LedState.ARGB_CYCLE) and self.t >= self.effects.end:
+                return
+            self.t_offset = t#! maybe a problem
+            print('\nt_offset updated, t=', self.t, self.effects.ledState.current, self.effects.ledState.target, self.states_were_last_equal)
         self.t = t - self.t_offset
         self.arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
         if type(self.arr[0]) == tuple:
             led_stripe.set_array(self.arr)
         elif type(self.arr[0]) == int:
             led_stripe.set_array_color(self.arr)
-        self.were_last_equal = self.effects.ledState.current == self.effects.ledState.target
+        self.states_were_last_equal = self.effects.ledState.current == self.effects.ledState.target
+        self.last_target_color = self.target_color
 
 
 if __name__ == '__main__':
