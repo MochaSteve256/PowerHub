@@ -172,7 +172,7 @@ class LED_Stripe:
     def update(self):
         self.t = time.time() - self.t_offset
         if self.effects.overtime:
-            self.effects.target_color = None
+            self.target_color = None
         self.arr = self.effects._generate_array(self.t, self.effects.ledState, target_color=self.target_color)
         if type(self.arr[0]) == tuple:
             led_stripe.set_array(self.arr)
