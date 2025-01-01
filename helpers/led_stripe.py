@@ -201,8 +201,10 @@ def sunrise(x, time):
         return fade_cx_cy(x, (150, 15, 0), (255, 90, 0), (time - 6) / 6)
     elif time < 24 and time > 12:
         return fade_cx_cy(x, (255, 90, 0), (255, 255, 128), (time - 12) / 12)
-    else:
+    elif time > 24:
         return fade_cx_cy(x, (255, 255, 128), (255, 255, 255), (time - 24) / 6)
+    else:
+        return Adafruit_WS2801.RGB_to_color(0, 0, 0)
 
 def alarm_cycle(x, time):
     """

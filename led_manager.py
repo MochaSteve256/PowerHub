@@ -124,45 +124,56 @@ class LED_Stripe:
         self.arr = [None for _ in range(led_stripe.PIXEL_COUNT)]
     
     def new_color(self, rgb):
+        self.t_offset = time.time()
         self.target_color = rgb
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def rgb_cycle(self):
+        self.t_offset = time.time()
         self.effects.ledState.target = self.effects.ledState.RGB_CYCLE
     
     def argb_cycle(self):
+        self.t_offset = time.time()
         self.effects.ledState.target = self.effects.ledState.ARGB_CYCLE
     
     def warm_white(self):
+        self.t_offset = time.time()
         self.target_color = (255, 210, 90)
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def white(self):
+        self.t_offset = time.time()
         self.target_color = (255, 230, 130)
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def cold_white(self):
+        self.t_offset = time.time()
         self.target_color = (255, 255, 255)
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def sunrise(self):
+        self.t_offset = time.time()
         self.effects.ledState.current = self.effects.ledState.SUNRISE
         self.effects.ledState.target = self.effects.ledState.SUNRISE
     
     def sunset(self):
+        self.t_offset = time.time()
         self.effects.ledState.current = self.effects.ledState.SUNSET
         self.effects.ledState.target = self.effects.ledState.SUNSET
     
     def alarm(self):
+        self.t_offset = time.time()
         self.effects.ledState.current = self.effects.ledState.ALARM
         self.effects.ledState.target = self.effects.ledState.ALARM
     
     def update(self):
+        """
         if self.states_were_last_equal != (self.effects.ledState.current == self.effects.ledState.target) or self.target_color != self.last_target_color:
             if (self.effects.ledState.target == LedState.RGB_CYCLE or self.effects.ledState.target == LedState.ARGB_CYCLE) and self.t >= self.effects.end:
                 return
             self.t_offset = time.time()#! maybe a problem
             print('\nt_offset updated, t=', self.t, self.effects.ledState.current, self.effects.ledState.target, self.states_were_last_equal)
+        """
         self.t = time.time() - self.t_offset
         self.arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
         if type(self.arr[0]) == tuple:
