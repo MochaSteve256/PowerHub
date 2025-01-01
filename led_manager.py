@@ -120,6 +120,7 @@ class LED_Stripe:
     
     def __init__(self) -> None:
         self.effects = Effects()
+        self.arr = [None for _ in range(led_stripe.PIXEL_COUNT)]
     
     def new_color(self, rgb):
         self.target_color = rgb
@@ -155,9 +156,11 @@ class LED_Stripe:
     def update(self, t):
         if self.were_last_equal != self.effects.ledState.current == self.effects.ledState.target:
             self.t_offset = t#! maybe a problem
+            print('t_offset updated')
         self.t = t - self.t_offset
-        arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
-        led_stripe.set_array(arr)
+        print(self.t)
+        self.arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
+        led_stripe.set_array(self.arr)
         self.were_last_equal = self.effects.ledState.current == self.effects.ledState.target
 
 
@@ -169,14 +172,14 @@ if __name__ == '__main__':
         while True:
             t = time.time()
             stripe.update(t)
-            time.sleep(0.01)
+            time.sleep(0.1)
             
     t = threading.Thread(target=thread)
     t.start()
     
     try:
         while True:
-            x = input()
+            x = input("Enter command: ")
             if x == 'w':
                 stripe.white()
             elif x == 'cw':
@@ -199,6 +202,8 @@ if __name__ == '__main__':
                 stripe.sunset()
             elif x == 'alarm':
                 stripe.alarm()
+            elif x == 'print':
+                print(stripe.effects.ledState.current, stripe.effects.ledState.target, stripe.arr)
             elif x == 'q':
                 break
             else:
