@@ -32,7 +32,7 @@ class Effects:
         for i in range(8):
             led = int(i * (led_stripe.PIXEL_COUNT / 8))
             if array[led] is not None:
-                line[i] = Adafruit_WS2801.color_to_RGB(array[led])
+                line[i] = array[led]
         return line
     def current_8px_rgb(self):
         return self._generate_8px_rgb(self.arr)
@@ -157,7 +157,7 @@ class LED_Stripe:
             self.t_offset = t#! maybe a problem
         self.t = t - self.t_offset
         arr = self.effects._generate_array(self.t, self.effects.ledState, self.target_color)
-        led_stripe.set_array_color(arr)
+        led_stripe.set_array(arr)
         self.were_last_equal = self.effects.ledState.current == self.effects.ledState.target
 
 
