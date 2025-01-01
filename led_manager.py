@@ -28,6 +28,7 @@ class Effects:
         self.ledState = LedState()
         self.end = 1
         self.overtime = False
+        self.target_color = None
     
     def _generate_8px_rgb(self, array):
         line = [[0, 0, 0] for _ in range(8)]
@@ -49,6 +50,7 @@ class Effects:
     
     def _generate_array(self, t:float, ledState:LedState, target_color=None, start_colors=current_colors_rgb):
         arr = start_colors
+        self.target_color = target_color
         if (ledState.current != ledState.target or ledState.current == ledState.STATIC_COLOR) and not self.overtime:
             if ledState.target == ledState.STATIC_COLOR and target_color is not None:
                 if ledState.current == ledState.STATIC_COLOR:
@@ -169,6 +171,8 @@ class LED_Stripe:
     
     def update(self):
         self.t = time.time() - self.t_offset
+        if self.effects.overtime:
+            self.effects.target_color = None
         self.arr = self.effects._generate_array(self.t, self.effects.ledState, target_color=self.target_color)
         if type(self.arr[0]) == tuple:
             led_stripe.set_array(self.arr)
