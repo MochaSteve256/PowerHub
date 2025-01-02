@@ -5,6 +5,10 @@ import copy
 
 import Adafruit_WS2801 # type: ignore
 
+# colors
+ww = (255, 130, 40)
+w = (255, 160, 80)
+cw = (255, 255, 255)
 
 class LedState:
     # Properties
@@ -42,11 +46,28 @@ class Effects:
     def current_8px_rgb(self):
         return self._generate_8px_rgb(self.arr)
     
-    def preview_effect_8px(self, t:float, effect:int, target_color=None):
-        ledState = self.ledState
-        ledState.target = effect
-        return self._generate_8px_rgb(Effects._generate_array(copy.deepcopy(self),t, ledState, target_color))
-    
+    def preview_effect_8px(self, t_offset, effect, target_color=None):
+        ledState = copy.deepcopy(self.ledState)
+        selfcopy = copy.deepcopy(self)
+        t = time.time() * 2 - t_offset * 2
+        if effect == LED_Stripe.warm_white:
+            ledState.target = ledState.STATIC_COLOR
+            return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState, target_color=ww))
+        elif effect == LED_Stripe.white:
+            ledState.target = ledState.STATIC_COLOR
+            return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState, target_color=w))
+        elif effect == LED_Stripe.cold_white:
+            ledState.target = ledState.STATIC_COLOR
+            return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState, target_color=cw))
+        elif effect == LED_Stripe.black:
+            ledState.target = ledState.STATIC_COLOR
+            return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState, target_color=(0, 0, 0)))
+        elif effect == LED_Stripe.rgb_cycle:
+            ledState.target = ledState.RGB_CYCLE
+            return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState))
+        elif effect == LED_Stripe.argb_cycle:
+            ledState.target = ledState.ARGB_CYCLE
+            return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState))
     def set_effect(self, effect:int):
         self.ledState.target = effect
     
@@ -131,17 +152,22 @@ class LED_Stripe:
     
     def warm_white(self):
         self._callback()
-        self.target_color = (255, 130, 40)
+        self.target_color = ww
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def white(self):
         self._callback()
-        self.target_color = (255, 160, 80)
+        self.target_color = w
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def cold_white(self):
         self._callback()
-        self.target_color = (255, 255, 255)
+        self.target_color = cw
+        self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
+    
+    def black(self):
+        self._callback()
+        self.target_color = (0, 0, 0)
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def sunrise(self):
@@ -199,7 +225,7 @@ if __name__ == '__main__':
             elif x == 'yellow':
                 stripe.new_color((255, 220, 0))
             elif x == 'black':
-                stripe.new_color((0, 0, 0))
+                stripe.black()
             elif x == 'rgb':
                 stripe.rgb_cycle()
             elif x == 'argb':
@@ -212,10 +238,7 @@ if __name__ == '__main__':
                 stripe.alarm()
             elif x == 'print':
                 print(stripe.effects.arr, stripe.effects.current_colors_rgb)
-            elif x == 'q':
-                break
             else:
                 print('unknown command')
-        stripe.new_color((0, 0, 0))
     except KeyboardInterrupt:
-        stripe.new_color((0, 0, 0))
+        stripe.black()

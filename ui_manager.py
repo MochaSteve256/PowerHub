@@ -1,7 +1,5 @@
-from typing import Callable, Tuple, Union, Optional
 import time
 import datetime
-from typing import Callable
 from pprint import pprint
 
 from helpers import u64led
@@ -132,28 +130,19 @@ class UI:
         elif self.state == uiState.LED_SLCT:
             if self.ledEffectNum == ledState.CUSTOM:
                 self.state = uiState.LED_CUSTOM
-            else:
-                func = self.translate_led(self.ledEffectNum)
-                # Case 1: func is a tuple (Callable + target_color)
-                if isinstance(func, tuple):
-                    callabl, target_color = func  # Unpack the tuple safely
-                    if callable(callabl):
-                        callabl(target_color)  # Pass target_color (even if it's None)
-                    else:
-                        print("Error: Expected a callable in the tuple, got", type(callabl))
+            elif self.ledEffectNum == ledState.WW:
+                self.ledStripe.warm_white()
+            elif self.ledEffectNum == ledState.W:
+                self.ledStripe.white()
+            elif self.ledEffectNum == ledState.CW:
+                self.ledStripe.cold_white()
+            elif self.ledEffectNum == ledState.BLACK:
+                self.ledStripe.new_color((0, 0, 0))
+            elif self.ledEffectNum == ledState.RGB:
+                self.ledStripe.rgb_cycle()
+            elif self.ledEffectNum == ledState.ARGB:
+                self.ledStripe.argb_cycle()
 
-                # Case 2: func is directly callable (like warm_white)
-                elif callable(func):
-                    func()
-
-                # Case 3: func is None
-                elif func is None:
-                    print("translate_led returned None")
-
-                # Case 4: Unexpected type (should never happen if the types are correct)
-                else:
-                    print("Unexpected return type:", type(func))
-                self.state = uiState.LED
             self.state = uiState.LED
             self.update()
         elif self.state == uiState.STBY:
@@ -166,6 +155,9 @@ class UI:
             return
         if self.state == uiState.LED_SLCT:
             self.state = uiState.LED
+            self.update()
+        if self.state == uiState.LED_CUSTOM:
+            self.state = uiState.LED_SLCT
             self.update()
     
     def update(self):
@@ -195,6 +187,8 @@ class UI:
             self.led_ui()
         elif self.state == uiState.LED_SLCT:
             self.led_slct_ui()
+        elif self.state == uiState.LED_CUSTOM:
+            self.led_custom_ui()
         elif self.state == uiState.WETH:
             self.weth_ui()
         elif self.state == uiState.CLCK:
@@ -233,12 +227,31 @@ class UI:
 
     def led_slct_ui(self):
         m = None
-        if self.ledEffectNum == 0:
-            m = u64images.add_navbar(u64images.nothing3 + self.ledStripe.effects.preview_effect_8px(time.time() - self.led_t_offset, self.ledEffectNum, target_color=self.led_target_color) + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct)
-        else:
-            m = u64images.add_navbar(u64images.nothing3 + self.ledStripe.effects.preview_effect_8px(time.time() - self.led_t_offset, self.ledEffectNum) + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct)
+        p = None
+        if self.ledEffectNum == ledState.WW:
+            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, self.ledStripe.warm_white)
+        elif self.ledEffectNum == ledState.W:
+            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, self.ledStripe.white)
+        elif self.ledEffectNum == ledState.CW:
+            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, self.ledStripe.cold_white)
+        elif self.ledEffectNum == ledState.BLACK:
+            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, self.ledStripe.black)
+        elif self.ledEffectNum == ledState.RGB:
+            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, self.ledStripe.rgb_cycle)
+        elif self.ledEffectNum == ledState.ARGB:
+            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, self.ledStripe.argb_cycle)
+        elif self.ledEffectNum == ledState.CUSTOM:
+            #something else
+            p = [(0, 0, 0) for _ in range(8)]
+        
+        m = u64images.add_navbar(u64images.nothing3 + p + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct) # type: ignore
+        
         m = clean_convert_matrix(m)
         m[0][self.ledEffectNum] = (0, 128, 0) # type: ignore
+        u64led.set_matrix(m)
+    
+    def led_custom_ui(self):
+        m = u64images.add_navbar(u64images.blank, *NavOpts.led_slct)
         u64led.set_matrix(m)
 
     def weth_ui(self):
@@ -250,30 +263,6 @@ class UI:
 
     def stby_ui(self):
         u64led.set_matrix(u64images.add_navbar(u64images.stby_text, *NavOpts.stby))
-
-    def translate_led(self, effectNum, target_color: Optional[Tuple[int, int, int]] = None) -> Union[
-    Callable[[], None],  # Functions with no arguments
-    Tuple[Callable[[Optional[Tuple[int, int, int]]], None], Optional[Tuple[int, int, int]]],
-    None
-]:
-        if effectNum == ledState.WW:
-            return self.ledStripe.warm_white
-        elif effectNum == ledState.W:
-            return self.ledStripe.white
-        elif effectNum == ledState.CW:
-            return self.ledStripe.cold_white
-        elif effectNum == ledState.BLACK:
-            return self.ledStripe.new_color, (0, 0, 0)
-        elif effectNum == ledState.RGB:
-            return self.ledStripe.rgb_cycle
-        elif effectNum == ledState.ARGB:
-            return self.ledStripe.argb_cycle
-        elif effectNum == ledState.CUSTOM:
-            return self.ledStripe.new_color, target_color
-        else:
-            print("invalid effectNum: " + str(effectNum))
-            return None
-
 def clean_convert_matrix(m):
     for i in range(8):
         for j in range(8):
