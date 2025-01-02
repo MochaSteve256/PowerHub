@@ -139,12 +139,12 @@ class LED_Stripe:
     
     def warm_white(self):
         self._callback()
-        self.target_color = (255, 210, 90)
+        self.target_color = (255, 170, 80)
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def white(self):
         self._callback()
-        self.target_color = (255, 230, 130)
+        self.target_color = (255, 200, 100)
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def cold_white(self):
@@ -205,7 +205,7 @@ if __name__ == '__main__':
             elif x == 'blue':
                 stripe.new_color((0, 0, 255))
             elif x == 'yellow':
-                stripe.new_color((255, 255, 0))
+                stripe.new_color((255, 220, 0))
             elif x == 'black':
                 stripe.new_color((0, 0, 0))
             elif x == 'rgb':
