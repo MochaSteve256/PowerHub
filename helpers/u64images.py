@@ -1,4 +1,5 @@
 import copy
+from pprint import pprint
 
 ## RGB values for 8x8 matrix
 
@@ -128,7 +129,8 @@ def add_navbar(matrix, select, back, scroll):
         matrix[7] = navbar_scroll[i]
 
     if len(matrix) > 8:
-        print("matrix too big", matrix)
+        print("matrix too big")
+        pprint(matrix)
         return
     if len(matrix[7]) < 8:
         print("m7 too small", matrix[7])
