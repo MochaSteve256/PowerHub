@@ -68,6 +68,8 @@ class Effects:
         elif effect == LED_Stripe.argb_cycle:
             ledState.target = ledState.ARGB_CYCLE
             return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState))
+        else:
+            print("error: cannot preview effect")
     def set_effect(self, effect:int):
         self.ledState.target = effect
     

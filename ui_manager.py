@@ -243,6 +243,9 @@ class UI:
         elif self.ledEffectNum == ledState.CUSTOM:
             #something else
             p = [(0, 0, 0) for _ in range(8)]
+        else:
+            print("error: invalid ledEffectNum")
+        print(p)
         
         m = u64images.add_navbar(u64images.nothing3 + p + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct) # type: ignore
         
