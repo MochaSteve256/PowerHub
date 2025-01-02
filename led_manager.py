@@ -29,9 +29,10 @@ class Effects:
     current_colors_rgb = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
     start_colors = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
     
-    def __init__(self) -> None:
+    def __init__(self, stripe) -> None:
         self.ledState = LedState()
         self.end = 1
+        self.stripe = stripe
         self.overtime = False
         self.target_color = None
         self.target_color_save = (0, 0, 0)
@@ -50,22 +51,22 @@ class Effects:
         ledState = copy.deepcopy(self.ledState)
         selfcopy = copy.deepcopy(self)
         t = time.time() * 2 - t_offset * 2
-        if effect == LED_Stripe.warm_white:
+        if effect == self.stripe.warm_white:
             ledState.target = ledState.STATIC_COLOR
             return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState, target_color=ww))
-        elif effect == LED_Stripe.white:
+        elif effect == self.stripe.white:
             ledState.target = ledState.STATIC_COLOR
             return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState, target_color=w))
-        elif effect == LED_Stripe.cold_white:
+        elif effect == self.stripe.cold_white:
             ledState.target = ledState.STATIC_COLOR
             return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState, target_color=cw))
-        elif effect == LED_Stripe.black:
+        elif effect == self.stripe.black:
             ledState.target = ledState.STATIC_COLOR
             return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState, target_color=(0, 0, 0)))
-        elif effect == LED_Stripe.rgb_cycle:
+        elif effect == self.stripe.rgb_cycle:
             ledState.target = ledState.RGB_CYCLE
             return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState))
-        elif effect == LED_Stripe.argb_cycle:
+        elif effect == self.stripe.argb_cycle:
             ledState.target = ledState.ARGB_CYCLE
             return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState))
         else:
@@ -133,7 +134,7 @@ class LED_Stripe:
     target_color = None
     
     def __init__(self) -> None:
-        self.effects = Effects()
+        self.effects = Effects(self)
     
     def _callback(self):
         self.t_offset = time.time()
