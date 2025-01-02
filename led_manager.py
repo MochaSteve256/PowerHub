@@ -23,6 +23,7 @@ class LedState:
 class Effects:
     arr = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
     current_colors_rgb = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
+    start_colors = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
     
     def __init__(self) -> None:
         self.ledState = LedState()
@@ -51,41 +52,41 @@ class Effects:
     
     def _generate_array(self, t:float, ledState:LedState, target_color=None):
         if not self.overtime:
-            start_colors = copy.deepcopy(self.current_colors_rgb)
-        if type(start_colors[0]) == int:
+            self.start_colors = copy.deepcopy(self.current_colors_rgb)
+        if type(self.start_colors[0]) == int:
             for i in range(led_stripe.PIXEL_COUNT):
-                start_colors[i] = Adafruit_WS2801.color_to_RGB(start_colors[i])
+                self.start_colors[i] = Adafruit_WS2801.color_to_RGB(self.start_colors[i])
         self.target_color = copy.deepcopy(target_color)
         if (ledState.current != ledState.target) or (target_color is not None):
             if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
                 self.target_color_save = target_color
-                self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
+                self.arr =[led_stripe.fade_cx_cy(i, self.start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
                 self.end = 1
             elif ledState.target == ledState.RGB_CYCLE:
                 if ledState.current == ledState.STATIC_COLOR or ledState.current == ledState.SUNRISE or ledState.current == ledState.SUNSET or ledState.current == ledState.ALARM:
-                    if start_colors[0] == (0, 0, 0):
+                    if self.start_colors[0] == (0, 0, 0):
                         self.arr =[led_stripe.fade_black_rgb(i, t) for i in range(led_stripe.PIXEL_COUNT)]
                         self.end = 1
                     else:
-                        self.arr =[led_stripe.fade_cx_rgb(i, start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)] 
+                        self.arr =[led_stripe.fade_cx_rgb(i, self.start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)] 
                         self.end = 2
                 elif ledState.current == ledState.ARGB_CYCLE:
                     if t < 1:
-                        self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], (0, 0, 0), t) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_cx_cy(i, self.start_colors[i], (0, 0, 0), t) for i in range(led_stripe.PIXEL_COUNT)]
                     else:
                         self.arr =[led_stripe.fade_black_rgb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
             elif ledState.target == ledState.ARGB_CYCLE:
                 if ledState.current == ledState.STATIC_COLOR or ledState.current == ledState.SUNRISE or ledState.current == ledState.SUNSET or ledState.current == ledState.ALARM:
-                    if start_colors[0] == (0, 0, 0):
+                    if self.start_colors[0] == (0, 0, 0):
                         self.arr =[led_stripe.fade_black_argb(i, t) for i in range(led_stripe.PIXEL_COUNT)]
                         self.end = 1
                     else:
-                        self.arr =[led_stripe.fade_cx_argb(i, start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_cx_argb(i, self.start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)]
                         self.end = 2
                 elif ledState.current == ledState.RGB_CYCLE:
                     if t < 1:
-                        self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], (0, 0, 0), t) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_cx_cy(i, self.start_colors[i], (0, 0, 0), t) for i in range(led_stripe.PIXEL_COUNT)]
                     else:
                         self.arr =[led_stripe.fade_black_argb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
