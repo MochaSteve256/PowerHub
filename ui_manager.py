@@ -270,9 +270,9 @@ class UI:
 
     def stby_ui(self):
         u64led.set_matrix(u64images.add_navbar(u64images.stby_text, *NavOpts.stby))
-def clean_convert_matrix(m):
-    for i in range(8):
-        for j in range(8):
-            if type(m[i][j]) == int: # type: ignore
-                m[i][j] = Adafruit_WS2801.color_to_RGB(m[i][j]) # type: ignore
-    return m
+def clean_convert_matrix(mtx):
+    for y in range(8):
+        for x in range(8):
+            if type(mtx[y][x]) == int: # type: ignore
+                mtx[y][x] = Adafruit_WS2801.color_to_RGB(mtx[y][x]) # type: ignore
+    return mtx
