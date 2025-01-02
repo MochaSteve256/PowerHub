@@ -8,6 +8,7 @@ from helpers import u64led
 from helpers import u64images
 from helpers import psu
 import led_manager
+import Adafruit_WS2801 # type: ignore
 
 
 class uiState():
@@ -207,7 +208,7 @@ class UI:
             if self._nighttime_check():
                 divider = 5
             else:
-                divider = 2.5
+                divider = 2
             matrix = u64led.get_matrix()
             for i in range(8):
                 for j in range(8):
@@ -227,15 +228,17 @@ class UI:
         u64led.set_matrix(m)
 
     def led_ui(self):
-        u64led.set_matrix(u64images.add_navbar(u64images.led_text + u64images.nothing1 + self.ledStripe.effects.current_8px_rgb() + u64images.nothing1, *NavOpts.led_slct))
+        m = u64images.add_navbar(u64images.led_text + u64images.nothing1 + self.ledStripe.effects.current_8px_rgb() + u64images.nothing1, *NavOpts.led_slct)
+        m = clean_convert_matrix(m)
+        u64led.set_matrix(m)
 
     def led_slct_ui(self):
-        m = []
+        m = None
         if self.ledEffectNum == 0:
             m = u64images.add_navbar(u64images.nothing3 + self.ledStripe.effects.preview_effect_8px(time.time() - self.led_t_offset, self.ledEffectNum, target_color=self.led_target_color) + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct)
         else:
             m = u64images.add_navbar(u64images.nothing3 + self.ledStripe.effects.preview_effect_8px(time.time() - self.led_t_offset, self.ledEffectNum) + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct)
-        
+        m = clean_convert_matrix(m)
         m[0][self.ledEffectNum] = (0, 128, 0) # type: ignore
         print(m)
         u64led.set_matrix(m)
@@ -273,3 +276,10 @@ class UI:
         else:
             print("invalid effectNum: " + str(effectNum))
             return None
+
+def clean_convert_matrix(m):
+    for i in range(8):
+        for j in range(8):
+            if type(m[i][j]) == int: # type: ignore
+                m[i][j] = Adafruit_WS2801.color_to_rgb(m[i][j]) # type: ignore
+    return m
