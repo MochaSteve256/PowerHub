@@ -58,18 +58,10 @@ class Effects:
         if (ledState.current != ledState.target) or (target_color is not None):
             if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
                 self.target_color_save = target_color
-                if ledState.current == ledState.STATIC_COLOR:
-                    self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
-                    self.end = 1
-                    #print(start_colors, target_color, ledState.current, ledState.target)
-                elif ledState.current == ledState.RGB_CYCLE:
-                    self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
-                    self.end = 1
-                elif ledState.current == ledState.ARGB_CYCLE:
-                    self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
-                    self.end = 1
+                self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
+                self.end = 1
             elif ledState.target == ledState.RGB_CYCLE:
-                if ledState.current == ledState.STATIC_COLOR:
+                if ledState.current == ledState.STATIC_COLOR or ledState.current == ledState.SUNRISE or ledState.current == ledState.SUNSET or ledState.current == ledState.ALARM:
                     if start_colors[0] == (0, 0, 0):
                         self.arr =[led_stripe.fade_black_rgb(i, t) for i in range(led_stripe.PIXEL_COUNT)]
                         self.end = 1
@@ -83,7 +75,7 @@ class Effects:
                         self.arr =[led_stripe.fade_black_rgb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
             elif ledState.target == ledState.ARGB_CYCLE:
-                if ledState.current == ledState.STATIC_COLOR:
+                if ledState.current == ledState.STATIC_COLOR or ledState.current == ledState.SUNRISE or ledState.current == ledState.SUNSET or ledState.current == ledState.ALARM:
                     if start_colors[0] == (0, 0, 0):
                         self.arr =[led_stripe.fade_black_argb(i, t) for i in range(led_stripe.PIXEL_COUNT)]
                         self.end = 1
@@ -226,5 +218,6 @@ if __name__ == '__main__':
                 break
             else:
                 print('unknown command')
+        stripe.new_color((0, 0, 0))
     except KeyboardInterrupt:
-        pass
+        stripe.new_color((0, 0, 0))
