@@ -1,3 +1,4 @@
+import threading
 import time
 
 import ui_manager
@@ -25,11 +26,17 @@ if __name__ == "__main__":
     led = led_manager.LED_Stripe()
     ui = ui_manager.UI(led)
     ky040 = ky040.KY040(ui.clockwise, ui.counterclockwise, press, release)
-
+    
+    def led_update():
+        while True:
+            led.update()
+            time.sleep(.01)
+    
     try:
+        ledUT = threading.Thread(target=led_update)
+        ledUT.start()
         while True:
             ui.update()
-            led.update()
             time.sleep(.01)
     finally:
         ky040.stop()
