@@ -251,12 +251,9 @@ class UI:
         else:
             print("error: invalid ledEffectNum")
         
-        x = u64images.add_navbar(u64images.nothing3 + p + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct) # type: ignore
-        m = copy.deepcopy(x)
+        m = copy.deepcopy(u64images.add_navbar(copy.deepcopy(u64images.nothing3) + p + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct)) # type: ignore
         m = clean_convert_matrix(m)
-        print(m)
         m[0][self.ledEffectNum] = (0, 128, 0) # type: ignore
-        print(m)
         u64led.set_matrix(m)
     
     def led_custom_ui(self):
