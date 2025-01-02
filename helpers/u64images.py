@@ -81,9 +81,11 @@ navbar_back   = [blue,  black, black, black, black, black, black, black]
 navbar_select = [black, black, black, black, black, black, black, blue ]
 
 def add_navbars_together(*args):
-    navbar = []
-    for i in range(8):
-        navbar.append([args[j][i] for j in range(len(args))])
+    navbar = list(args[0])
+    for i in range(1, len(args)):
+        for j in range(8):
+            if args[i][j] != black:
+                navbar[j] = args[i][j]
     return navbar
 
 def add_navbar(matrix, select, back, scroll):
