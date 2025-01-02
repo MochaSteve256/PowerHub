@@ -233,6 +233,7 @@ class UI:
             m = u64images.add_navbar(u64images.nothing3 + self.ledStripe.effects.preview_effect_8px(time.time() - self.led_t_offset, self.ledEffectNum) + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct)
         
         m[0][self.ledEffectNum] = (0, 128, 0) # type: ignore
+        print(m)
         u64led.set_matrix(m)
 
     def weth_ui(self):
