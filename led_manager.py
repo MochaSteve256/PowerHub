@@ -55,6 +55,8 @@ class Effects:
             for i in range(led_stripe.PIXEL_COUNT):
                 self.start_colors[i] = Adafruit_WS2801.color_to_RGB(self.start_colors[i])
         self.target_color = copy.deepcopy(target_color)
+        if t >= self.end:
+            self.start_colors = copy.deepcopy(self.current_colors_rgb)
         if (ledState.current != ledState.target) or (target_color is not None):
             if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
                 self.target_color_save = target_color
@@ -88,9 +90,8 @@ class Effects:
                     else:
                         self.arr =[led_stripe.fade_black_argb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
-            if t >= self.end:
+            if t > self.end:
                 ledState.current = ledState.target
-                self.start_colors = copy.deepcopy(self.current_colors_rgb)
                 self.overtime = True
             else:
                 self.overtime = False
@@ -203,6 +204,10 @@ if __name__ == '__main__':
                 stripe.new_color((0, 255, 0))
             elif x == 'blue':
                 stripe.new_color((0, 0, 255))
+            elif x == 'yellow':
+                stripe.new_color((255, 255, 0))
+            elif x == 'black':
+                stripe.new_color((0, 0, 0))
             elif x == 'rgb':
                 stripe.rgb_cycle()
             elif x == 'argb':
