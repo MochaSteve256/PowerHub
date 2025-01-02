@@ -43,7 +43,7 @@ class UI:
     led_t_offset = time.time()
     led_target_color = (0, 0, 0)
     
-    def __init__(self, ledStripe:led_manager.LED_Stripe):
+    def __init__(self, ledStripe):
         self.ledStripe = ledStripe
         self.state = uiState.PSU
         self.last_click = time.time()
@@ -251,6 +251,7 @@ class UI:
         
         m = u64images.add_navbar(u64images.nothing3 + p + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct) # type: ignore
         m[0][self.ledEffectNum] = (0, 128, 0) # type: ignore
+        pprint(m)
         
         m = clean_convert_matrix(m)
         u64led.set_matrix(m)

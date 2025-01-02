@@ -75,8 +75,8 @@ class Effects:
         self.ledState.target = effect
     
     def _generate_array(self, t:float, ledState:LedState, target_color=None):
-        if type(self.start_colors[0]) == int:
-            for i in range(led_stripe.PIXEL_COUNT):
+        for i in range(led_stripe.PIXEL_COUNT):
+            if type(self.start_colors[i]) == int:
                 self.start_colors[i] = Adafruit_WS2801.color_to_RGB(self.start_colors[i])
         self.target_color = copy.deepcopy(target_color)
         if t >= self.end:
