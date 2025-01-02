@@ -91,7 +91,6 @@ def add_navbars_together(*args):
     Returns:
         List of RGB tuples representing the combined navbar.
     """
-    print(*args)
     if not args:
         raise ValueError("At least one navbar must be provided.")
     
@@ -107,7 +106,6 @@ def add_navbars_together(*args):
             if color != [0, 0, 0]:  # Overlay non-black colors
                 result[i] = color
     
-    print(result)
     return result
 
 
