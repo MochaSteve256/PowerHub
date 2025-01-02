@@ -248,7 +248,6 @@ class UI:
             p = [(0, 0, 0) for _ in range(8)]
         else:
             print("error: invalid ledEffectNum")
-        p = [p]
         
         m = u64images.add_navbar(u64images.nothing3 + p + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct) # type: ignore
         m = clean_convert_matrix(m)
@@ -278,5 +277,5 @@ def clean_convert_matrix(mtx):
                     mtx[y][x] = Adafruit_WS2801.color_to_RGB(mtx[y][x]) # type: ignore
             except Exception as e:
                 print(e, mtx, y, x)
-                raise
+                return
     return mtx
