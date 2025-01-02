@@ -224,7 +224,6 @@ class UI:
             m = u64images.add_navbar(u64images.psu_text + u64images.psu_on, *NavOpts.psu)
         else:
             m = u64images.add_navbar(u64images.psu_text + u64images.psu_off, *NavOpts.psu)
-        pprint(m)
         u64led.set_matrix(m)
 
     def led_ui(self):
@@ -245,7 +244,6 @@ class UI:
 
     def weth_ui(self):
         m = u64images.add_navbar(u64images.blank, *NavOpts.weth)#TODO
-        pprint(m)
         u64led.set_matrix(m)
 
     def clck_ui(self):

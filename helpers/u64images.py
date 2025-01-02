@@ -128,7 +128,7 @@ def add_navbar(matrix, select, back, scroll):
         matrix[7] = navbar_scroll[i]
 
     if len(matrix) > 8:
-        print("matrix too big")
+        print("matrix too big", matrix)
         return
     if len(matrix[7]) < 8:
         print("m7 too small", matrix[7])
