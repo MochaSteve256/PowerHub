@@ -33,10 +33,11 @@ if __name__ == "__main__":
             time.sleep(.01)
     
     try:
-        ledUT = threading.Thread(target=led_update)
-        ledUT.start()
+        #ledUT = threading.Thread(target=led_update)
+        #ledUT.start()
         while True:
             ui.update()
+            led.update()
             time.sleep(.01)
     finally:
         ky040.stop()
