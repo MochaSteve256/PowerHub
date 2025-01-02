@@ -253,7 +253,7 @@ class UI:
         m = u64images.add_navbar(u64images.nothing3 + p + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct) # type: ignore
         print(m)
         m[0][self.ledEffectNum] = (0, 128, 0) # type: ignore
-        
+        print(m)
         m = clean_convert_matrix(m)
         u64led.set_matrix(m)
     
@@ -274,5 +274,8 @@ def clean_convert_matrix(mtx):
     for y in range(8):
         for x in range(8):
             if type(mtx[y][x]) == int: # type: ignore
-                mtx[y][x] = Adafruit_WS2801.color_to_RGB(mtx[y][x]) # type: ignore
+                try:
+                    mtx[y][x] = Adafruit_WS2801.color_to_RGB(mtx[y][x]) # type: ignore
+                except:
+                    print("error", mtx, y, x)
     return mtx
