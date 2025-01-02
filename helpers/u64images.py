@@ -81,12 +81,32 @@ navbar_back   = [blue,  black, black, black, black, black, black, black]
 navbar_select = [black, black, black, black, black, black, black, blue ]
 
 def add_navbars_together(*args):
-    navbar = list(args[0])
-    for i in range(1, len(args)):
-        for j in range(8):
-            if args[i][j] != black:
-                navbar[j] = args[i][j]
-    return navbar
+    """
+    Overlay multiple navbars, with later navbars overwriting earlier ones where they are non-black.
+    
+    Args:
+        *args: Lists of RGB tuples representing navbar colors.
+        
+    Returns:
+        List of RGB tuples representing the combined navbar.
+    """
+    if not args:
+        raise ValueError("At least one navbar must be provided.")
+    
+    # Ensure all navbars are the same length
+    length = len(args[0])
+    if not all(len(navbar) == length for navbar in args):
+        raise ValueError("All navbars must have the same length.")
+    
+    result = list(args[0])  # Start with the first navbar
+    
+    for navbar in args[1:]:
+        for i, color in enumerate(navbar):
+            if color != (0, 0, 0):  # Overlay non-black colors
+                result[i] = color
+    
+    return result
+
 
 def add_navbar(matrix, select, back, scroll):
     if len(matrix) < 8:
