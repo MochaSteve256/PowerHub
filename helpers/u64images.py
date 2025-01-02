@@ -91,6 +91,7 @@ def add_navbars_together(*args):
     Returns:
         List of RGB tuples representing the combined navbar.
     """
+    print(*args)
     if not args:
         raise ValueError("At least one navbar must be provided.")
     
@@ -129,8 +130,7 @@ def add_navbar(matrix, select, back, scroll):
         matrix[7] = navbar_scroll[i]
 
     if len(matrix) > 8:
-        print("matrix too big")
-        pprint(matrix)
+        print("matrix too big", matrix)
         return
     if len(matrix[7]) < 8:
         print("m7 too small", matrix[7])
