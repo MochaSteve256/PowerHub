@@ -45,7 +45,7 @@ class Effects:
     def preview_effect_8px(self, t:float, effect:int, target_color=None):
         ledState = self.ledState
         ledState.target = effect
-        return self._generate_8px_rgb(self._generate_array(t, ledState, target_color))
+        return self._generate_8px_rgb(Effects._generate_array(copy.deepcopy(self),t, ledState, target_color))
     
     def set_effect(self, effect:int):
         self.ledState.target = effect

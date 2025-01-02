@@ -1,10 +1,11 @@
+from typing import Callable, Tuple, Union, Optional
 import time
 import datetime
+from typing import Callable
 
 from helpers import u64led
 from helpers import u64images
 from helpers import psu
-from helpers import led_stripe
 import led_manager
 
 
@@ -12,10 +13,19 @@ class uiState():
     PSU = 0
     LED = 1
     LED_SLCT = 2
+    LED_CUSTOM = 6
     WETH = 3
     CLCK = 4
     STBY = 5
 
+class ledState():
+    WW = 0
+    W = 1
+    CW = 2
+    BLACK = 3
+    RGB = 4
+    ARGB = 5
+    CUSTOM = 6
 
 #nav options
 class NavOpts():
@@ -69,7 +79,7 @@ class UI:
             self.update()
         elif self.state == uiState.LED_SLCT:
             self.ledEffectNum += 1
-            if self.ledEffectNum == 6:
+            if self.ledEffectNum == 7:
                 self.ledEffectNum = 0
             self.led_t_offset = time.time()
         elif self.state == uiState.WETH:
@@ -93,7 +103,7 @@ class UI:
         elif self.state == uiState.LED_SLCT:
             self.ledEffectNum -= 1
             if self.ledEffectNum == -1:
-                self.ledEffectNum = 5
+                self.ledEffectNum = 6
             self.led_t_offset = time.time()
         elif self.state == uiState.WETH:
             self.state = uiState.CLCK
@@ -118,7 +128,30 @@ class UI:
             self.state = uiState.LED_SLCT
             self.update()
         elif self.state == uiState.LED_SLCT:
-            led_stripe.set_all((0, 0, 0))#TODO
+            if self.ledEffectNum == ledState.CUSTOM:
+                self.state = uiState.LED_CUSTOM
+            else:
+                func = self.translate_led(self.ledEffectNum)
+                # Case 1: func is a tuple (Callable + target_color)
+                if isinstance(func, tuple):
+                    callabl, target_color = func  # Unpack the tuple safely
+                    if callable(callabl):
+                        callabl(target_color)  # Pass target_color (even if it's None)
+                    else:
+                        print("Error: Expected a callable in the tuple, got", type(callabl))
+
+                # Case 2: func is directly callable (like warm_white)
+                elif callable(func):
+                    func()
+
+                # Case 3: func is None
+                elif func is None:
+                    print("translate_led returned None")
+
+                # Case 4: Unexpected type (should never happen if the types are correct)
+                else:
+                    print("Unexpected return type:", type(func))
+                self.state = uiState.LED
             self.state = uiState.LED
             self.update()
         elif self.state == uiState.STBY:
@@ -206,3 +239,26 @@ class UI:
 
     def stby_ui(self):
         u64led.set_matrix(u64images.add_navbar(u64images.stby_text + u64images.nothing3, *NavOpts.stby))
+
+    def translate_led(self, effectNum, target_color: Optional[Tuple[int, int, int]] = None) -> Union[
+    Callable[[], None],  # Functions with no arguments
+    Tuple[Callable[[Optional[Tuple[int, int, int]]], None], Optional[Tuple[int, int, int]]],
+    None
+]:
+        if effectNum == ledState.WW:
+            return self.ledStripe.warm_white
+        elif effectNum == ledState.W:
+            return self.ledStripe.white
+        elif effectNum == ledState.CW:
+            return self.ledStripe.cold_white
+        elif effectNum == ledState.BLACK:
+            return self.ledStripe.new_color, (0, 0, 0)
+        elif effectNum == ledState.RGB:
+            return self.ledStripe.rgb_cycle
+        elif effectNum == ledState.ARGB:
+            return self.ledStripe.argb_cycle
+        elif effectNum == ledState.CUSTOM:
+            return self.ledStripe.new_color, target_color
+        else:
+            print("invalid effectNum: " + str(effectNum))
+            return None
