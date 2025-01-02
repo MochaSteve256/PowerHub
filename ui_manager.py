@@ -245,13 +245,14 @@ class UI:
             p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, self.ledStripe.argb_cycle)
         elif self.ledEffectNum == ledState.CUSTOM:
             #something else
-            p = [[(0, 0, 0) for _ in range(8)]]
+            p = [(0, 0, 0) for _ in range(8)]
         else:
             print("error: invalid ledEffectNum")
+        p = [p]
         
         m = u64images.add_navbar(u64images.nothing3 + p + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct) # type: ignore
-        m[0][self.ledEffectNum] = (0, 128, 0) # type: ignore
         pprint(m)
+        m[0][self.ledEffectNum] = (0, 128, 0) # type: ignore
         
         m = clean_convert_matrix(m)
         u64led.set_matrix(m)
