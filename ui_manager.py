@@ -3,9 +3,9 @@ import datetime
 
 from helpers import u64led
 from helpers import u64images
-
 from helpers import psu
 from helpers import led_stripe
+import led_manager
 
 
 class uiState():
@@ -29,7 +29,12 @@ class NavOpts():
 
 class UI:
     standby = False
-    def __init__(self):
+    ledEffectNum = 0
+    led_t_offset = time.time()
+    led_target_color = (0, 0, 0)
+    
+    def __init__(self, ledStripe:led_manager.LED_Stripe):
+        self.ledStripe = ledStripe
         self.state = uiState.PSU
         self.last_click = time.time()
         self.update()
@@ -63,7 +68,10 @@ class UI:
             self.state = uiState.CLCK
             self.update()
         elif self.state == uiState.LED_SLCT:
-            pass#TODO
+            self.ledEffectNum += 1
+            if self.ledEffectNum == 6:
+                self.ledEffectNum = 0
+            self.led_t_offset = time.time()
         elif self.state == uiState.WETH:
             self.state = uiState.STBY
             self.update()
@@ -83,7 +91,10 @@ class UI:
             self.state = uiState.PSU
             self.update()
         elif self.state == uiState.LED_SLCT:
-            pass#TODO
+            self.ledEffectNum -= 1
+            if self.ledEffectNum == -1:
+                self.ledEffectNum = 5
+            self.led_t_offset = time.time()
         elif self.state == uiState.WETH:
             self.state = uiState.CLCK
             self.update()
@@ -144,17 +155,17 @@ class UI:
         
         # ui functions
         if self.state == uiState.PSU:
-            psu_ui()
+            self.psu_ui()
         elif self.state == uiState.LED:
-            led_ui()
+            self.led_ui()
         elif self.state == uiState.LED_SLCT:
-            led_slct_ui()
+            self.led_slct_ui()
         elif self.state == uiState.WETH:
-            weth_ui()
+            self.weth_ui()
         elif self.state == uiState.CLCK:
-            clck_ui()
+            self.clck_ui()
         elif self.state == uiState.STBY:
-            stby_ui()
+            self.stby_ui()
         
         # brightness adjustment at standby
         if self.standby:
@@ -172,23 +183,26 @@ class UI:
         
         u64led.show_matrix()
 
-def psu_ui():
-    if psu.is_on():
-        u64led.set_matrix(u64images.add_navbar(u64images.psu_text + u64images.psu_on, *NavOpts.psu))
-    else:
-        u64led.set_matrix(u64images.add_navbar(u64images.psu_text + u64images.psu_off, *NavOpts.psu))
+    def psu_ui(self):
+        if psu.is_on():
+            u64led.set_matrix(u64images.add_navbar(u64images.psu_text + u64images.psu_on, *NavOpts.psu))
+        else:
+            u64led.set_matrix(u64images.add_navbar(u64images.psu_text + u64images.psu_off, *NavOpts.psu))
 
-def led_ui():
-    u64led.set_matrix(u64images.add_navbar(u64images.led_text + u64images.nothing3, *NavOpts.led))
+    def led_ui(self):
+        u64led.set_matrix(u64images.add_navbar(u64images.led_text + u64images.nothing1 + self.ledStripe.effects.current_8px_rgb(), *NavOpts.led_slct))
 
-def led_slct_ui():
-    u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.led_slct))#TODO
+    def led_slct_ui(self):
+        if self.ledEffectNum == 0:
+            u64led.set_matrix(u64images.add_navbar(u64images.nothing3 + self.ledStripe.effects.preview_effect_8px(time.time() - self.led_t_offset, self.ledEffectNum, target_color=self.led_target_color) + u64images.nothing3 + u64images.nothing1, *NavOpts.led_slct))
+        else:
+            u64led.set_matrix(u64images.add_navbar(u64images.nothing3 + self.ledStripe.effects.preview_effect_8px(time.time() - self.led_t_offset, self.ledEffectNum) + u64images.nothing3 + u64images.nothing1, *NavOpts.led_slct))
 
-def weth_ui():
-    u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.weth))#TODO
+    def weth_ui(self):
+        u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.weth))#TODO
 
-def clck_ui():
-    u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.clck))#TODO
+    def clck_ui(self):
+        u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.clck))#TODO
 
-def stby_ui():
-    u64led.set_matrix(u64images.add_navbar(u64images.stby_text + u64images.nothing3, *NavOpts.stby))
+    def stby_ui(self):
+        u64led.set_matrix(u64images.add_navbar(u64images.stby_text + u64images.nothing3, *NavOpts.stby))

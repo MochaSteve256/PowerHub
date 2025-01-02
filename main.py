@@ -1,8 +1,8 @@
 import time
 
 import ui_manager
+import led_manager
 from helpers import ky040
-from helpers import led_stripe
 
 
 press_time = 0
@@ -22,8 +22,8 @@ def release():
 
 if __name__ == "__main__":
     
-    ui = ui_manager.UI()
-    
+    led = led_manager.LED_Stripe()
+    ui = ui_manager.UI(led)
     ky040 = ky040.KY040(ui.clockwise, ui.counterclockwise, press, release)
 
     try:
