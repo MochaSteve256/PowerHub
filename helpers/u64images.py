@@ -94,7 +94,7 @@ def add_navbars_together(*args):
         raise ValueError("At least one navbar must be provided.")
     
     # Ensure all navbars are the same length
-    length = len(args[0])
+    length = 8
     if not all(len(navbar) == length for navbar in args):
         raise ValueError("All navbars must have the same length.")
     
