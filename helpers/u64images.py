@@ -80,31 +80,30 @@ navbar_scroll = [black, black, blue,  blue,  blue,  blue,  black, black]
 navbar_back   = [blue,  black, black, black, black, black, black, black]
 navbar_select = [black, black, black, black, black, black, black, blue ]
 
+def add_navbars_together(*args):
+    navbar = []
+    for i in range(8):
+        navbar.append([args[j][i] for j in range(len(args))])
+    return navbar
+
 def add_navbar(matrix, select, back, scroll):
     if len(matrix) < 8:
         print("matrix too small")
         return
     if select and back and scroll:
-        for i in range(8):
-            matrix[7][i] = [navbar_scroll[i][j] + navbar_back[i][j] + navbar_select[i][j] for j in range(3)]
+        matrix[7] = add_navbars_together(navbar_scroll, navbar_back, navbar_select)
     elif select and back:
-        for i in range(8):
-            matrix[7][i] = [navbar_back[i][j] + navbar_select[i][j] for j in range(3)]
+        matrix[7] = add_navbars_together(navbar_back, navbar_select)
     elif select and scroll:
-        for i in range(8):
-            matrix[7][i] = [navbar_scroll[i][j] + navbar_select[i][j] for j in range(3)]
+        matrix[7] = add_navbars_together(navbar_scroll, navbar_select)
     elif back and scroll:
-        for i in range(8):
-            matrix[7][i] = [navbar_scroll[i][j] + navbar_back[i][j] for j in range(3)]
+        matrix[7] = add_navbars_together(navbar_scroll, navbar_back)
     elif select:
-        for i in range(8):
-            matrix[7][i] = [navbar_select[i][j] for j in range(3)]
+        matrix[7] = navbar_select[i]
     elif back:
-        for i in range(8):
-            matrix[7][i] = [navbar_back[i][j] for j in range(3)]
+        matrix[7] = navbar_back[i]
     elif scroll:
-        for i in range(8):
-            matrix[7][i] = [navbar_scroll[i][j] for j in range(3)]
+        matrix[7] = navbar_scroll[i]
 
     return matrix
 
