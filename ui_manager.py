@@ -2,6 +2,7 @@ from typing import Callable, Tuple, Union, Optional
 import time
 import datetime
 from typing import Callable
+from pprint import pprint
 
 from helpers import u64led
 from helpers import u64images
@@ -222,7 +223,7 @@ class UI:
             m = u64images.add_navbar(u64images.psu_text + u64images.psu_on, *NavOpts.psu)
         else:
             m = u64images.add_navbar(u64images.psu_text + u64images.psu_off, *NavOpts.psu)
-        print(m)
+        pprint(m)
         u64led.set_matrix(m)
 
     def led_ui(self):
