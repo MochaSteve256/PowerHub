@@ -273,9 +273,10 @@ class UI:
 def clean_convert_matrix(mtx):
     for y in range(8):
         for x in range(8):
-            if type(mtx[y][x]) == int: # type: ignore
-                try:
+            try:
+                if type(mtx[y][x]) == int: # type: ignore
                     mtx[y][x] = Adafruit_WS2801.color_to_RGB(mtx[y][x]) # type: ignore
-                except:
-                    print("error", mtx, y, x)
+            except Exception as e:
+                print(e, mtx, y, x)
+                raise
     return mtx
