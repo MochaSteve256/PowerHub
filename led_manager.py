@@ -139,7 +139,7 @@ class LED_Stripe:
     
     def warm_white(self):
         self._callback()
-        self.target_color = (255, 120, 50)
+        self.target_color = (255, 130, 40)
         self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
     
     def white(self):
