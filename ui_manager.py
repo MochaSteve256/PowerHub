@@ -250,7 +250,7 @@ class UI:
         u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.clck))#TODO
 
     def stby_ui(self):
-        u64led.set_matrix(u64images.add_navbar(u64images.stby_text + u64images.nothing3, *NavOpts.stby))
+        u64led.set_matrix(u64images.add_navbar(u64images.stby_text, *NavOpts.stby))
 
     def translate_led(self, effectNum, target_color: Optional[Tuple[int, int, int]] = None) -> Union[
     Callable[[], None],  # Functions with no arguments
