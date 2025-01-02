@@ -38,7 +38,7 @@ class Effects:
             led = int(i * (led_stripe.PIXEL_COUNT / 8))
             if array[led] is not None:
                 line[i] = array[led]
-        return line
+        return [line]
     def current_8px_rgb(self):
         return self._generate_8px_rgb(self.arr)
     

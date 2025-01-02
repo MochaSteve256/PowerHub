@@ -190,8 +190,6 @@ class UI:
             u64led.set_matrix(u64images.add_navbar(u64images.psu_text + u64images.psu_off, *NavOpts.psu))
 
     def led_ui(self):
-        print(self.ledStripe.effects.current_8px_rgb())
-        print(u64images.nothing1)
         u64led.set_matrix(u64images.add_navbar(u64images.led_text + u64images.nothing1 + self.ledStripe.effects.current_8px_rgb() + u64images.nothing1, *NavOpts.led_slct))
 
     def led_slct_ui(self):
