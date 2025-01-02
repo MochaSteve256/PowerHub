@@ -217,10 +217,13 @@ class UI:
         u64led.show_matrix()
 
     def psu_ui(self):
+        m = []
         if psu.is_on():
-            u64led.set_matrix(u64images.add_navbar(u64images.psu_text + u64images.psu_on, *NavOpts.psu))
+            m = u64images.add_navbar(u64images.psu_text + u64images.psu_on, *NavOpts.psu)
         else:
-            u64led.set_matrix(u64images.add_navbar(u64images.psu_text + u64images.psu_off, *NavOpts.psu))
+            m = u64images.add_navbar(u64images.psu_text + u64images.psu_off, *NavOpts.psu)
+        print(m)
+        u64led.set_matrix(m)
 
     def led_ui(self):
         u64led.set_matrix(u64images.add_navbar(u64images.led_text + u64images.nothing1 + self.ledStripe.effects.current_8px_rgb() + u64images.nothing1, *NavOpts.led_slct))
