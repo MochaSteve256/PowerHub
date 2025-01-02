@@ -81,6 +81,9 @@ navbar_back   = [blue,  black, black, black, black, black, black, black]
 navbar_select = [black, black, black, black, black, black, black, blue ]
 
 def add_navbar(matrix, select, back, scroll):
+    if len(matrix) < 8:
+        print("matrix too small")
+        return
     if select and back and scroll:
         for i in range(8):
             matrix[7][i] = [navbar_scroll[i][j] + navbar_back[i][j] + navbar_select[i][j] for j in range(3)]
