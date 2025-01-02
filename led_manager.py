@@ -50,7 +50,8 @@ class Effects:
         self.ledState.target = effect
     
     def _generate_array(self, t:float, ledState:LedState, target_color=None):
-        start_colors = copy.deepcopy(self.current_colors_rgb)
+        if not self.overtime:
+            start_colors = copy.deepcopy(self.current_colors_rgb)
         if type(start_colors[0]) == int:
             for i in range(led_stripe.PIXEL_COUNT):
                 start_colors[i] = Adafruit_WS2801.color_to_RGB(start_colors[i])
@@ -62,13 +63,10 @@ class Effects:
                 self.end = 1
             elif ledState.target == ledState.RGB_CYCLE:
                 if ledState.current == ledState.STATIC_COLOR or ledState.current == ledState.SUNRISE or ledState.current == ledState.SUNSET or ledState.current == ledState.ALARM:
-                    if start_colors[0] == (0, 0, 0) or start_colors[0] == 0:
+                    if start_colors[0] == (0, 0, 0):
                         self.arr =[led_stripe.fade_black_rgb(i, t) for i in range(led_stripe.PIXEL_COUNT)]
                         self.end = 1
                     else:
-                        if type(start_colors[0]) == int:
-                            for i in range(led_stripe.PIXEL_COUNT):
-                                start_colors[i] = Adafruit_WS2801.color_to_RGB(start_colors[i])
                         self.arr =[led_stripe.fade_cx_rgb(i, start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)] 
                         self.end = 2
                 elif ledState.current == ledState.ARGB_CYCLE:
@@ -79,13 +77,10 @@ class Effects:
                     self.end = 2
             elif ledState.target == ledState.ARGB_CYCLE:
                 if ledState.current == ledState.STATIC_COLOR or ledState.current == ledState.SUNRISE or ledState.current == ledState.SUNSET or ledState.current == ledState.ALARM:
-                    if start_colors[0] == (0, 0, 0) or start_colors[0] == 0:
+                    if start_colors[0] == (0, 0, 0):
                         self.arr =[led_stripe.fade_black_argb(i, t) for i in range(led_stripe.PIXEL_COUNT)]
                         self.end = 1
                     else:
-                        if type(start_colors[0]) == int:
-                            for i in range(led_stripe.PIXEL_COUNT):
-                                start_colors[i] = Adafruit_WS2801.color_to_RGB(start_colors[i])
                         self.arr =[led_stripe.fade_cx_argb(i, start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)]
                         self.end = 2
                 elif ledState.current == ledState.RGB_CYCLE:
