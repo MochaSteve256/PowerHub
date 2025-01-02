@@ -190,13 +190,13 @@ class UI:
             u64led.set_matrix(u64images.add_navbar(u64images.psu_text + u64images.psu_off, *NavOpts.psu))
 
     def led_ui(self):
-        u64led.set_matrix(u64images.add_navbar(u64images.led_text + u64images.nothing1 + self.ledStripe.effects.current_8px_rgb(), *NavOpts.led_slct))
+        u64led.set_matrix(u64images.add_navbar(u64images.led_text + u64images.nothing1 + self.ledStripe.effects.current_8px_rgb() + u64images.nothing1, *NavOpts.led_slct))
 
     def led_slct_ui(self):
         if self.ledEffectNum == 0:
-            u64led.set_matrix(u64images.add_navbar(u64images.nothing3 + [self.ledStripe.effects.preview_effect_8px(time.time() - self.led_t_offset, self.ledEffectNum, target_color=self.led_target_color)] + u64images.nothing3 + u64images.nothing1, *NavOpts.led_slct))
+            u64led.set_matrix(u64images.add_navbar(u64images.nothing3 + self.ledStripe.effects.preview_effect_8px(time.time() - self.led_t_offset, self.ledEffectNum, target_color=self.led_target_color) + u64images.nothing3 + u64images.nothing1, *NavOpts.led_slct))
         else:
-            u64led.set_matrix(u64images.add_navbar(u64images.nothing3 + [self.ledStripe.effects.preview_effect_8px(time.time() - self.led_t_offset, self.ledEffectNum)] + u64images.nothing3 + u64images.nothing1, *NavOpts.led_slct))
+            u64led.set_matrix(u64images.add_navbar(u64images.nothing3 + self.ledStripe.effects.preview_effect_8px(time.time() - self.led_t_offset, self.ledEffectNum) + u64images.nothing3 + u64images.nothing1, *NavOpts.led_slct))
 
     def weth_ui(self):
         u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.weth))#TODO
