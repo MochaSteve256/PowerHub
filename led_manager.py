@@ -70,7 +70,7 @@ class Effects:
                         self.end = 2
                 elif ledState.current == ledState.ARGB_CYCLE:
                     if t < 1:
-                        self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], (0, 0, 0), -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], (0, 0, 0), t) for i in range(led_stripe.PIXEL_COUNT)]
                     else:
                         self.arr =[led_stripe.fade_black_rgb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
@@ -84,7 +84,7 @@ class Effects:
                         self.end = 2
                 elif ledState.current == ledState.RGB_CYCLE:
                     if t < 1:
-                        self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], (0, 0, 0), -t + 1) for i in range(led_stripe.PIXEL_COUNT)]
+                        self.arr =[led_stripe.fade_cx_cy(i, start_colors[i], (0, 0, 0), t) for i in range(led_stripe.PIXEL_COUNT)]
                     else:
                         self.arr =[led_stripe.fade_black_argb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
