@@ -50,7 +50,7 @@ class Effects:
     def preview_effect_8px(self, t_off, effect, target_color=None):
         ledState = copy.deepcopy(self.ledState)
         selfcopy = copy.deepcopy(self)
-        t = time.time() - t_off
+        t = (time.time() * 2) - (t_off * 2)
         if effect == self.stripe.warm_white:
             ledState.target = ledState.STATIC_COLOR
             return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState, target_color=ww))
