@@ -107,12 +107,16 @@ def add_navbars_together(*args):
             if color != [0, 0, 0]:  # Overlay non-black colors
                 result[i] = color
     
+    print(result)
     return result
 
 
 def add_navbar(matrix, select, back, scroll):
     if len(matrix) < 8:
         print("matrix too small")
+        return
+    if len(matrix) > 8:
+        print("matrix too big before adding navbar")
         return
     if select and back and scroll:
         matrix[7] = add_navbars_together(navbar_scroll, navbar_back, navbar_select)
