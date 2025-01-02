@@ -29,6 +29,7 @@ if __name__ == "__main__":
     try:
         while True:
             ui.update()
+            led.update()
             time.sleep(.01)
     finally:
         ky040.stop()

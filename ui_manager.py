@@ -130,6 +130,7 @@ class UI:
         elif self.state == uiState.LED_SLCT:
             if self.ledEffectNum == ledState.CUSTOM:
                 self.state = uiState.LED_CUSTOM
+                self.update()
             elif self.ledEffectNum == ledState.WW:
                 self.ledStripe.warm_white()
             elif self.ledEffectNum == ledState.W:
@@ -142,7 +143,9 @@ class UI:
                 self.ledStripe.rgb_cycle()
             elif self.ledEffectNum == ledState.ARGB:
                 self.ledStripe.argb_cycle()
-
+            self.state = uiState.LED
+            self.update()
+        elif self.state == uiState.LED_CUSTOM:
             self.state = uiState.LED
             self.update()
         elif self.state == uiState.STBY:
@@ -221,7 +224,7 @@ class UI:
         u64led.set_matrix(m)
 
     def led_ui(self):
-        m = u64images.add_navbar(u64images.led_text + u64images.nothing1 + self.ledStripe.effects.current_8px_rgb() + u64images.nothing1, *NavOpts.led_slct)
+        m = u64images.add_navbar(u64images.led_text + u64images.nothing1 + self.ledStripe.effects.current_8px_rgb() + u64images.nothing1, *NavOpts.led)
         m = clean_convert_matrix(m)
         u64led.set_matrix(m)
 
