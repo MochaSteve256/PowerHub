@@ -102,7 +102,7 @@ def add_navbars_together(*args):
     
     for navbar in args[1:]:
         for i, color in enumerate(navbar):
-            if color != (0, 0, 0):  # Overlay non-black colors
+            if color != [0, 0, 0]:  # Overlay non-black colors
                 result[i] = color
     
     return result
