@@ -251,7 +251,7 @@ class UI:
         p = [p]
         
         m = u64images.add_navbar(u64images.nothing3 + p + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct) # type: ignore
-        pprint(m)
+        print(m)
         m[0][self.ledEffectNum] = (0, 128, 0) # type: ignore
         
         m = clean_convert_matrix(m)
