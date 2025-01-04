@@ -52,7 +52,8 @@ class Effects:
     def preview_effect_8px(self, t_off, divider, effect, targetColor=None):
         pLedState = copy.copy(self.LedState)
         selfcopy = copy.copy(self)
-        selfcopy.end = 1
+        if selfcopy.overtime:
+            selfcopy.target_color = None
         pt = (time.time() * 2) - (t_off * 2)
         if effect == self.stripe.warm_white:
             pLedState.target = pLedState.STATIC_COLOR
@@ -90,7 +91,6 @@ class Effects:
                 self.start_colors[i] = Adafruit_WS2801.color_to_RGB(self.start_colors[i])
         self.target_color = copy.deepcopy(target_color)
         if t >= self.end:
-            target_color = None
             self.start_colors = copy.deepcopy(self.current_colors_rgb)
         if (ledState.current != ledState.target) or (target_color is not None):
             if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
@@ -201,6 +201,8 @@ class LED_Stripe:
     
     def update(self):
         self.t = time.time() - self.t_offset
+        if self.effects.overtime:
+            self.target_color = None
         arr = self.effects._generate_array(self.t, self.effects.LedState, target_color=self.target_color)
         if type(arr[0]) == tuple:
             led_stripe.set_array(arr)
