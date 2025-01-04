@@ -37,6 +37,7 @@ if __name__ == "__main__":
         #ledUT = threading.Thread(target=led_update)
         #ledUT.start()
         while True:
+            ky040.update()
             ui.update()
             led.update()
     finally:

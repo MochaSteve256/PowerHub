@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO # type: ignore
 KY = None
 try:
     from .KY040_lib import KY040 as KY
@@ -23,19 +23,19 @@ _switchReleaseFunc = None
 
 def _rotaryChange(direction):
     if direction == 1:
-        _clockwiseFunc()
+        _clockwiseFunc() #type: ignore
     else:
-        _counterclockwiseFunc()
+        _counterclockwiseFunc() #type: ignore
 def _switchPressed():
-    _switchPressFunc()
+    _switchPressFunc() #type: ignore
 
 def _switchReleased():
-    _switchReleaseFunc()
+    _switchReleaseFunc() #type: ignore
 
 class KY040:
     def __init__(self, clockwiseCallback, counterclockwiseCallback, switchPressCallback, switchReleaseCallback):
-        self.ky040 = KY(CLOCKPIN, DATAPIN, SWITCHPIN, _rotaryChange, _switchPressed, _switchReleased)
-        self.ky040.start()
+        self.ky040 = KY(CLOCKPIN, DATAPIN, SWITCHPIN, _rotaryChange, _switchPressed, _switchReleased) #type: ignore
+        #self.ky040.start()
         
         global _clockwiseFunc, _counterclockwiseFunc, _switchPressFunc, _switchReleaseFunc
         _clockwiseFunc = clockwiseCallback
@@ -45,6 +45,9 @@ class KY040:
     
     def stop(self):
         self.ky040.stop()
+        
+    def update(self):
+        self.ky040.update()
 
 
 if __name__ == "__main__":

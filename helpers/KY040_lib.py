@@ -9,7 +9,7 @@ Additional code added by Conrad Storz 2015 and 2016
 Additional code added by Adrian Steyer 2024
 """
 
-import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO# type: ignore
 from time import sleep
 import threading
 
@@ -36,23 +36,27 @@ class KY040:
         GPIO.setup(clockPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(dataPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.setup(switchPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        
+        # Relocate from start()
+        print("Starting KY040")
+        GPIO.add_event_detect(self.clockPin, GPIO.FALLING, callback=self._clockCallback, bouncetime=self.DEBOUNCE)
 
     def _switch_monitor(self):
         print("Switch monitoring thread running")
         while self.running:
             sleep(0.005)
-            switch_state = GPIO.input(self.switchPin)
-            if switch_state != self._switch_state:
-                sleep(self.DEBOUNCE * 0.001)
-                if switch_state == GPIO.LOW:
-                    self.switchPressCallback()
-                else:
-                    self.switchReleaseCallback()
-                self._switch_state = switch_state
+    
+    def update(self):
+        switch_state = GPIO.input(self.switchPin)
+        if switch_state != self._switch_state:
+            sleep(self.DEBOUNCE * 0.001)
+            if switch_state == GPIO.LOW:
+                self.switchPressCallback()
+            else:
+                self.switchReleaseCallback()
+            self._switch_state = switch_state
 
     def start(self):
-        print("Starting KY040")
-        GPIO.add_event_detect(self.clockPin, GPIO.FALLING, callback=self._clockCallback, bouncetime=self.DEBOUNCE)
         self.running = True
         self._switch_thread = threading.Thread(target=self._switch_monitor)
         self._switch_thread.start()
