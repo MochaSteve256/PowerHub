@@ -13,7 +13,7 @@ try:
         print(f"Found PID: {pid}")
         
         # Step 2: Kill the Process
-        subprocess.run(["sudo kill", pid])
+        os.system(f"sudo kill {pid}")
         print(f"Process {pid} has been killed.")
     else:
         print("No matching process found.")
