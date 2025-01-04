@@ -65,13 +65,13 @@ class Effects:
             return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, pLedState, target_color=(0, 0, 0)))
         elif effect == self.stripe.rgb_cycle:
             pLedState.target = pLedState.RGB_CYCLE
-            x = selfcopy._generate_8px_rgb(selfcopy._generate_array(t, pLedState))
+            x = selfcopy._generate_8px_rgb(Effects._generate_array(selfcopy, t, pLedState))
             if t > selfcopy.end:
                 pLedState.current = pLedState.RGB_CYCLE
             return x
         elif effect == self.stripe.argb_cycle:
             pLedState.target = pLedState.ARGB_CYCLE
-            x = selfcopy._generate_8px_rgb(selfcopy._generate_array(t, pLedState))
+            x = selfcopy._generate_8px_rgb(Effects._generate_array(selfcopy,t, pLedState))
             if t > selfcopy.end:
                 pLedState.current = pLedState.ARGB_CYCLE
             return x

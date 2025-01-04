@@ -129,6 +129,7 @@ class UI:
         elif self.state == uiState.LED:
             self.state = uiState.LED_SLCT
             self.update()
+            self.led_t_offset = time.time()
         elif self.state == uiState.LED_SLCT:
             if self.ledEffectNum == ledState.CUSTOM:
                 self.state = uiState.LED_CUSTOM
