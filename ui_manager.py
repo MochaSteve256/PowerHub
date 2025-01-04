@@ -230,7 +230,7 @@ class UI:
         u64led.set_matrix(m)
 
     def led_ui(self):
-        m = u64images.add_navbar(u64images.led_text + u64images.nothing1 + self.ledStripe.effects.current_8px_rgb() + u64images.nothing1, *NavOpts.led)
+        m = u64images.add_navbar(u64images.led_text + u64images.nothing1 + self.ledStripe.effects.current_8px_rgb(2) + u64images.nothing1, *NavOpts.led)
         m = clean_convert_matrix(m)
         u64led.set_matrix(m)
 
@@ -238,17 +238,17 @@ class UI:
         m = None
         p = None
         if self.ledEffectNum == ledState.WW:
-            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, self.ledStripe.warm_white)
+            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, 2, self.ledStripe.warm_white)
         elif self.ledEffectNum == ledState.W:
-            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, self.ledStripe.white)
+            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, 2, self.ledStripe.white)
         elif self.ledEffectNum == ledState.CW:
-            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, self.ledStripe.cold_white)
+            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, 2, self.ledStripe.cold_white)
         elif self.ledEffectNum == ledState.BLACK:
-            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, self.ledStripe.black)
+            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, 2, self.ledStripe.black)
         elif self.ledEffectNum == ledState.RGB:
-            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, self.ledStripe.rgb_cycle)
+            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, 2, self.ledStripe.rgb_cycle)
         elif self.ledEffectNum == ledState.ARGB:
-            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, self.ledStripe.argb_cycle)
+            p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, 2, self.ledStripe.argb_cycle)
         elif self.ledEffectNum == ledState.CUSTOM:
             #something else
             p = [[(0, 0, 0) for _ in range(8)]]
