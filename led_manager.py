@@ -53,9 +53,8 @@ class Effects:
     
     def preview_effect_8px(self, t_off, divider, effect, targetColor=None):
         if self.selfcopy is None or effect != self.pLastEffect:
-            self.selfcopy = copy.deepcopy(self)
+            self.selfcopy = copy.copy(self)
             self.pLastEffect = effect
-            print("copied", self.selfcopy is None, effect != self.pLastEffect)
         if self.selfcopy.overtime:
             self.selfcopy.target_color = None
             self.selfcopy.LedState.current = self.selfcopy.LedState.target
@@ -96,7 +95,6 @@ class Effects:
         if t >= self.end:
             self.start_colors = copy.deepcopy(self.current_colors_rgb)
         if (ledState.current != ledState.target) or (target_color is not None):
-            print(t, self.end, ledState.current, ledState.target, target_color)
             if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
                 self.target_color_save = target_color
                 self.arr =[led_stripe.fade_cx_cy(i, self.start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
