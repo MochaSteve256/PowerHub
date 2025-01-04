@@ -55,7 +55,7 @@ class Effects:
         if self.selfcopy is None or self.selfcopy.LedState != self.pLedState:
             self.selfcopy = copy.deepcopy(self)
             self.pLedState = copy.copy(self.selfcopy.LedState)
-            print("copied", self.selfcopy, self.selfcopy.LedState != self.pLedState)
+            print("copied", self.selfcopy is None, self.selfcopy.LedState != self.pLedState)
         if self.selfcopy.overtime:
             self.selfcopy.target_color = None
             self.selfcopy.LedState.current = self.selfcopy.LedState.target
