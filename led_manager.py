@@ -54,9 +54,10 @@ class Effects:
     def preview_effect_8px(self, t_off, divider, effect, targetColor=None):
         if self.selfcopy is None or self.selfcopy.LedState != self.pLedState:
             self.selfcopy = copy.copy(self)
-        pLedState = copy.copy(self.selfcopy.LedState)
+            pLedState = copy.copy(self.selfcopy.LedState)
         if self.selfcopy.overtime:
             self.selfcopy.target_color = None
+            self.selfcopy.LedState.current = self.selfcopy.LedState.target
         pt = (time.time() * 2) - (t_off * 2)
         if effect == self.stripe.warm_white:
             pLedState.target = pLedState.STATIC_COLOR
@@ -121,7 +122,7 @@ class Effects:
                     self.end = 2
             if t > self.end:
                 print("wtf")
-                ledState.current = copy.copy(ledState.target)
+                ledState.current = ledState.target
                 self.overtime = True
             else:
                 self.overtime = False
