@@ -48,8 +48,8 @@ class Effects:
         return self._generate_8px_rgb(self.arr)
     
     def preview_effect_8px(self, t_off, effect, target_color=None):
-        pLedState = copy.deepcopy(self.LedState)
-        selfcopy = copy.deepcopy(self)
+        pLedState = copy.copy(self.LedState)
+        selfcopy = copy.copy(self)
         selfcopy.end = 1
         pt = (time.time() * 2) - (t_off * 2)
         if effect == self.stripe.warm_white:
