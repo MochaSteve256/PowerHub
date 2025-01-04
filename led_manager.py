@@ -50,30 +50,26 @@ class Effects:
     def preview_effect_8px(self, t_off, effect, target_color=None):
         pLedState = copy.deepcopy(self.ledState)
         selfcopy = copy.deepcopy(self)
-        t = (time.time() * 2) - (t_off * 2)
+        pt = (time.time() * 2) - (t_off * 2)
         if effect == self.stripe.warm_white:
             pLedState.target = pLedState.STATIC_COLOR
-            return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, pLedState, target_color=ww))
+            return selfcopy._generate_8px_rgb(selfcopy._generate_array(pt, pLedState, target_color=ww))
         elif effect == self.stripe.white:
             pLedState.target = pLedState.STATIC_COLOR
-            return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, pLedState, target_color=w))
+            return selfcopy._generate_8px_rgb(selfcopy._generate_array(pt, pLedState, target_color=w))
         elif effect == self.stripe.cold_white:
             pLedState.target = pLedState.STATIC_COLOR
-            return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, pLedState, target_color=cw))
+            return selfcopy._generate_8px_rgb(selfcopy._generate_array(pt, pLedState, target_color=cw))
         elif effect == self.stripe.black:
             pLedState.target = pLedState.STATIC_COLOR
-            return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, pLedState, target_color=(0, 0, 0)))
+            return selfcopy._generate_8px_rgb(selfcopy._generate_array(pt, pLedState, target_color=(0, 0, 0)))
         elif effect == self.stripe.rgb_cycle:
             pLedState.target = pLedState.RGB_CYCLE
-            x = selfcopy._generate_8px_rgb(Effects._generate_array(selfcopy, t, pLedState))
-            if t > selfcopy.end:
-                pLedState.current = pLedState.RGB_CYCLE
+            x = selfcopy._generate_8px_rgb(Effects._generate_array(selfcopy, pt, pLedState))
             return x
         elif effect == self.stripe.argb_cycle:
             pLedState.target = pLedState.ARGB_CYCLE
-            x = selfcopy._generate_8px_rgb(Effects._generate_array(selfcopy,t, pLedState))
-            if t > selfcopy.end:
-                pLedState.current = pLedState.ARGB_CYCLE
+            x = selfcopy._generate_8px_rgb(Effects._generate_array(selfcopy, pt, pLedState))
             return x
         else:
             print("error: cannot preview effect")
