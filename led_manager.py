@@ -73,12 +73,14 @@ class Effects:
         else:
             print("error: cannot preview effect")
         
-        print(pt, selfcopy.end)
+        print(pt, selfcopy.end, target_color)
         return x
     def set_effect(self, effect:int):
         self.LedState.target = effect
     
     def _generate_array(self, t:float, ledState:LEDState, target_color=None):
+        if self.overtime:
+            target_color = None
         for i in range(led_stripe.PIXEL_COUNT):
             if type(self.start_colors[i]) == int:
                 self.start_colors[i] = Adafruit_WS2801.color_to_RGB(self.start_colors[i])
@@ -194,8 +196,6 @@ class LED_Stripe:
     
     def update(self):
         self.t = time.time() - self.t_offset
-        if self.effects.overtime:
-            self.target_color = None
         arr = self.effects._generate_array(self.t, self.effects.LedState, target_color=self.target_color)
         if type(arr[0]) == tuple:
             led_stripe.set_array(arr)
