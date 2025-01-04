@@ -74,6 +74,8 @@ class Effects:
             return x
         else:
             print("error: cannot preview effect")
+        
+        print(pt, selfcopy.end)
     def set_effect(self, effect:int):
         self.LedState.target = effect
     

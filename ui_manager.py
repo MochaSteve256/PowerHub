@@ -44,6 +44,7 @@ class UI:
     ledEffectNum = 0
     led_t_offset = time.time()
     led_target_color = (0, 0, 0)
+    before_stby_ui = 0
     
     def __init__(self, ledStripe):
         self.ledStripe = ledStripe
@@ -56,14 +57,17 @@ class UI:
         self.last_click = time.time()
         if self.standby:
             self.standby = False
+            self.state = self.before_stby_ui
             self.update()
+            self.before_stby_ui = self.state
             return True
         return False
     
-    def _stby_callback(self, *_args):
+    def _stby_callback(self):
         print("standby callback")
+        self.standby = True
         self._last_standby_switch = time.time()
-    
+        self.before_stby_ui = self.state
 
     def _nighttime_check(self):
         if datetime.datetime.now().hour < 6 or datetime.datetime.now().hour > 22:
@@ -96,6 +100,7 @@ class UI:
     def counterclockwise(self):
         if self._stby_check():
             return
+            
         if self.state == uiState.PSU:
             self.state = uiState.STBY
             self.update()
@@ -152,9 +157,8 @@ class UI:
             self.state = uiState.LED
             self.update()
         elif self.state == uiState.STBY:
-            self.standby = not self.standby
-            if self.standby:
-                self._last_standby_switch = time.time()
+            self.standby = True
+            self._stby_callback()
             self.update()
     def back(self):
         if self._stby_check():
@@ -170,8 +174,7 @@ class UI:
         # auto standby
         if time.time() - self.last_click > 10:
             if not self.standby:
-                self.standby = True
-                self._last_standby_switch = time.time()
+                self._stby_callback()
         
         # standby logic
         if self.standby:
