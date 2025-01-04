@@ -118,7 +118,7 @@ class Effects:
                     self.end = 2
             if t > self.end:
                 print("wtf")
-                ledState.current = ledState.target
+                ledState.current = copy.copy(ledState.target)
                 self.overtime = True
             else:
                 self.overtime = False
