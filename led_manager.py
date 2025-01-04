@@ -10,7 +10,7 @@ ww = (255, 130, 40)
 w = (255, 160, 80)
 cw = (255, 255, 255)
 
-class LedState:
+class LEDState:
     # Properties
     current = 0
     target = 0
@@ -30,7 +30,7 @@ class Effects:
     start_colors = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
     
     def __init__(self, stripe) -> None:
-        self.ledState = LedState()
+        self.LedState = LEDState()
         self.end = 1
         self.stripe = stripe
         self.overtime = False
@@ -48,8 +48,9 @@ class Effects:
         return self._generate_8px_rgb(self.arr)
     
     def preview_effect_8px(self, t_off, effect, target_color=None):
-        pLedState = copy.deepcopy(self.ledState)
+        pLedState = copy.deepcopy(self.LedState)
         selfcopy = copy.deepcopy(self)
+        selfcopy.end = 1
         pt = (time.time() * 2) - (t_off * 2)
         if effect == self.stripe.warm_white:
             pLedState.target = pLedState.STATIC_COLOR
@@ -74,9 +75,9 @@ class Effects:
         else:
             print("error: cannot preview effect")
     def set_effect(self, effect:int):
-        self.ledState.target = effect
+        self.LedState.target = effect
     
-    def _generate_array(self, t:float, ledState:LedState, target_color=None):
+    def _generate_array(self, t:float, ledState:LEDState, target_color=None):
         for i in range(led_stripe.PIXEL_COUNT):
             if type(self.start_colors[i]) == int:
                 self.start_colors[i] = Adafruit_WS2801.color_to_RGB(self.start_colors[i])
@@ -145,56 +146,56 @@ class LED_Stripe:
     def new_color(self, rgb):
         self._callback()
         self.target_color = rgb
-        self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
+        self.effects.LedState.target = self.effects.LedState.STATIC_COLOR
     
     def rgb_cycle(self):
         self._callback()
-        self.effects.ledState.target = self.effects.ledState.RGB_CYCLE
+        self.effects.LedState.target = self.effects.LedState.RGB_CYCLE
     
     def argb_cycle(self):
         self._callback()
-        self.effects.ledState.target = self.effects.ledState.ARGB_CYCLE
+        self.effects.LedState.target = self.effects.LedState.ARGB_CYCLE
     
     def warm_white(self):
         self._callback()
         self.target_color = ww
-        self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
+        self.effects.LedState.target = self.effects.LedState.STATIC_COLOR
     
     def white(self):
         self._callback()
         self.target_color = w
-        self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
+        self.effects.LedState.target = self.effects.LedState.STATIC_COLOR
     
     def cold_white(self):
         self._callback()
         self.target_color = cw
-        self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
+        self.effects.LedState.target = self.effects.LedState.STATIC_COLOR
     
     def black(self):
         self._callback()
         self.target_color = (0, 0, 0)
-        self.effects.ledState.target = self.effects.ledState.STATIC_COLOR
+        self.effects.LedState.target = self.effects.LedState.STATIC_COLOR
     
     def sunrise(self):
         self._callback()
-        self.effects.ledState.current = self.effects.ledState.SUNRISE
-        self.effects.ledState.target = self.effects.ledState.SUNRISE
+        self.effects.LedState.current = self.effects.LedState.SUNRISE
+        self.effects.LedState.target = self.effects.LedState.SUNRISE
     
     def sunset(self):
         self._callback()
-        self.effects.ledState.current = self.effects.ledState.SUNSET
-        self.effects.ledState.target = self.effects.ledState.SUNSET
+        self.effects.LedState.current = self.effects.LedState.SUNSET
+        self.effects.LedState.target = self.effects.LedState.SUNSET
     
     def alarm(self):
         self._callback()
-        self.effects.ledState.current = self.effects.ledState.ALARM
-        self.effects.ledState.target = self.effects.ledState.ALARM
+        self.effects.LedState.current = self.effects.LedState.ALARM
+        self.effects.LedState.target = self.effects.LedState.ALARM
     
     def update(self):
         self.t = time.time() - self.t_offset
         if self.effects.overtime:
             self.target_color = None
-        arr = self.effects._generate_array(self.t, self.effects.ledState, target_color=self.target_color)
+        arr = self.effects._generate_array(self.t, self.effects.LedState, target_color=self.target_color)
         if type(arr[0]) == tuple:
             led_stripe.set_array(arr)
         elif type(arr[0]) == int:

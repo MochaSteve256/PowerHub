@@ -21,10 +21,10 @@ class uiState():
     STBY = 5
 
 class ledState():
-    WW = 0
+    WW = 3
     W = 1
     CW = 2
-    BLACK = 3
+    BLACK = 0
     RGB = 4
     ARGB = 5
     CUSTOM = 6
