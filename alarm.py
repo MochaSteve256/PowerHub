@@ -4,10 +4,10 @@ import schedule
 import led_manager
 
 class Alarm():
-    sunriseTime = "6:55"
-    alarmTime = "7:00"
-    cwTime = "7:02"
-    schoolPowerOffTime = "7:45"
+    sunriseTime = "06:55"
+    alarmTime = "07:00"
+    cwTime = "07:02"
+    schoolPowerOffTime = "07:45"
     wwTime = "22:00"
     sunsetTime = "23:00"
     
@@ -27,3 +27,4 @@ class Alarm():
     
     def update(self):
         schedule.run_pending()
+
