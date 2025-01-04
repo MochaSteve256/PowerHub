@@ -29,6 +29,7 @@ class Effects:
     current_colors_rgb = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
     start_colors = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
     pLedState = None
+    selfcopy = None
     
     def __init__(self, stripe) -> None:
         self.LedState = LEDState()
