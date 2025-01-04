@@ -81,8 +81,7 @@ class Effects:
             print("error: cannot preview effect")
         
         return x
-    def set_effect(self, effect:int):
-        self.LedState.target = effect
+
     
     def _generate_array(self, t:float, ledState:LEDState, target_color=None):
         for i in range(led_stripe.PIXEL_COUNT):
@@ -118,6 +117,7 @@ class Effects:
                         self.arr =[led_stripe.fade_black_argb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
             if t > self.end:
+                print("wtf")
                 ledState.current = ledState.target
                 self.overtime = True
             else:
