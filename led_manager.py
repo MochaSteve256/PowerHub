@@ -80,7 +80,6 @@ class Effects:
         else:
             print("error: cannot preview effect")
         
-        print(pt, selfcopy.end, targetColor)
         return x
     def set_effect(self, effect:int):
         self.LedState.target = effect
@@ -93,6 +92,7 @@ class Effects:
         if t >= self.end:
             self.start_colors = copy.deepcopy(self.current_colors_rgb)
         if (ledState.current != ledState.target) or (target_color is not None):
+            print(t, ledState.current, ledState.target, target_color)
             if (ledState.target == ledState.STATIC_COLOR) and (target_color is not None):
                 self.target_color_save = target_color
                 self.arr =[led_stripe.fade_cx_cy(i, self.start_colors[i], target_color, t) for i in range(led_stripe.PIXEL_COUNT)]
