@@ -28,6 +28,7 @@ class Effects:
     arr = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
     current_colors_rgb = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
     start_colors = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
+    pLedState = None
     
     def __init__(self, stripe) -> None:
         self.LedState = LEDState()
@@ -50,33 +51,34 @@ class Effects:
         return self._generate_8px_rgb(self.arr, divider)
     
     def preview_effect_8px(self, t_off, divider, effect, targetColor=None):
-        pLedState = copy.copy(self.LedState)
-        selfcopy = copy.copy(self)
-        if selfcopy.overtime:
-            selfcopy.target_color = None
+        if self.selfcopy is None or self.selfcopy.LedState != self.pLedState:
+            self.selfcopy = copy.copy(self)
+        pLedState = copy.copy(self.selfcopy.LedState)
+        if self.selfcopy.overtime:
+            self.selfcopy.target_color = None
         pt = (time.time() * 2) - (t_off * 2)
         if effect == self.stripe.warm_white:
             pLedState.target = pLedState.STATIC_COLOR
             targetColor = ww
-            x =selfcopy._generate_8px_rgb(selfcopy._generate_array(pt, pLedState, targetColor), divider)
+            x =self.selfcopy._generate_8px_rgb(self.selfcopy._generate_array(pt, pLedState, targetColor), divider)
         elif effect == self.stripe.white:
             pLedState.target = pLedState.STATIC_COLOR
             targetColor = w
-            x =selfcopy._generate_8px_rgb(selfcopy._generate_array(pt, pLedState, targetColor), divider)
+            x =self.selfcopy._generate_8px_rgb(self.selfcopy._generate_array(pt, pLedState, targetColor), divider)
         elif effect == self.stripe.cold_white:
             pLedState.target = pLedState.STATIC_COLOR
             targetColor = cw
-            x =selfcopy._generate_8px_rgb(selfcopy._generate_array(pt, pLedState, targetColor), divider)
+            x =self.selfcopy._generate_8px_rgb(self.selfcopy._generate_array(pt, pLedState, targetColor), divider)
         elif effect == self.stripe.black:
             pLedState.target = pLedState.STATIC_COLOR
             targetColor = (0, 0, 0)
-            x =selfcopy._generate_8px_rgb(selfcopy._generate_array(pt, pLedState, targetColor), divider)
+            x =self.selfcopy._generate_8px_rgb(self.selfcopy._generate_array(pt, pLedState, targetColor), divider)
         elif effect == self.stripe.rgb_cycle:
             pLedState.target = pLedState.RGB_CYCLE
-            x = selfcopy._generate_8px_rgb(Effects._generate_array(selfcopy, pt, pLedState), divider)
+            x = self.selfcopy._generate_8px_rgb(Effects._generate_array(self.selfcopy, pt, pLedState), divider)
         elif effect == self.stripe.argb_cycle:
             pLedState.target = pLedState.ARGB_CYCLE
-            x = selfcopy._generate_8px_rgb(Effects._generate_array(selfcopy, pt, pLedState), divider)
+            x = self.selfcopy._generate_8px_rgb(Effects._generate_array(self.selfcopy, pt, pLedState), divider)
         else:
             print("error: cannot preview effect")
         
