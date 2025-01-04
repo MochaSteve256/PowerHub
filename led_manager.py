@@ -28,7 +28,7 @@ class Effects:
     arr = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
     current_colors_rgb = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
     start_colors = [(0, 0, 0) for _ in range(led_stripe.PIXEL_COUNT)]
-    pLedState = None
+    pLastEffect = None
     selfcopy = None
     
     def __init__(self, stripe) -> None:
@@ -52,10 +52,10 @@ class Effects:
         return self._generate_8px_rgb(self.arr, divider)
     
     def preview_effect_8px(self, t_off, divider, effect, targetColor=None):
-        if self.selfcopy is None or self.selfcopy.LedState != self.pLedState:
+        if self.selfcopy is None or effect != self.pLastEffect:
             self.selfcopy = copy.deepcopy(self)
-            self.pLedState = copy.copy(self.selfcopy.LedState)
-            print("copied", self.selfcopy is None, self.selfcopy.LedState != self.pLedState)
+            self.pLastEffect = effect
+            print("copied", self.selfcopy is None, effect != self.pLastEffect)
         if self.selfcopy.overtime:
             self.selfcopy.target_color = None
             self.selfcopy.LedState.current = self.selfcopy.LedState.target
