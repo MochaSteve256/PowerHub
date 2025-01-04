@@ -54,7 +54,7 @@ class Effects:
     def preview_effect_8px(self, t_off, divider, effect, targetColor=None):
         if self.selfcopy is None or self.selfcopy.LedState != self.pLedState:
             self.selfcopy = copy.deepcopy(self)
-            pLedState = copy.copy(self.selfcopy.LedState)
+            self.pLedState = copy.copy(self.selfcopy.LedState)
             print("copied")
         if self.selfcopy.overtime:
             self.selfcopy.target_color = None
