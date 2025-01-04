@@ -24,4 +24,4 @@ except subprocess.CalledProcessError as e:
 os.system("git pull")
 
 # Start new process
-os.system("nohupsudo python3 main.py")
+os.system("nohup sudo python3 main.py")
