@@ -65,9 +65,13 @@ class Effects:
             return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState, target_color=(0, 0, 0)))
         elif effect == self.stripe.rgb_cycle:
             ledState.target = ledState.RGB_CYCLE
+            if selfcopy.overtime:
+                ledState.current = ledState.RGB_CYCLE
             return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState))
         elif effect == self.stripe.argb_cycle:
             ledState.target = ledState.ARGB_CYCLE
+            if selfcopy.overtime:
+                ledState.current = ledState.ARGB_CYCLE
             return selfcopy._generate_8px_rgb(selfcopy._generate_array(t, ledState))
         else:
             print("error: cannot preview effect")
