@@ -1,4 +1,4 @@
-import RPi.GPIO as gp
+import RPi.GPIO as gp# type: ignore
 from time import sleep
 
 gp.setmode(gp.BCM)

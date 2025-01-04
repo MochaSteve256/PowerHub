@@ -6,8 +6,8 @@ import copy
 import Adafruit_WS2801 # type: ignore
 
 # colors
-ww = (255, 130, 40)
-w = (255, 160, 80)
+ww = (255, 140, 30)
+w = (255, 160, 60)
 cw = (255, 255, 255)
 
 class LEDState:
@@ -120,7 +120,6 @@ class Effects:
                         self.arr =[led_stripe.fade_black_argb(i, t - 1) for i in range(led_stripe.PIXEL_COUNT)]
                     self.end = 2
             if t > self.end:
-                print("wtf")
                 ledState.current = ledState.target
                 self.overtime = True
             else:

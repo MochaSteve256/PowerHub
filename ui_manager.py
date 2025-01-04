@@ -1,4 +1,3 @@
-from calendar import c
 import time
 import datetime
 import copy
@@ -21,9 +20,9 @@ class uiState():
     STBY = 5
 
 class ledState():
-    WW = 3
-    W = 1
-    CW = 2
+    WW = 1
+    W = 2
+    CW = 3
     BLACK = 0
     RGB = 4
     ARGB = 5
