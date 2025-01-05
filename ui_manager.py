@@ -14,7 +14,6 @@ class uiState():
     PSU = 0
     LED = 1
     LED_SLCT = 2
-    LED_CUSTOM = 6
     WETH = 3
     CLCK = 4
     STBY = 5
@@ -26,7 +25,6 @@ class ledState():
     BLACK = 0
     RGB = 4
     ARGB = 5
-    CUSTOM = 6
 
 #nav options
 class NavOpts():
@@ -84,7 +82,7 @@ class UI:
             self.update()
         elif self.state == uiState.LED_SLCT:
             self.ledEffectNum += 1
-            if self.ledEffectNum == 7:
+            if self.ledEffectNum == 6:
                 self.ledEffectNum = 0
             self.led_t_offset = time.time()
         elif self.state == uiState.WETH:
@@ -109,7 +107,7 @@ class UI:
         elif self.state == uiState.LED_SLCT:
             self.ledEffectNum -= 1
             if self.ledEffectNum == -1:
-                self.ledEffectNum = 6
+                self.ledEffectNum = 5
             self.led_t_offset = time.time()
         elif self.state == uiState.WETH:
             self.state = uiState.CLCK
@@ -135,10 +133,7 @@ class UI:
             self.update()
             self.led_t_offset = time.time()
         elif self.state == uiState.LED_SLCT:
-            if self.ledEffectNum == ledState.CUSTOM:
-                self.state = uiState.LED_CUSTOM
-                self.update()
-            elif self.ledEffectNum == ledState.WW:
+            if self.ledEffectNum == ledState.WW:
                 self.ledStripe.warm_white()
             elif self.ledEffectNum == ledState.W:
                 self.ledStripe.white()
@@ -152,9 +147,6 @@ class UI:
                 self.ledStripe.argb_cycle()
             self.state = uiState.LED
             self.update()
-        elif self.state == uiState.LED_CUSTOM:
-            self.state = uiState.LED
-            self.update()
         elif self.state == uiState.STBY:
             self.standby = True
             self._stby_callback()
@@ -164,9 +156,6 @@ class UI:
             return
         if self.state == uiState.LED_SLCT:
             self.state = uiState.LED
-            self.update()
-        if self.state == uiState.LED_CUSTOM:
-            self.state = uiState.LED_SLCT
             self.update()
     
     def update(self):
@@ -195,8 +184,6 @@ class UI:
             self.led_ui()
         elif self.state == uiState.LED_SLCT:
             self.led_slct_ui()
-        elif self.state == uiState.LED_CUSTOM:
-            self.led_custom_ui()
         elif self.state == uiState.WETH:
             self.weth_ui()
         elif self.state == uiState.CLCK:
@@ -248,20 +235,14 @@ class UI:
             p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, 2, self.ledStripe.rgb_cycle)
         elif self.ledEffectNum == ledState.ARGB:
             p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, 2, self.ledStripe.argb_cycle)
-        elif self.ledEffectNum == ledState.CUSTOM:
-            #something else
-            p = [[(0, 0, 0) for _ in range(8)]]
         else:
             print("error: invalid ledEffectNum")
         
         m = copy.deepcopy(u64images.add_navbar(copy.deepcopy(u64images.nothing3) + p + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct)) # type: ignore
         m = clean_convert_matrix(m)
-        m[0][self.ledEffectNum] = (0, 128, 0) # type: ignore
+        m[0][self.ledEffectNum + 1] = (0, 128, 0) # type: ignore
         u64led.set_matrix(m)
     
-    def led_custom_ui(self):
-        m = u64images.add_navbar(u64images.blank, *NavOpts.led_slct)
-        u64led.set_matrix(m)
 
     def weth_ui(self):
         m = u64images.add_navbar(u64images.blank, *NavOpts.weth)#TODO
