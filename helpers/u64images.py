@@ -1,5 +1,5 @@
 import copy
-from pprint import pprint
+import datetime
 
 ## RGB values for 8x8 matrix
 
@@ -192,6 +192,10 @@ def number_to_matrix(number):
     
     return matrix
 
+def clock():
+    dt = datetime.datetime.now()
+
+    return blank
 
 
 if __name__ == '__main__':

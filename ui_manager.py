@@ -160,6 +160,7 @@ class UI:
             self.standby = True
             self._stby_callback()
             self.ledStripe.cold_white()
+            self.state = uiState.LED
             self.auto_stby = True
     def back(self):
         if self._stby_check():
@@ -269,7 +270,8 @@ class UI:
         u64led.set_matrix(m)
 
     def clck_ui(self):
-        u64led.set_matrix(u64images.add_navbar(u64images.blank, *NavOpts.clck))#TODO
+        u64led.set_matrix(u64images.add_navbar(u64images.clock(), *NavOpts.clck))
+
 
     def stby_ui(self):
         u64led.set_matrix(u64images.add_navbar(u64images.stby_text, *NavOpts.stby))
