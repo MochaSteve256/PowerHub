@@ -36,6 +36,7 @@ class Alarm():
     
     def _alarm(self):
         self.led.alarm()# type: ignore
+        self.ui.alarm()# type: ignore
     
     def __init__(self, led: led_manager.LED_Stripe, ui: ui_manager.UI) -> None:
         self.led = led
