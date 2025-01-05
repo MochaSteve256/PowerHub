@@ -53,7 +53,7 @@ def update_clock(hour, minute):
 
     # Draw hour and minute dots at the edge
     draw_dot(matrix, minute_x, minute_y, color=minute_color)
-    draw_dot(matrix, s_minute_x, s_minute_y, color=minute_color)
+    draw_dot(matrix, s_minute_x, s_minute_y, color=s_minute_color)
     if minute_x == hour_x and minute_y == hour_y:
         draw_dot(matrix, minute_x, minute_y, color=both_color)
     else:
