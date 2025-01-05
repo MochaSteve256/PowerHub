@@ -22,15 +22,19 @@ def angle_to_edge_coords(angle, small_clip):
     """
     center_x, center_y = 3, 3  # Center of 8x8 matrix (integer coordinates)
 
-    # Calculate raw coordinates
-    x = center_x + 5 * math.cos(math.radians(angle))
-    y = center_y - 5 * math.sin(math.radians(angle))  # Y-axis inverted
+    
 
     # Clamp to nearest edge pixel
     if not small_clip:
+        # Calculate raw coordinates
+        x = center_x + 5 * math.cos(math.radians(angle))
+        y = center_y - 5 * math.sin(math.radians(angle))  # Y-axis inverted
         edge_x = max(0, min(7, round(x)))
         edge_y = max(0, min(6, round(y)))
     else:
+        # Calculate raw coordinates
+        x = center_x + 4 * math.cos(math.radians(angle))
+        y = center_y - 4 * math.sin(math.radians(angle))  # Y-axis inverted
         edge_x = max(1, min(6, round(x)))
         edge_y = max(1, min(5, round(y)))
 
