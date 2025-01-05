@@ -103,6 +103,7 @@ if __name__ == "__main__":
             ui.update()
             led.update()
             alarmManager.update()
+            time.sleep(.01)#!
 
     finally:
         ky040.stop()

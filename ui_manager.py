@@ -273,8 +273,23 @@ class UI:
         m = u64images.add_navbar(u64images.blank_white, *NavOpts.alm)
         u64led.set_matrix(m)
     def weth_ui(self):
-        m = u64images.add_navbar(u64images.number_to_matrix(0), *NavOpts.weth)
+        # forecast not implemented yet
+        temp = 0
+        sunny = False
+        raining = True
+        nextMorning = False
+        m = u64images.add_navbar(u64images.number_to_matrix(temp), *NavOpts.weth)
         m[0][7] = u64images.orange# type: ignore
+        if sunny:
+            m[0][0] = yellow# type: ignore
+            m[0][1] = yellow# type: ignore
+            m[1][0] = yellow# type: ignore
+        elif raining:
+            m[0][0] = blue# type: ignore
+            m[0][1] = blue# type: ignore
+            m[1][0] = blue# type: ignore
+        if nextMorning:
+            m[6][7] = u64images.green# type: ignore
         u64led.set_matrix(m)
 
     def clck_ui(self):
