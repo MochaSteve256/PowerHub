@@ -46,6 +46,8 @@ class Effects:
             if array[led] is not None:
                 if type(array[led]) == int:
                     line[i] = Adafruit_WS2801.color_to_RGB(array[led])
+                else:
+                    line[i] = array[led]
                 line[i] = (line[i][0] // divider, line[i][1] // divider, line[i][2] // divider)
         return [line]
     def current_8px_rgb(self, divider):
