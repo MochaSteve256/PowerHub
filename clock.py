@@ -6,6 +6,7 @@ import u64images
 
 hour_color = (128, 0, 0)
 minute_color = (0, 128, 0)
+both_color = (128, 128, 0)
 
 # Define your LED matrix control functions (replace with your library)
 def draw_dot(mtx,x, y, color):
@@ -40,12 +41,16 @@ def update_clock(hour, minute):
     hour_x, hour_y = angle_to_edge_coords(hour_angle)
     minute_x, minute_y = angle_to_edge_coords(minute_angle)
     
-    # Matrix
-    matrix = copy.deepcopy(u64images.blank)
+    # Matrix initialization
+    matrix = copy.deepcopy(u64images.clock_face)
+    
 
     # Draw hour and minute dots at the edge
-    draw_dot(matrix, hour_x, hour_y, color=hour_color)
-    draw_dot(matrix, minute_x, minute_y, color=minute_color)
+    if hour_x == minute_x and hour_y == minute_y:
+        draw_dot(matrix, hour_x, hour_y, color=both_color)
+    else:
+        draw_dot(matrix, hour_x, hour_y, color=hour_color)
+        draw_dot(matrix, minute_x, minute_y, color=minute_color)
     
     return matrix
 

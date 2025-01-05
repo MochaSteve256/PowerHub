@@ -11,7 +11,7 @@ orange = [150 // 2, 100 // 2, 0]
 red    = [64, 0, 0]
 green  = [0, 64, 0]
 blue   = [0, 0, 64]
-white  = [255, 255, 255]
+white  = [128, 128, 128]
 
 
 #psu
@@ -192,8 +192,15 @@ def number_to_matrix(number):
     
     return matrix
 
+clock_face = copy.deepcopy(blank)
+clock_face[3][3] = white # center dot
+clock_face[3][0] = white # 12 o'clock dot
+clock_face[7][3] = white # 3 o'clock dot
+clock_face[3][7] = white # 6 o'clock dot
+clock_face[0][3] = white # 9 o'clock dot
+
 
 if __name__ == '__main__':
-    import u64led
+    from helpers import u64led
     #u64led.set_matrix(add_navbar(psu_text + psu_on, True, False, True))
     u64led.set_matrix(add_navbar(number_to_matrix(12), False, False, True))
