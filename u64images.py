@@ -196,7 +196,7 @@ clock_face = copy.deepcopy(blank)
 clock_face[3][3] = white # center dot
 clock_face[3][0] = white # 12 o'clock dot
 clock_face[7][3] = white # 3 o'clock dot
-clock_face[3][7] = white # 6 o'clock dot
+clock_face[3][6] = white # 6 o'clock dot
 clock_face[0][3] = white # 9 o'clock dot
 
 
