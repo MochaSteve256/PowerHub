@@ -49,7 +49,7 @@ class Effects:
                 line[i] = (line[i][0] // divider, line[i][1] // divider, line[i][2] // divider)
         return [line]
     def current_8px_rgb(self, divider):
-        return self._generate_8px_rgb(self.arr, divider)
+        return self._generate_8px_rgb(self.current_colors_rgb, divider)
     
     def preview_effect_8px(self, t_off, divider, effect, targetColor=None):
         if self.selfcopy is None or effect != self.pLastEffect:
