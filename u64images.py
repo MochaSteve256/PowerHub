@@ -194,11 +194,11 @@ def number_to_matrix(number):
 
 clock_face = copy.deepcopy(blank)
 # ----     y  x       ----
-clock_face[3][3] = white # center dot
-clock_face[0][3] = white # 12 o'clock dot
-clock_face[3][7] = white # 3 o'clock dot
-clock_face[6][3] = white # 6 o'clock dot
-clock_face[3][0] = white # 9 o'clock dot
+clock_face[3][3] = [64, 64, 64] # center dot
+clock_face[0][3] = [64, 64, 64] # 12 o'clock dot
+clock_face[3][7] = [64, 64, 64] # 3 o'clock dot
+clock_face[6][3] = [64, 64, 64] # 6 o'clock dot
+clock_face[3][0] = [64, 64, 64] # 9 o'clock dot
 
 
 if __name__ == '__main__':
