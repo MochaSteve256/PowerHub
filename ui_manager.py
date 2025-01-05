@@ -281,13 +281,13 @@ class UI:
         m = u64images.add_navbar(u64images.number_to_matrix(temp), *NavOpts.weth)
         m[0][7] = u64images.orange# type: ignore
         if sunny:
-            m[0][0] = yellow# type: ignore
-            m[0][1] = yellow# type: ignore
-            m[1][0] = yellow# type: ignore
+            m[0][0] = u64images.yellow# type: ignore
+            m[0][1] = u64images.yellow# type: ignore
+            m[1][0] = u64images.yellow# type: ignore
         elif raining:
-            m[0][0] = blue# type: ignore
-            m[0][1] = blue# type: ignore
-            m[1][0] = blue# type: ignore
+            m[0][0] = u64images.blue# type: ignore
+            m[0][1] = u64images.blue# type: ignore
+            m[1][0] = u64images.blue# type: ignore
         if nextMorning:
             m[6][7] = u64images.green# type: ignore
         u64led.set_matrix(m)
