@@ -16,7 +16,7 @@ white  = [128, 128, 128]
 
 #psu
 psu_text = [
-    [pink, pink,  pink,  purple, purple, pink,  black, pink],
+    [pink, pink,  black, purple, purple, pink,  black, pink],
     [pink, black, pink,  purple, black,  pink,  black, pink],
     [pink, pink,  black, purple, purple, pink,  black, pink],
     [pink, black, black, black,  purple, pink,  black, pink],
@@ -186,7 +186,10 @@ def number_to_matrix(number):
         for i in range(3):
             for j in range(6):
                 if z == 0:
-                    matrix[j][i + 1] = numbers[int(str(number)[z])][j][i]
+                    if number >= 10:
+                        matrix[j][i + 1] = numbers[int(str(number)[z])][j][i]
+                    else:
+                        matrix[j][i + 4] = numbers[0][j][i]
                 else:
                     matrix[j][i + 4] = purple_numbers[int(str(number)[z])][j][i]
     
@@ -204,4 +207,4 @@ clock_face[3][0] = [64, 64, 64] # 9 o'clock dot
 if __name__ == '__main__':
     from helpers import u64led
     #u64led.set_matrix(add_navbar(psu_text + psu_on, True, False, True))
-    u64led.set_matrix(add_navbar(number_to_matrix(12), False, False, True))
+    u64led.set_matrix(add_navbar(number_to_matrix(-5), False, False, True))
