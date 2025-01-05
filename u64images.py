@@ -179,10 +179,10 @@ for z in range(10):
 
 def number_to_matrix(number):
     matrix = copy.deepcopy(blank)
+    below = False
     if number < 0:
-        matrix[3][0] = orange
-        matrix[3][1] = orange
         number = abs(number)
+        below = True
     if abs(number) >= 10:
         nd = 2
     else:
@@ -197,6 +197,10 @@ def number_to_matrix(number):
                         matrix[j][i + 2] = numbers[int(str(number)[z])][j][i]
                 else:
                     matrix[j][i + 4] = purple_numbers[int(str(number)[z])][j][i]
+    
+    if below:
+        matrix[3][0] = orange
+        matrix[3][1] = orange
     
     return matrix
 
