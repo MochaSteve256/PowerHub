@@ -46,6 +46,7 @@ class UI:
     led_target_color = (0, 0, 0)
     before_stby_ui = 0
     auto_stby = True
+    clock_show_date = False
     
     def __init__(self, ledStripe):
         self.ledStripe = ledStripe
@@ -163,6 +164,8 @@ class UI:
             self.ledStripe.cold_white()
             self.state = uiState.LED
             self.auto_stby = True
+        elif self.state == uiState.CLCK:
+            self.clock_show_date = not self.clock_show_date
     def back(self):
         if self._stby_check():
             return
@@ -186,9 +189,12 @@ class UI:
         if self.standby:
             if not self._nighttime_check():
                 self.state = uiState.CLCK
-                if time.time() - self._last_standby_switch > 10:
+                if time.time() - self._last_standby_switch > 8:
+                    self.clock_show_date = True
+                if time.time() - self._last_standby_switch > 12:
                     self.state = uiState.WETH
-                if time.time() - self._last_standby_switch > 15:
+                    self.clock_show_date = False
+                if time.time() - self._last_standby_switch > 16:
                     self._last_standby_switch = time.time()
             else:
                 self.state = uiState.CLCK
@@ -272,7 +278,12 @@ class UI:
         u64led.set_matrix(m)
 
     def clck_ui(self):
-        u64led.set_matrix(u64images.add_navbar(clock.gen_matrix(), *NavOpts.clck))
+        if not self.clock_show_date:
+            u64led.set_matrix(u64images.add_navbar(clock.gen_matrix(), *NavOpts.clck))
+        else:
+            m = u64images.add_navbar(u64images.number_to_matrix(datetime.datetime.now().day), *NavOpts.clck)
+            m[6][7] = u64images.orange# type: ignore
+            u64led.set_matrix(m)
 
 
     def stby_ui(self):
