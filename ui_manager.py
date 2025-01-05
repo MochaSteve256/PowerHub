@@ -54,11 +54,11 @@ class UI:
         self.last_click = time.time()
         if self.standby:
             self.standby = False
+            if self.before_stby_ui == uiState.LED_SLCT:
+                self.before_stby_ui = uiState.LED
             self.state = self.before_stby_ui
             self.update()
             self.before_stby_ui = self.state
-            if self.before_stby_ui == uiState.LED_SLCT:
-                self.before_stby_ui = uiState.LED
             return True
         return False
     
