@@ -55,6 +55,7 @@ class Effects:
     
     def preview_effect_8px(self, t_off, divider, effect, targetColor=None):
         if self.selfcopy is None or effect != self.pLastEffect:
+            self.selfcopy = None
             self.selfcopy = copy.deepcopy(self)
             self.pLastEffect = effect
         if self.selfcopy.overtime:
