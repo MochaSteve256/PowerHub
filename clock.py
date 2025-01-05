@@ -14,7 +14,7 @@ def draw_dot(mtx,x, y, color):
     mtx[y][x] = color
 
 # Map angles to edge coordinates
-def angle_to_edge_coords(angle):
+def angle_to_edge_coords(angle, small_clip):
     """
     Map an angle to the nearest edge coordinate on an 8x8 LED matrix.
     Top-left corner is (0,0), center is (3,3).
@@ -26,8 +26,12 @@ def angle_to_edge_coords(angle):
     y = center_y - 5 * math.sin(math.radians(angle))  # Y-axis inverted
 
     # Clamp to nearest edge pixel
-    edge_x = max(0, min(7, round(x)))
-    edge_y = max(0, min(6, round(y)))
+    if not small_clip:
+        edge_x = max(0, min(7, round(x)))
+        edge_y = max(0, min(6, round(y)))
+    else:
+        edge_x = max(1, min(6, round(x)))
+        edge_y = max(1, min(5, round(y)))
 
     return edge_x, edge_y
 
@@ -38,19 +42,18 @@ def update_clock(hour, minute):
     minute_angle = 90 - (minute * 6)  # 6° per minute
 
     # Calculate LED edge positions
-    hour_x, hour_y = angle_to_edge_coords(hour_angle)
-    minute_x, minute_y = angle_to_edge_coords(minute_angle)
+    hour_x, hour_y = angle_to_edge_coords(hour_angle, False)
+    minute_x, minute_y = angle_to_edge_coords(minute_angle, False)
+    s_minute_x, s_minute_y = angle_to_edge_coords(minute_angle, True)
     
     # Matrix initialization
     matrix = copy.deepcopy(u64images.clock_face)
     
 
     # Draw hour and minute dots at the edge
-    if hour_x == minute_x and hour_y == minute_y:
-        draw_dot(matrix, hour_x, hour_y, color=both_color)
-    else:
-        draw_dot(matrix, hour_x, hour_y, color=hour_color)
-        draw_dot(matrix, minute_x, minute_y, color=minute_color)
+    draw_dot(matrix, minute_x, minute_y, color=minute_color)
+    draw_dot(matrix, s_minute_x, s_minute_y, color=minute_color)
+    draw_dot(matrix, hour_x, hour_y, color=hour_color)
     
     return matrix
 
