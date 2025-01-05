@@ -182,14 +182,18 @@ def number_to_matrix(number):
     if number < 0:
         matrix[3][0] = orange
         matrix[3][1] = orange
-    for z in range(2):
+    if abs(number) >= 10:
+        nd = 2
+    else:
+        nd = 1
+    for z in range(nd):
         for i in range(3):
             for j in range(6):
                 if z == 0:
-                    if number >= 10:
+                    if abs(number) >= 10:
                         matrix[j][i + 1] = numbers[int(str(number)[z])][j][i]
                     else:
-                        matrix[j][i + 4] = numbers[0][j][i]
+                        matrix[j][i + 2] = numbers[int(str(number)[z])][j][i]
                 else:
                     matrix[j][i + 4] = purple_numbers[int(str(number)[z])][j][i]
     
@@ -207,4 +211,5 @@ clock_face[3][0] = [64, 64, 64] # 9 o'clock dot
 if __name__ == '__main__':
     from helpers import u64led
     #u64led.set_matrix(add_navbar(psu_text + psu_on, True, False, True))
-    u64led.set_matrix(add_navbar(number_to_matrix(-5), False, False, True))
+    u64led.set_matrix(add_navbar(number_to_matrix(-15), False, False, True))
+    u64led.show_matrix()
