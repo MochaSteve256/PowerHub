@@ -88,7 +88,7 @@ if __name__ == "__main__":
     led = led_manager.LED_Stripe()
     ui = ui_manager.UI(led)
     ky040 = ky040.KY040(ui.clockwise, ui.counterclockwise, press, release)
-    alarmManager = alarm.Alarm(led)
+    alarmManager = alarm.Alarm(led, ui)
     
     def led_update():
         while True:

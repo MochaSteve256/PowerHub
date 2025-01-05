@@ -17,6 +17,7 @@ class uiState():
     WETH = 3
     CLCK = 4
     STBY = 5
+    ALM = 6
 
 class ledState():
     WW = 1
@@ -35,6 +36,7 @@ class NavOpts():
     weth = [False, False, True]
     clck = [True, False, True]
     stby = [True, False, True]
+    alm = [True, False, False]
 
 class UI:
     standby = False
@@ -153,12 +155,21 @@ class UI:
             self.standby = True
             self._stby_callback()
             self.update()
+        elif self.state == uiState.ALM:
+            self.standby = True
+            self._stby_callback()
+            self.ledStripe.cold_white()
     def back(self):
         if self._stby_check():
             return
         if self.state == uiState.LED_SLCT:
             self.state = uiState.LED
             self.update()
+    
+    def alarm(self):
+        self.standby = False
+        self.state = uiState.ALM
+        
     
     def update(self):
         # auto standby
@@ -245,7 +256,9 @@ class UI:
         m[0][self.ledEffectNum + 1] = (0, 128, 0) # type: ignore
         u64led.set_matrix(m)
     
-
+    def alarm_ui(self):
+        m = u64images.add_navbar(u64images.blank_white, *NavOpts.alm)
+        u64led.set_matrix(m)
     def weth_ui(self):
         m = u64images.add_navbar(u64images.blank, *NavOpts.weth)#TODO
         u64led.set_matrix(m)

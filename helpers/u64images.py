@@ -11,6 +11,7 @@ orange = [150 // 2, 100 // 2, 0]
 red    = [64, 0, 0]
 green  = [0, 64, 0]
 blue   = [0, 0, 64]
+white  = [255, 255, 255]
 
 
 #psu
@@ -74,6 +75,17 @@ blank = [
     [black, black, black, black, black, black, black, black],
     [black, black, black, black, black, black, black, black],
     [black, black, black, black, black, black, black, black]
+]
+
+blank_white = [
+    [white, white, white, white, white, white, white, white],
+    [white, white, white, white, white, white, white, white],
+    [white, white, white, white, white, white, white, white],
+    [white, white, white, white, white, white, white, white],
+    [white, white, white, white, white, white, white, white],
+    [white, white, white, white, white, white, white, white],
+    [white, white, white, white, white, white, white, white],
+    [white, white, white, white, white, white, white, white]
 ]
 
 #nav bar
