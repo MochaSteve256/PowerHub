@@ -178,7 +178,7 @@ for z in range(10):
                 purple_numbers[z][j][i] = purple
 
 def number_to_matrix(number):
-    matrix = blank
+    matrix = copy.deepcopy(blank)
     if number < 0:
         matrix[3][0] = orange
         matrix[3][1] = orange
