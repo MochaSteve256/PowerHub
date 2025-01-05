@@ -267,7 +267,7 @@ class UI:
         m = u64images.add_navbar(u64images.blank_white, *NavOpts.alm)
         u64led.set_matrix(m)
     def weth_ui(self):
-        m = u64images.add_navbar(u64images.number_to_matrix(16), *NavOpts.weth)
+        m = u64images.add_navbar(u64images.number_to_matrix(0), *NavOpts.weth)
         u64led.set_matrix(m)
 
     def clck_ui(self):

@@ -182,6 +182,7 @@ def number_to_matrix(number):
     if number < 0:
         matrix[3][0] = orange
         matrix[3][1] = orange
+        number = abs(number)
     if abs(number) >= 10:
         nd = 2
     else:
