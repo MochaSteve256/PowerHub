@@ -44,6 +44,7 @@ class UI:
     led_t_offset = time.time()
     led_target_color = (0, 0, 0)
     before_stby_ui = 0
+    auto_stby = True
     
     def __init__(self, ledStripe):
         self.ledStripe = ledStripe
@@ -159,6 +160,7 @@ class UI:
             self.standby = True
             self._stby_callback()
             self.ledStripe.cold_white()
+            self.auto_stby = True
     def back(self):
         if self._stby_check():
             return
@@ -167,15 +169,16 @@ class UI:
             self.update()
     
     def alarm(self):
-        self.standby = False
+        self._stby_check()
         self.state = uiState.ALM
-        
+        self.auto_stby = False
     
     def update(self):
         # auto standby
-        if time.time() - self.last_click > 10:
-            if not self.standby:
-                self._stby_callback()
+        if self.auto_stby:
+            if time.time() - self.last_click > 10:
+                if not self.standby:
+                    self._stby_callback()
         
         # standby logic
         if self.standby:
