@@ -206,6 +206,8 @@ class UI:
             self.clck_ui()
         elif self.state == uiState.STBY:
             self.stby_ui()
+        elif self.state == uiState.ALM:
+            self.alarm_ui()
         
         # brightness adjustment at standby
         if self.standby:
