@@ -188,7 +188,7 @@ class UI:
                 self.state = uiState.CLCK
                 if time.time() - self._last_standby_switch > 10:
                     self.state = uiState.WETH
-                if time.time() - self._last_standby_switch > 20:
+                if time.time() - self._last_standby_switch > 15:
                     self._last_standby_switch = time.time()
             else:
                 self.state = uiState.CLCK
