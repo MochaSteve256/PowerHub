@@ -6,7 +6,8 @@ import u64images
 
 hour_color = (128, 0, 0)
 minute_color = (0, 128, 0)
-both_color = (128, 128, 0)
+s_minute_color = (0, 64, 0)
+both_color = (128, 64, 0)
 
 # Define your LED matrix control functions (replace with your library)
 def draw_dot(mtx,x, y, color):
