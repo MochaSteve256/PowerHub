@@ -1,15 +1,16 @@
+import copy
 import math
 from datetime import datetime
 
+import u64images
+
+hour_color = (128, 0, 0)
+minute_color = (0, 128, 0)
+
 # Define your LED matrix control functions (replace with your library)
-def draw_dot(x, y, color):
+def draw_dot(mtx,x, y, color):
     print(f"A {color} dot at ({x}, {y})")  # Replace with actual drawing logic
-
-def clear_matrix():
-    print("Clearing matrix")  # Replace with actual clearing logic
-
-def display():
-    print("Updating display")  # Replace with actual display update logic
+    mtx[y][x] = color
 
 # Map angles to edge coordinates
 def angle_to_edge_coords(angle):
@@ -25,7 +26,7 @@ def angle_to_edge_coords(angle):
 
     # Clamp to nearest edge pixel
     edge_x = max(0, min(7, round(x)))
-    edge_y = max(0, min(7, round(y)))
+    edge_y = max(0, min(6, round(y)))
 
     return edge_x, edge_y
 
@@ -38,28 +39,33 @@ def update_clock(hour, minute):
     # Calculate LED edge positions
     hour_x, hour_y = angle_to_edge_coords(hour_angle)
     minute_x, minute_y = angle_to_edge_coords(minute_angle)
-
-    # Clear matrix
-    clear_matrix()
+    
+    # Matrix
+    matrix = copy.deepcopy(u64images.blank)
 
     # Draw hour and minute dots at the edge
-    draw_dot(hour_x, hour_y, color='red')
-    draw_dot(minute_x, minute_y, color='blue')
+    draw_dot(matrix, hour_x, hour_y, color=hour_color)
+    draw_dot(matrix, minute_x, minute_y, color=minute_color)
+    
+    return matrix
 
-    # Update display
-    display()
+def gen_matrix():
+    now = datetime.now()
+    return update_clock(now.hour, now.minute)
 
-# Test the clock at various times
-test_times = [
-    (3, 0),  # 3:00
-    (6, 0),  # 6:00
-    (9, 0),  # 9:00
-    (12, 0), # 12:00
-    (1, 15), # 1:15
-    (4, 45), # 4:45
-    (10, 30) # 10:30
-]
 
-for hour, minute in test_times:
-    print(f"Testing time: {hour:02d}:{minute:02d}")
-    update_clock(hour, minute)
+if __name__ == "__main__":
+    # Test the clock at various times
+    test_times = [
+        (3, 0),  # 3:00
+        (6, 0),  # 6:00
+        (9, 0),  # 9:00
+        (12, 0), # 12:00
+        (1, 15), # 1:15
+        (4, 45), # 4:45
+        (10, 30) # 10:30
+    ]
+
+    for hour, minute in test_times:
+        print(f"Testing time: {hour:02d}:{minute:02d}")
+        update_clock(hour, minute)

@@ -4,9 +4,10 @@ import copy
 from pprint import pprint
 
 from helpers import u64led
-from helpers import u64images
+import u64images
 from helpers import psu
-import led_manager
+import clock
+
 import Adafruit_WS2801 # type: ignore
 
 
@@ -270,7 +271,7 @@ class UI:
         u64led.set_matrix(m)
 
     def clck_ui(self):
-        u64led.set_matrix(u64images.add_navbar(u64images.clock(), *NavOpts.clck))
+        u64led.set_matrix(u64images.add_navbar(clock.gen_matrix(), *NavOpts.clck))
 
 
     def stby_ui(self):

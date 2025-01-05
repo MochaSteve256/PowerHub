@@ -2,7 +2,7 @@ from helpers.ky040 import KY040
 from helpers import psu
 from helpers import u64led
 from helpers import led_stripe
-import helpers.u64images as u64images
+import u64images as u64images
 
 import time
 import threading

@@ -192,11 +192,6 @@ def number_to_matrix(number):
     
     return matrix
 
-def clock():
-    dt = datetime.datetime.now()
-
-    return blank
-
 
 if __name__ == '__main__':
     import u64led
