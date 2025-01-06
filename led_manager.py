@@ -135,7 +135,7 @@ class Effects:
             elif ledState.current == ledState.SUNRISE:
                 self.arr =[led_stripe.sunrise(i, t) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.SUNSET:
-                self.arr =[led_stripe.sunrise(i, -t + 30) for i in range(led_stripe.PIXEL_COUNT)]
+                self.arr =[led_stripe.sunset(i, self.start_colors[i], t) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.ALARM:
                 self.arr =[led_stripe.alarm_cycle(i, t) for i in range(led_stripe.PIXEL_COUNT)]
             elif ledState.current == ledState.STATIC_COLOR:
