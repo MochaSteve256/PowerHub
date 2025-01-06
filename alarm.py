@@ -10,7 +10,7 @@ class Alarm():
     ui = None
     
     sunriseTime = "07:00"
-    alarmTime = "19:58"#"07:01"
+    alarmTime = "19:59"#"07:01"
     cwTime = "07:02"
     schoolPowerOffTime = "07:45"
     schoolPsuOffTime = "07:50"

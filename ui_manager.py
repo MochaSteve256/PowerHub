@@ -160,9 +160,9 @@ class UI:
             self.update()
         elif self.state == uiState.ALM:
             self.standby = True
+            self.state = uiState.LED
             self._stby_callback()
             self.ledStripe.cold_white()
-            self.state = uiState.LED
             self.auto_stby = True
             self.update()
         elif self.state == uiState.CLCK:
