@@ -220,7 +220,6 @@ def sunset(x, start, time):
     Returns:
         color: Int Formatted color
     """
-    print(-time + 60)
     result = Adafruit_WS2801.color_to_RGB(sunrise(x, -time + 60))
     if start[0] < result[0]:
         result[0] = start[0]
@@ -290,8 +289,8 @@ if __name__ == '__main__':
         if time.time() - t < 60:
             arr = [sunrise(i, time.time() - t) for i in range(PIXEL_COUNT)]
             set_array_color(arr)
-        elif time.time() - t < 60 and time.time() - t > 60:
-            arr = [sunset(i,(255, 255, 255), time.time() - t - 60) for i in range(PIXEL_COUNT)]
+        elif time.time() - t > 60:
+            arr = [sunset(i,(0, 255, 255), time.time() - t - 60) for i in range(PIXEL_COUNT)]
             set_array_color(arr)
         time.sleep(0.01)
     #"""
