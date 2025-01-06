@@ -220,6 +220,7 @@ def sunset(x, start, time):
     Returns:
         color: Int Formatted color
     """
+    print(-time + 60)
     result = Adafruit_WS2801.color_to_RGB(sunrise(x, -time + 60))
     if start[0] < result[0]:
         result[0] = start[0]
