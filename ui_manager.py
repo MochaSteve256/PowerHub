@@ -164,6 +164,7 @@ class UI:
             self.ledStripe.cold_white()
             self.state = uiState.LED
             self.auto_stby = True
+            self.update()
         elif self.state == uiState.CLCK:
             self.clock_show_date = not self.clock_show_date
     def back(self):
@@ -177,6 +178,7 @@ class UI:
         self._stby_check()
         self.state = uiState.ALM
         self.auto_stby = False
+        self.update()
     
     def update(self):
         # auto standby
