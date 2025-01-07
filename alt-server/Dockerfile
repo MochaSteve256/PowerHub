@@ -1,5 +1,5 @@
 # raspbery pi python container
-FROM raspberrypi/python:3.9
+FROM dtcooper/raspberrypi-os:python3.11-bullseye
 
 WORKDIR /usr/src/app
 
