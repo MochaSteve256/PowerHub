@@ -49,5 +49,3 @@ def get_morning_forecast():
 
     return parse_data(data["weather"][0])
 
-print(get_current_weather())
-print(get_morning_forecast())
