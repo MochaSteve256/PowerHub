@@ -1,6 +1,6 @@
 import weather
-import datetime
 import time
+import json
 import schedule
 import requests
 
@@ -19,7 +19,8 @@ def call_weather_update():
         cond_tomorrow = morning_weather[0] # type: ignore
     )
     
-    requests.post(url, data=data, headers={'Content-Type': 'application/json'})
+    r = requests.post(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
+    print(r.text)
 
 if __name__ == "__main__":
     schedule.every(1).hours.do(call_weather_update)
