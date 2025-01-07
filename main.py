@@ -101,7 +101,11 @@ def weather_api():
 
 if __name__ == "__main__":
     
-    app.run(host='0.0.0.0')
+    def api_thread():
+        app.run(host='0.0.0.0')
+    
+    apiT = threading.Thread(target=api_thread)
+    apiT.start()
     
     led = led_manager.LED_Stripe()
     ui = ui_manager.UI(led, weather)

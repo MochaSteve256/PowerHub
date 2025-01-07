@@ -11,7 +11,6 @@ both_color = (128, 64, 0)
 
 # Define your LED matrix control functions (replace with your library)
 def draw_dot(mtx,x, y, color):
-    print(f"A {color} dot at ({x}, {y})")  # Replace with actual drawing logic
     mtx[y][x] = color
 
 # Map angles to edge coordinates
