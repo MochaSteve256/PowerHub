@@ -47,7 +47,7 @@ class UI:
     before_stby_ui = 0
     auto_stby = True
     clock_show_date = False
-    
+
     def __init__(self, ledStripe):
         self.ledStripe = ledStripe
         self.state = uiState.PSU
@@ -66,7 +66,7 @@ class UI:
             self.before_stby_ui = self.state
             return True
         return False
-    
+
     def _stby_callback(self):
         print("standby callback")
         self.standby = True
@@ -77,7 +77,7 @@ class UI:
         if datetime.datetime.now().hour < 6 or datetime.datetime.now().hour > 22:
             return True
         return False
-    
+
     def clockwise(self):
         if self._stby_check():
             return
@@ -104,7 +104,7 @@ class UI:
     def counterclockwise(self):
         if self._stby_check():
             return
-            
+
         if self.state == uiState.PSU:
             self.state = uiState.STBY
             self.update()
@@ -173,20 +173,20 @@ class UI:
         if self.state == uiState.LED_SLCT:
             self.state = uiState.LED
             self.update()
-    
+
     def alarm(self):
         self._stby_check()
         self.state = uiState.ALM
         self.auto_stby = False
         self.update()
-    
+
     def update(self):
         # auto standby
         if self.auto_stby:
             if time.time() - self.last_click > 10:
                 if not self.standby:
                     self._stby_callback()
-        
+
         # standby logic
         if self.standby:
             if not self._nighttime_check():
@@ -202,7 +202,7 @@ class UI:
                 self.state = uiState.CLCK
                 if time.time() - self._last_standby_switch > 60:
                     self._last_standby_switch = time.time()
-        
+
         # ui functions
         if self.state == uiState.PSU:
             self.psu_ui()
@@ -218,7 +218,7 @@ class UI:
             self.stby_ui()
         elif self.state == uiState.ALM:
             self.alarm_ui()
-        
+
         # brightness adjustment at standby
         if self.standby:
             divider = 0
@@ -232,7 +232,7 @@ class UI:
                     for k in range(3):
                         matrix[i][j][k] = int(matrix[i][j][k] / divider)
             u64led.set_matrix(matrix)
-        
+
         u64led.show_matrix()
 
     def psu_ui(self):
@@ -265,12 +265,12 @@ class UI:
             p = self.ledStripe.effects.preview_effect_8px(self.led_t_offset, 2, self.ledStripe.argb_cycle)
         else:
             print("error: invalid ledEffectNum")
-        
+
         m = copy.deepcopy(u64images.add_navbar(copy.deepcopy(u64images.nothing3) + p + u64images.nothing1 + u64images.nothing3, *NavOpts.led_slct)) # type: ignore
         m = clean_convert_matrix(m)
         m[0][self.ledEffectNum + 1] = (0, 128, 0) # type: ignore
         u64led.set_matrix(m)
-    
+
     def alarm_ui(self):
         m = u64images.add_navbar(u64images.blank_white, *NavOpts.alm)
         u64led.set_matrix(m)
