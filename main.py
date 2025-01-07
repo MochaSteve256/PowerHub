@@ -35,6 +35,7 @@ class WeatherState:
 weather = WeatherState()
 
 def api_auth_check(token):
+    print("Unauthorized request, token: ", token)
     if token == "br4d9c2ayqrk7iswse7v8t2x":
         return True
     return False
@@ -49,7 +50,6 @@ def index_api():
 def psu_api():
     # check auth
     if not api_auth_check(flask.request.args.get("token")):
-        print("Unauthorized request, token: ", flask.request.args.get("token"))
         return "Unauthorized", 401
     # get
     
