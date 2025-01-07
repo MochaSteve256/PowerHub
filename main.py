@@ -49,7 +49,7 @@ def index_api():
 @app.route('/psu', methods=['GET', 'POST'])
 def psu_api():
     # check auth
-    if not api_auth_check(flask.request.args.get("token")):
+    if not api_auth_check(flask.request.json["token"]):
         return "Unauthorized", 401
     # get
     
@@ -62,7 +62,7 @@ def psu_api():
 @app.route('/led', methods=['GET', 'POST'])
 def led_api():
     # check auth
-    if not api_auth_check(flask.request.args.get("token")):
+    if not api_auth_check(flask.request.json["token"]):
         return "Unauthorized", 401
     # get
 
@@ -75,7 +75,7 @@ def led_api():
 @app.route('/alarm', methods=['GET', 'POST'])
 def alarm_api():
     # check auth
-    if not api_auth_check(flask.request.args.get("token")):
+    if not api_auth_check(flask.request.json["token"]):
         return "Unauthorized", 401
     # get
 
@@ -88,14 +88,14 @@ def alarm_api():
 @app.route('/weather', methods=['POST'])
 def weather_api():
     # check auth
-    if not api_auth_check(flask.request.args.get("token")):
+    if not api_auth_check(flask.request.json["token"]):
         return "Unauthorized", 401
 
     # post
-    weather.temp_current = flask.request.args.get("temp_current") # type: ignore
-    weather.cond_current = flask.request.args.get("cond_current") # type: ignore
-    weather.temp_tomorrow = flask.request.args.get("temp_tomorrow") # type: ignore
-    weather.cond_tomorrow = flask.request.args.get("cond_tomorrow") # type: ignore
+    weather.temp_current = flask.request.json["temp_current"] # type: ignore
+    weather.cond_current = flask.request.json["cond_current"] # type: ignore
+    weather.temp_tomorrow = flask.request.json["temp_tomorrow"] # type: ignore
+    weather.cond_tomorrow = flask.request.json["cond_tomorrow"] # type: ignore
 
     return "OK", 200
 
