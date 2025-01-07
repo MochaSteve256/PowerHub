@@ -10,10 +10,10 @@ def parse_data(data):
     cloud_cover = int(data["cloud_cover"])
     temp = round(int(data["temperature"]))
 
-    if weather_cond == "rain":
+    if weather_cond == "rain" or weather_cond == "snow" or weather_cond == "sleet" or weather_cond == "hail" or weather_cond == "thunderstorm":
         return "rain", temp
     elif weather_cond == "dry":
-        if cloud_cover < 20:
+        if cloud_cover < 35:
             return "sunny", temp
         else:
             return "cloudy", temp

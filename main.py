@@ -25,6 +25,14 @@ def release():
     else:
         ui.back()
 
+# weather state
+class WeatherState:
+    temp_current = 0
+    cond_current = "cloudy"
+    temp_tomorrow = 0
+    cond_tomorrow = "cloudy"
+
+weather = WeatherState()
 
 def api_auth_check(token):
     if token == "br4d9c2ayqrk7iswse7v8t2x":
@@ -37,10 +45,11 @@ app = flask.Flask(__name__)
 def index_api():
     return "Hello World!"
 
-@app.route('/psu')
+@app.route('/psu', methods=['GET', 'POST'])
 def psu_api():
     # check auth
-
+    if not api_auth_check(flask.request.args.get("token")):
+        return "Unauthorized", 401
     # get
     
 
@@ -49,10 +58,11 @@ def psu_api():
 
     return "Hello World!"
 
-@app.route('/led')
+@app.route('/led', methods=['GET', 'POST'])
 def led_api():
     # check auth
-    
+    if not api_auth_check(flask.request.args.get("token")):
+        return "Unauthorized", 401
     # get
 
 
@@ -61,10 +71,11 @@ def led_api():
 
     return "Hello World!"
 
-@app.route('/alarm')
+@app.route('/alarm', methods=['GET', 'POST'])
 def alarm_api():
     # check auth
-    
+    if not api_auth_check(flask.request.args.get("token")):
+        return "Unauthorized", 401
     # get
 
 
@@ -73,20 +84,27 @@ def alarm_api():
 
     return "Hello World!"
 
-@app.route('/weather')
+@app.route('/weather', methods=['POST'])
 def weather_api():
     # check auth
-    
+    if not api_auth_check(flask.request.args.get("token")):
+        return "Unauthorized", 401
+
     # post
+    weather.temp_current = flask.request.args.get("temp_current") # type: ignore
+    weather.cond_current = flask.request.args.get("cond_current") # type: ignore
+    weather.temp_tomorrow = flask.request.args.get("temp_tomorrow") # type: ignore
+    weather.cond_tomorrow = flask.request.args.get("cond_tomorrow") # type: ignore
 
-
-    return "Hello World!"
+    return "OK", 200
 
 
 if __name__ == "__main__":
     
+    app.run(host='0.0.0.0')
+    
     led = led_manager.LED_Stripe()
-    ui = ui_manager.UI(led)
+    ui = ui_manager.UI(led, weather)
     ky040 = ky040.KY040(ui.clockwise, ui.counterclockwise, press, release)
     alarmManager = alarm.Alarm(led, ui)
     

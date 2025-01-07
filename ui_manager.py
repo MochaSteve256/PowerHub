@@ -7,6 +7,7 @@ from helpers import u64led
 import u64images
 from helpers import psu
 import clock
+import main
 
 import Adafruit_WS2801 # type: ignore
 
@@ -34,7 +35,7 @@ class NavOpts():
     psu = [True, False, True]
     led = [True, False, True]
     led_slct = [True, True, True]
-    weth = [False, False, True]
+    weth = [True, False, True]
     clck = [True, False, True]
     stby = [True, False, True]
     alm = [True, False, False]
@@ -47,8 +48,11 @@ class UI:
     before_stby_ui = 0
     auto_stby = True
     clock_show_date = False
+    weth_show_tomorrow = False
+    weatherState = None
 
-    def __init__(self, ledStripe):
+    def __init__(self, ledStripe, wetherState: main.WeatherState):
+        self.weatherState = wetherState
         self.ledStripe = ledStripe
         self.state = uiState.PSU
         self.last_click = time.time()
@@ -167,6 +171,8 @@ class UI:
             self.update()
         elif self.state == uiState.CLCK:
             self.clock_show_date = not self.clock_show_date
+        elif self.state == uiState.WETH:
+            self.weth_show_tomorrow = not self.weth_show_tomorrow
     def back(self):
         if self._stby_check():
             return
@@ -193,9 +199,12 @@ class UI:
                 self.state = uiState.CLCK
                 if time.time() - self._last_standby_switch > 8:
                     self.clock_show_date = True
-                if time.time() - self._last_standby_switch > 12:
+                if time.time() - self._last_standby_switch > 10:
+                    self.weth_show_tomorrow = False
                     self.state = uiState.WETH
                     self.clock_show_date = False
+                if time.time() - self._last_standby_switch > 12:
+                    self.weth_show_tomorrow = True
                 if time.time() - self._last_standby_switch > 16:
                     self._last_standby_switch = time.time()
             else:
@@ -275,11 +284,31 @@ class UI:
         m = u64images.add_navbar(u64images.blank_white, *NavOpts.alm)
         u64led.set_matrix(m)
     def weth_ui(self):
-        # forecast not implemented yet
-        temp = 0
-        sunny = False
-        raining = True
-        nextMorning = False
+        # forecast
+        if not self.weth_show_tomorrow:
+            temp = self.weatherState.temp_current # type: ignore
+            if self.weatherState.cond_current == "sunny": # type: ignore
+                sunny = True
+                raining = False
+            elif self.weatherState.cond_current == "rainy": # type: ignore
+                sunny = False
+                raining = True
+            else:
+                sunny = False
+                raining = False
+            nextMorning = False
+        else:
+            temp = self.weatherState.temp_tomorrow # type: ignore
+            if self.weatherState.cond_tomorrow == "sunny": # type: ignore
+                sunny = True
+                raining = False
+            elif self.weatherState.cond_tomorrow == "rainy": # type: ignore
+                sunny = False
+                raining = True
+            else:
+                sunny = False
+                raining = False
+            nextMorning = True
         m = u64images.add_navbar(u64images.number_to_matrix(temp), *NavOpts.weth)
         m[0][7] = u64images.orange# type: ignore
         if sunny:
