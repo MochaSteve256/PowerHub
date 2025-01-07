@@ -91,6 +91,8 @@ def weather_api():
     # check auth
     if not api_auth_check(flask.request.json["token"]): # type: ignore
         return "Unauthorized", 401
+    
+    print(flask.request.json)
 
     # post
     weather.temp_current = flask.request.json["temp_current"] # type: ignore
