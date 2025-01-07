@@ -7,7 +7,6 @@ from helpers import u64led
 import u64images
 from helpers import psu
 import clock
-import main
 
 import Adafruit_WS2801 # type: ignore
 
@@ -51,7 +50,7 @@ class UI:
     weth_show_tomorrow = False
     weatherState = None
 
-    def __init__(self, ledStripe, wetherState: main.WeatherState):
+    def __init__(self, ledStripe, wetherState):
         self.weatherState = wetherState
         self.ledStripe = ledStripe
         self.state = uiState.PSU
