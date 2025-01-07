@@ -49,6 +49,7 @@ def index_api():
 def psu_api():
     # check auth
     if not api_auth_check(flask.request.args.get("token")):
+        print("Unauthorized request, token: ", flask.request.args.get("token"))
         return "Unauthorized", 401
     # get
     

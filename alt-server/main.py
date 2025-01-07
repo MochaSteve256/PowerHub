@@ -5,12 +5,14 @@ import schedule
 import requests
 
 def call_weather_update():
+    print("Updating weather...")
     url = "http://stevepi.local:5000/weather"
     
     current_weather = weather.get_current_weather()
     morning_weather = weather.get_morning_forecast()
     
     data = dict(
+        token = "br4d9c2ayqrk7iswse7v8t2x",
         temp_current = current_weather[1], # type: ignore
         cond_current = current_weather[0], # type: ignore
         temp_tomorrow = morning_weather[1], # type: ignore
@@ -21,6 +23,8 @@ def call_weather_update():
 
 if __name__ == "__main__":
     schedule.every(1).hours.do(call_weather_update)
+    
+    call_weather_update()
     
     while True:
         schedule.run_pending()
