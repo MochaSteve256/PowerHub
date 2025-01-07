@@ -35,9 +35,10 @@ class WeatherState:
 weather = WeatherState()
 
 def api_auth_check(token):
-    print("Unauthorized request, token: ", token)
     if token == "br4d9c2ayqrk7iswse7v8t2x":
+        print("Authorized")
         return True
+    print("Unauthorized request, token: ", token)
     return False
 
 app = flask.Flask(__name__)
@@ -49,7 +50,7 @@ def index_api():
 @app.route('/psu', methods=['GET', 'POST'])
 def psu_api():
     # check auth
-    if not api_auth_check(flask.request.json["token"]):
+    if not api_auth_check(flask.request.json["token"]): # type: ignore
         return "Unauthorized", 401
     # get
     
@@ -62,7 +63,7 @@ def psu_api():
 @app.route('/led', methods=['GET', 'POST'])
 def led_api():
     # check auth
-    if not api_auth_check(flask.request.json["token"]):
+    if not api_auth_check(flask.request.json["token"]): # type: ignore
         return "Unauthorized", 401
     # get
 
@@ -75,7 +76,7 @@ def led_api():
 @app.route('/alarm', methods=['GET', 'POST'])
 def alarm_api():
     # check auth
-    if not api_auth_check(flask.request.json["token"]):
+    if not api_auth_check(flask.request.json["token"]): # type: ignore
         return "Unauthorized", 401
     # get
 
@@ -88,7 +89,7 @@ def alarm_api():
 @app.route('/weather', methods=['POST'])
 def weather_api():
     # check auth
-    if not api_auth_check(flask.request.json["token"]):
+    if not api_auth_check(flask.request.json["token"]): # type: ignore
         return "Unauthorized", 401
 
     # post
