@@ -207,6 +207,7 @@ class UI:
                 if time.time() - self._last_standby_switch > 16:
                     self._last_standby_switch = time.time()
             else:
+                self.clock_show_date = False
                 self.state = uiState.CLCK
                 if time.time() - self._last_standby_switch > 60:
                     self._last_standby_switch = time.time()
