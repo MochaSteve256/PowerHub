@@ -222,6 +222,8 @@ def sunset(x, start, time):
     """
     sr = Adafruit_WS2801.color_to_RGB(sunrise(x, -time + 60))
     result = [sr[0], sr[1], sr[2]]
+    if type(start) == int:
+        start = Adafruit_WS2801.color_to_RGB(start)
     if start[0] < result[0]:
         result[0] = start[0]
     if start[1] < result[1]:
