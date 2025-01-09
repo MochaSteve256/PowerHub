@@ -195,6 +195,7 @@ class UI:
         # standby logic
         if self.standby:
             if not self._nighttime_check():
+                self.clock_show_date = False
                 self.state = uiState.CLCK
                 if time.time() - self._last_standby_switch > 8:
                     self.clock_show_date = True
