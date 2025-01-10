@@ -291,7 +291,7 @@ class UI:
             if self.weatherState.cond_current == "sunny": # type: ignore
                 sunny = True
                 raining = False
-            elif self.weatherState.cond_current == "rainy": # type: ignore
+            elif self.weatherState.cond_current == "rain": # type: ignore
                 sunny = False
                 raining = True
             else:
@@ -303,7 +303,7 @@ class UI:
             if self.weatherState.cond_tomorrow == "sunny": # type: ignore
                 sunny = True
                 raining = False
-            elif self.weatherState.cond_tomorrow == "rainy": # type: ignore
+            elif self.weatherState.cond_tomorrow == "rain": # type: ignore
                 sunny = False
                 raining = True
             else:
