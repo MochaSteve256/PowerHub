@@ -49,3 +49,6 @@ def get_morning_forecast():
 
     return parse_data(data["weather"][0])
 
+if __name__ == "__main__":
+    print(get_current_weather())
+    print(get_morning_forecast())
