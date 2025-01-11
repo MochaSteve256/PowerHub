@@ -8,6 +8,7 @@ from helpers import ky040
 import ui_manager
 import led_manager
 import alarm
+from helpers import psu
 
 
 press_time = 0
@@ -47,18 +48,26 @@ app = flask.Flask(__name__)
 def index_api():
     return "Hello World!"
 
-@app.route('/psu', methods=['GET', 'POST'])
+@app.route('/psu', methods=['GET', 'POST'])# type: ignore
 def psu_api():
     # check auth
     if not api_auth_check(flask.request.json["token"]): # type: ignore
         return "Unauthorized", 401
     # get
-    
+    if flask.request.method == "GET":
+        return dict(
+            is_on = psu.is_on()
+        ), 200
 
     # post
+    elif flask.request.method == "POST":
+        if flask.request.json["is_on"]: # type: ignore
+            psu.on()
+        else:
+            psu.off()
+        return "OK", 200
 
 
-    return "Hello World!"
 
 @app.route('/led', methods=['GET', 'POST'])
 def led_api():
