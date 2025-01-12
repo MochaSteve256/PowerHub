@@ -37,8 +37,6 @@ weather = WeatherState()
 
 def api_auth_check(req):
     token = req.headers.get("token")
-    if token is None:
-        token = req.json["token"]
     if token == "br4d9c2ayqrk7iswse7v8t2x":
         print("Authorized")
         return True

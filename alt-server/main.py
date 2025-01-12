@@ -12,14 +12,13 @@ def call_weather_update():
     morning_weather = weather.get_morning_forecast()
     
     data = dict(
-        token = "br4d9c2ayqrk7iswse7v8t2x",
         temp_current = current_weather[1], # type: ignore
         cond_current = current_weather[0], # type: ignore
         temp_tomorrow = morning_weather[1], # type: ignore
         cond_tomorrow = morning_weather[0] # type: ignore
     )
     
-    r = requests.post(url, data=json.dumps(data), headers={'Content-Type': 'application/json'})
+    r = requests.post(url, data=json.dumps(data), headers={'Content-Type': 'application/json', 'token':'br4d9c2ayqrk7iswse7v8t2x'})
     print(r.text)
 
 if __name__ == "__main__":
