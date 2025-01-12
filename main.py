@@ -89,11 +89,7 @@ def led_api():
         elif flask.request.json["target"] == "ALARM": # type: ignore
             led.alarm()
         elif flask.request.json["target"] == "STATIC_COLOR": # type: ignore
-            try:
-                led.new_color(flask.request.json["color"]) # type: ignore
-            except:
-                print("Invalid color/format")
-                return "Invalid color/format", 400
+            led.new_color(flask.request.json["color"]) # type: ignore
         elif flask.request.json["target"] == "WARM_WHITE": # type: ignore
             led.warm_white()
         elif flask.request.json["target"] == "COLD_WHITE": # type: ignore
