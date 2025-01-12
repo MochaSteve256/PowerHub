@@ -1,7 +1,6 @@
 import threading
 import time
 
-import json
 import flask
 
 from helpers import ky040
@@ -47,7 +46,7 @@ app = flask.Flask(__name__)
 
 @app.route('/')
 def index_api():
-    return "Hello World!"
+    return "Hello World!", 200
 
 @app.route('/psu', methods=['GET', 'POST'])# type: ignore
 def psu_api():
@@ -76,25 +75,68 @@ def led_api():
     if not api_auth_check(flask.request): # type: ignore
         return "Unauthorized", 401
     # get
-
+    if flask.request.method == "GET":
+        return dict(
+            status = led.effects.LedState.current
+        ), 200
 
     # post
-    
+    elif flask.request.method == "POST":
+        if flask.request.json["target"] == "SUNRISE": # type: ignore
+            led.sunrise()
+        elif flask.request.json["target"] == "SUNSET": # type: ignore
+            led.sunset()
+        elif flask.request.json["target"] == "ALARM": # type: ignore
+            led.alarm()
+        elif flask.request.json["target"] == "STATIC_COLOR": # type: ignore
+            led.static_color(flask.request.json["color"]) # type: ignore
+        elif flask.request.json["target"] == "WARM_WHITE": # type: ignore
+            led.warm_white()
+        elif flask.request.json["target"] == "COLD_WHITE": # type: ignore
+            led.cold_white()
+        elif flask.request.json["target"] == "WHITE": # type: ignore
+            led.white()
+        elif flask.request.json["target"] == "BLACK": # type: ignore
+            led.black()
+        elif flask.request.json["target"] == "RGB_CYCLE": # type: ignore
+            led.rgb_cycle()
+        elif flask.request.json["target"] == "ARGB_CYCLE": # type: ignore
+            led.argb_cycle()
+        return "OK", 200
 
     return "Hello World!"
 
-@app.route('/alarm', methods=['GET', 'POST'])
+@app.route('/alarm', methods=['GET', 'POST']) # type: ignore
 def alarm_api():
     # check auth
     if not api_auth_check(flask.request): # type: ignore
         return "Unauthorized", 401
     # get
-
+    if flask.request.method == "GET":
+        return dict(
+            sunrise = alarmManager.sunriseTime,
+            alarm = alarmManager.alarmTime,
+            cw = alarmManager.cwTime,
+            schoolPowerOff = alarmManager.schoolPowerOffTime,
+            schoolPsuOff = alarmManager.schoolPsuOffTime,
+            ww = alarmManager.wwTime,
+            sunset = alarmManager.sunsetTime,
+            sunsetPsuOff = alarmManager.sunsetPsuOffTime
+        ), 200
 
     # post
+    elif flask.request.method == "POST":
+        alarmManager.sunriseTime = flask.request.json["sunrise"] # type: ignore
+        alarmManager.alarmTime = flask.request.json["alarm"] # type: ignore
+        alarmManager.cwTime = flask.request.json["cw"] # type: ignore
+        alarmManager.schoolPowerOffTime = flask.request.json["schoolPowerOff"] # type: ignore
+        alarmManager.schoolPsuOffTime = flask.request.json["schoolPsuOff"] # type: ignore
+        alarmManager.wwTime = flask.request.json["ww"] # type: ignore
+        alarmManager.sunsetTime = flask.request.json["sunset"] # type: ignore
+        alarmManager.sunsetPsuOffTime = flask.request.json["sunsetPsuOff"] # type: ignore
+        return "OK", 200
     
-
-    return "Hello World!"
+    return 400
 
 @app.route('/weather', methods=['POST'])
 def weather_api():
