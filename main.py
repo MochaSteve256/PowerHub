@@ -134,6 +134,8 @@ def alarm_api():
         alarmManager.wwTime = flask.request.json["ww"] # type: ignore
         alarmManager.sunsetTime = flask.request.json["sunset"] # type: ignore
         alarmManager.sunsetPsuOffTime = flask.request.json["sunsetPsuOff"] # type: ignore
+
+        alarmManager.update_times()
         return "OK", 200
     
     return 400
