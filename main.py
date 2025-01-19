@@ -88,7 +88,7 @@ def led_api():
             led.sunset()
         elif flask.request.json["target"] == "ALARM": # type: ignore
             led.alarm()
-        elif flask.request.json["target"] == "STATIC_COLOR": # type: ignore
+        elif flask.request.json["target"] == "CUSTOM": # type: ignore
             led.new_color(flask.request.json["color"]) # type: ignore
         elif flask.request.json["target"] == "WARM_WHITE": # type: ignore
             led.warm_white()
@@ -98,10 +98,12 @@ def led_api():
             led.white()
         elif flask.request.json["target"] == "BLACK": # type: ignore
             led.black()
-        elif flask.request.json["target"] == "RGB_CYCLE": # type: ignore
+        elif flask.request.json["target"] == "RGB": # type: ignore
             led.rgb_cycle()
-        elif flask.request.json["target"] == "ARGB_CYCLE": # type: ignore
+        elif flask.request.json["target"] == "ARGB": # type: ignore
             led.argb_cycle()
+        else:
+            return "Invalid target", 400
         return "OK", 200
 
     return "Hello World!"
