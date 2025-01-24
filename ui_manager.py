@@ -162,12 +162,7 @@ class UI:
             self._stby_callback()
             self.update()
         elif self.state == uiState.ALM:
-            self.standby = True
-            self.state = uiState.LED
-            self._stby_callback()
-            self.ledStripe.cold_white()
-            self.auto_stby = True
-            self.update()
+            self.dismiss_alarm()
         elif self.state == uiState.CLCK:
             self.clock_show_date = not self.clock_show_date
         elif self.state == uiState.WETH:
@@ -183,6 +178,14 @@ class UI:
         self._stby_check()
         self.state = uiState.ALM
         self.auto_stby = False
+        self.update()
+
+    def dismiss_alarm(self):
+        self.standby = True
+        self.state = uiState.LED
+        self._stby_callback()
+        self.ledStripe.cold_white()
+        self.auto_stby = True
         self.update()
 
     def update(self):

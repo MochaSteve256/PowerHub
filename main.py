@@ -168,6 +168,16 @@ def alarm_api():
     # Unsupported HTTP method
     return "Method not allowed", 405
 
+@app.route('/dismiss', methods=['POST'])
+def dismiss_api():
+    # check auth
+    if not api_auth_check(flask.request): # type: ignore
+        return "Unauthorized", 401
+    # dismiss alarm screen
+    ui.dismiss_alarm()
+    
+    return "OK", 200
+
 
 @app.route('/weather', methods=['POST'])
 def weather_api():
