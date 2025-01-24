@@ -108,39 +108,66 @@ def led_api():
 
     return "Hello World!"
 
-@app.route('/alarm', methods=['GET', 'POST']) # type: ignore
+@app.route('/alarm', methods=['GET', 'POST', 'DELETE', 'PATCH'])  # type: ignore
 def alarm_api():
-    # check auth
-    if not api_auth_check(flask.request): # type: ignore
+    # Check authentication
+    if not api_auth_check(flask.request):  # type: ignore
         return "Unauthorized", 401
-    # get
+
+    # Handle GET request: List all schedules
     if flask.request.method == "GET":
-        return dict(
-            sunrise = alarmManager.sunriseTime,
-            alarm = alarmManager.alarmTime,
-            cw = alarmManager.cwTime,
-            schoolPowerOff = alarmManager.schoolPowerOffTime,
-            schoolPsuOff = alarmManager.schoolPsuOffTime,
-            ww = alarmManager.wwTime,
-            sunset = alarmManager.sunsetTime,
-            sunsetPsuOff = alarmManager.sunsetPsuOffTime
-        ), 200
+        return {
+            "schedules": [
+                {
+                    "name": entry["name"],
+                    "action": entry["action"],
+                    "repeat": entry["repeat"],
+                    "time": entry["time"],
+                    "enabled": entry["enabled"],
+                }
+                for entry in alarmManager.schedule
+            ]
+        }, 200
 
-    # post
+    # Handle POST request: Add a new schedule
     elif flask.request.method == "POST":
-        alarmManager.sunriseTime = flask.request.json["sunrise"] # type: ignore
-        alarmManager.alarmTime = flask.request.json["alarm"] # type: ignore
-        alarmManager.cwTime = flask.request.json["cw"] # type: ignore
-        alarmManager.schoolPowerOffTime = flask.request.json["schoolPowerOff"] # type: ignore
-        alarmManager.schoolPsuOffTime = flask.request.json["schoolPsuOff"] # type: ignore
-        alarmManager.wwTime = flask.request.json["ww"] # type: ignore
-        alarmManager.sunsetTime = flask.request.json["sunset"] # type: ignore
-        alarmManager.sunsetPsuOffTime = flask.request.json["sunsetPsuOff"] # type: ignore
+        data = flask.request.json  # type: ignore
+        if not all(key in data for key in ["name", "action", "repeat", "time", "enabled"]): # type: ignore
+            return "Invalid request body", 400
 
-        alarmManager.update_times()
-        return "OK", 200
-    
-    return 400
+        alarmManager.add_schedule(
+            name=data["name"], # type: ignore
+            action=data["action"], # type: ignore
+            repeat=data["repeat"], # type: ignore
+            time=data["time"], # type: ignore
+            enabled=data["enabled"], # type: ignore
+        )
+        return "Schedule added", 201
+
+    # Handle DELETE request: Remove a schedule
+    elif flask.request.method == "DELETE":
+        data = flask.request.json  # type: ignore
+        if "name" not in data: # type: ignore
+            return "Invalid request body", 400
+
+        alarmManager.remove_schedule(data["name"]) # type: ignore
+        return "Schedule removed", 200
+
+    # Handle PATCH request: Enable/disable a schedule
+    elif flask.request.method == "PATCH":
+        data = flask.request.json  # type: ignore
+        if not all(key in data for key in ["name", "enabled"]): # type: ignore
+            return "Invalid request body", 400
+
+        if data["enabled"]: # type: ignore
+            alarmManager.enable_schedule(data["name"]) # type: ignore
+        else:
+            alarmManager.disable_schedule(data["name"]) # type: ignore
+        return "Schedule updated", 200
+
+    # Unsupported HTTP method
+    return "Method not allowed", 405
+
 
 @app.route('/weather', methods=['POST'])
 def weather_api():
