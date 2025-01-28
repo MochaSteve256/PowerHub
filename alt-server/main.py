@@ -22,10 +22,10 @@ def call_weather_update():
     print(r.text)
 
 if __name__ == "__main__":
-    schedule.every(1).hours.do(call_weather_update)
+    schedule.every(10).minutes.do(call_weather_update)
     
     call_weather_update()
     
     while True:
         schedule.run_pending()
-        time.sleep(120)
+        time.sleep(60)
