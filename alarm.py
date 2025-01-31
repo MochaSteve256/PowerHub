@@ -47,8 +47,6 @@ class Alarm():
         self.led.black()  # type: ignore
 
     def _warmWhite(self):
-        if not psu.is_on():
-            psu.on()
         self.led.warm_white()  # type: ignore
 
     def _alarm(self):
