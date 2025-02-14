@@ -78,7 +78,8 @@ def led_api():
     if flask.request.method == "GET":
         return dict(
             status = led.effects.LedState.current,
-            color = led.target_color
+            color = led.effects.target_color,
+            transitive_color = led.target_color
         ), 200
 
     # post
