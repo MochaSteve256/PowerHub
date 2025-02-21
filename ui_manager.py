@@ -17,7 +17,6 @@ class uiState():
     LED_SLCT = 2
     WETH = 3
     CLCK = 4
-    STBY = 5
     ALM = 6
 
 class ledState():
@@ -95,13 +94,10 @@ class UI:
             if self.ledEffectNum == 6:
                 self.ledEffectNum = 0
             self.led_t_offset = time.time()
-        elif self.state == uiState.WETH:
-            self.state = uiState.STBY
-            self.update()
         elif self.state == uiState.CLCK:
             self.state = uiState.WETH
             self.update()
-        elif self.state == uiState.STBY:
+        elif self.state == uiState.WETH:
             self.state = uiState.PSU
             self.update()
     def counterclockwise(self):
@@ -109,7 +105,7 @@ class UI:
             return
 
         if self.state == uiState.PSU:
-            self.state = uiState.STBY
+            self.state = uiState.WETH
             self.update()
         elif self.state == uiState.LED:
             self.state = uiState.PSU
@@ -119,14 +115,11 @@ class UI:
             if self.ledEffectNum == -1:
                 self.ledEffectNum = 5
             self.led_t_offset = time.time()
-        elif self.state == uiState.WETH:
-            self.state = uiState.CLCK
-            self.update()
         elif self.state == uiState.CLCK:
             self.state = uiState.LED
             self.update()
-        elif self.state == uiState.STBY:
-            self.state = uiState.WETH
+        elif self.state == uiState.WETH:
+            self.state = uiState.CLCK
             self.update()
     def select(self):
         if self._stby_check():
@@ -156,10 +149,6 @@ class UI:
             elif self.ledEffectNum == ledState.ARGB:
                 self.ledStripe.argb_cycle()
             self.state = uiState.LED
-            self.update()
-        elif self.state == uiState.STBY:
-            self.standby = True
-            self._stby_callback()
             self.update()
         elif self.state == uiState.ALM:
             self.dismiss_alarm()
@@ -227,8 +216,6 @@ class UI:
             self.weth_ui()
         elif self.state == uiState.CLCK:
             self.clck_ui()
-        elif self.state == uiState.STBY:
-            self.stby_ui()
         elif self.state == uiState.ALM:
             self.alarm_ui()
 
@@ -336,8 +323,6 @@ class UI:
             u64led.set_matrix(m)
 
 
-    def stby_ui(self):
-        u64led.set_matrix(u64images.add_navbar(u64images.stby_text, *NavOpts.stby))
 def clean_convert_matrix(mtx):
     for y in range(8):
         for x in range(8):

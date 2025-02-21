@@ -37,17 +37,6 @@ psu_off = [
     [black, black, black, black, black, black, black, black ]
 ]
 
-#standby
-stby_text = [
-    [pink,  pink,  purple, purple, purple, orange, black,  orange],
-    [pink,  black, black,  purple, black,  orange, black,  orange],
-    [pink,  pink,  black,  pink,   pink,   black,  orange, orange],
-    [black, pink,  black,  pink,   black,  pink,   black,  orange],
-    [pink,  pink,  black,  pink,   pink,   black,  orange, black ],
-    [black, black, black,  pink,   black,  pink,   black,  black ],
-    [black, black, black,  pink,   pink,   black,  black,  black ],
-    [black, black, black,  black,  black,  black,  black,  black ]
-]
 
 #led
 led_text = [
