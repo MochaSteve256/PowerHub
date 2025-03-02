@@ -127,7 +127,7 @@ def alarm_api():
                     "time": entry["time"],
                     "enabled": entry["enabled"],
                 }
-                for entry in alarmManager.default_schedule
+                for entry in alarmManager.schedule_entries
             ]
         }, 200
 
