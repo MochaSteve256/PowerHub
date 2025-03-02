@@ -127,7 +127,7 @@ def alarm_api():
                     "time": entry["time"],
                     "enabled": entry["enabled"],
                 }
-                for entry in alarmManager.schedule
+                for entry in alarmManager.default_schedule
             ]
         }, 200
 
@@ -169,6 +169,17 @@ def alarm_api():
 
     # Unsupported HTTP method
     return "Method not allowed", 405
+
+@app.route('/alarm/actions', methods=['GET'])  # type: ignore
+def alarm_actions_api():
+    # Check authentication
+    if not api_auth_check(flask.request):  # type: ignore
+        return "Unauthorized", 401
+
+    # Retrieve all available action keys from the alarm manager
+    actions_list = list(alarmManager.actions.keys())
+    return {"actions": actions_list}, 200
+
 
 @app.route('/dismiss', methods=['POST'])
 def dismiss_api():

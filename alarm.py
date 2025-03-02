@@ -5,88 +5,123 @@ from helpers import psu
 import led_manager
 import ui_manager
 
-class Alarm():
-    led = None
-    ui = None
-
-    # Actions map to callables
-    actions = {
-        "sunrise": lambda self: self._sunrise(),
-        "schoolPowerOff": lambda self: self._schoolPowerOff(),
-        "warmWhite": lambda self: self._warmWhite(),
-        "alarm": lambda self: self._alarm(),
-        "coldWhite": lambda self: self.led.cold_white(),  # type: ignore
-        "sunset": lambda self: self.led.sunset(),  # type: ignore
-        "psuOff": lambda self: psu.off(),
-    }
-
-    # Default schedules
-    default_schedule = [
-        {"name": "sunrise", "action": "sunrise", "repeat": "daily", "time": "07:00", "enabled": True},
-        {"name": "alarm", "action": "alarm", "repeat": "daily", "time": "07:01", "enabled": True},
-        {"name": "coldWhite", "action": "coldWhite", "repeat": "daily", "time": "07:02", "enabled": True},
-        {"name": "schoolPowerOff", "action": "schoolPowerOff", "repeat": "daily", "time": "07:45", "enabled": True},
-        {"name": "psuOffSchool", "action": "psuOff", "repeat": "daily", "time": "07:50", "enabled": True},
-        {"name": "warmWhite", "action": "warmWhite", "repeat": "daily", "time": "22:00", "enabled": True},
-        {"name": "sunset", "action": "sunset", "repeat": "daily", "time": "23:00", "enabled": True},
-        {"name": "psuOffSunset", "action": "psuOff", "repeat": "daily", "time": "23:05", "enabled": True},
-    ]
-
+class Alarm:
     def __init__(self, led: led_manager.LED_Stripe, ui: ui_manager.UI) -> None:
         self.led = led
         self.ui = ui
-        self.schedule = self.default_schedule.copy()
+        # use a separate attribute for schedule entries to keep them isolated
+        self.schedule_entries = self.default_schedule.copy()
         self.update_times()
 
+    # PSU control methods
+    def _psu_on(self):
+        psu.on()
+
+    def _psu_off(self):
+        psu.off()
+
+    # LED control methods (each action does exactly one thing)
     def _sunrise(self):
-        if not psu.is_on():
-            psu.on()
-        self.led.sunrise()  # type: ignore
+        self.led.sunrise()
 
-    def _schoolPowerOff(self):
-        self.led.black()  # type: ignore
-
-    def _warmWhite(self):
-        self.led.warm_white()  # type: ignore
+    def _sunset(self):
+        self.led.sunset()
 
     def _alarm(self):
-        self.led.alarm()  # type: ignore
-        self.ui.alarm()  # type: ignore
+        self.led.alarm()
+        self.ui.alarm()
+
+    def _warm_white(self):
+        self.led.warm_white()
+
+    def _cold_white(self):
+        self.led.cold_white()
+
+    def _white(self):
+        self.led.white()
+
+    def _lights_off(self):
+        self.led.black()
+
+    def _rgb_cycle(self):
+        self.led.rgb_cycle()
+
+    def _argb_cycle(self):
+        self.led.argb_cycle()
+
+    def _new_color(self, color=(255, 0, 0)):
+        self.led.new_color(color)
+
+    # Actions mapping: keys are the snake_case names referenced in schedules.
+    actions = {
+        "psu_on": lambda self: self._psu_on(),
+        "psu_off": lambda self: self._psu_off(),
+        "sunrise": lambda self: self._sunrise(),
+        "sunset": lambda self: self._sunset(),
+        "alarm": lambda self: self._alarm(),
+        "cold_white": lambda self: self._cold_white(),
+        "warm_white": lambda self: self._warm_white(),
+        "white": lambda self: self._white(),
+        "lights_off": lambda self: self._lights_off(),
+        "rgb_cycle": lambda self: self._rgb_cycle(),
+        "argb_cycle": lambda self: self._argb_cycle(),
+        "new_color": lambda self: self._new_color(),  # uses a default color
+    }
+
+    # Default schedules with human‐readable names (now with spaces) and action keys
+    default_schedule = [
+        {"name": "PSU On", "action": "psu_on", "repeat": "daily", "time": "06:55", "enabled": True},
+        {"name": "Sunrise", "action": "sunrise", "repeat": "daily", "time": "07:00", "enabled": True},
+        {"name": "Alarm", "action": "alarm", "repeat": "daily", "time": "07:01", "enabled": True},
+        {"name": "Cold White", "action": "cold_white", "repeat": "daily", "time": "07:02", "enabled": True},
+        {"name": "School Power Off", "action": "lights_off", "repeat": "daily", "time": "07:45", "enabled": True},
+        {"name": "PSU Off School", "action": "psu_off", "repeat": "daily", "time": "07:50", "enabled": True},
+        {"name": "Warm White", "action": "warm_white", "repeat": "daily", "time": "22:00", "enabled": True},
+        {"name": "Sunset", "action": "sunset", "repeat": "daily", "time": "23:00", "enabled": True},
+        {"name": "PSU Off Sunset", "action": "psu_off", "repeat": "daily", "time": "23:05", "enabled": True},
+    ]
 
     def add_schedule(self, name: str, action: str, repeat: str, time: str, enabled: bool = True):
-        self.schedule.append({"name": name, "action": action, "repeat": repeat, "time": time, "enabled": enabled})
+        self.schedule_entries.append({
+            "name": name,
+            "action": action,
+            "repeat": repeat,
+            "time": time,
+            "enabled": enabled
+        })
         self.update_times()
 
     def remove_schedule(self, name: str):
-        self.schedule = [s for s in self.schedule if s["name"] != name]
+        self.schedule_entries = [s for s in self.schedule_entries if s["name"] != name]
         self.update_times()
 
     def enable_schedule(self, name: str):
-        for s in self.schedule:
+        for s in self.schedule_entries:
             if s["name"] == name:
                 s["enabled"] = True
         self.update_times()
 
     def disable_schedule(self, name: str):
-        for s in self.schedule:
+        for s in self.schedule_entries:
             if s["name"] == name:
                 s["enabled"] = False
         self.update_times()
 
     def update_times(self):
+        # Clear previous schedules
         schedule.clear()
-        for entry in self.schedule:
+        for entry in self.schedule_entries:
             if not entry["enabled"]:
                 continue
 
-            action_callable = self.actions.get(entry["action"], None)
+            action_callable = self.actions.get(entry["action"])
             if action_callable:
-                days = entry["repeat"]
-                time = entry["time"]
-
-                if days == "daily":
-                    schedule.every().day.at(time).do(action_callable, self)
+                repeat = entry["repeat"]
+                time_str = entry["time"]
+                if repeat == "daily":
+                    schedule.every().day.at(time_str).do(action_callable, self)
                 else:
+                    # Support for specific days (e.g., "mo", "tu", etc.)
                     day_map = {
                         "mo": schedule.every().monday,
                         "tu": schedule.every().tuesday,
@@ -96,11 +131,11 @@ class Alarm():
                         "sa": schedule.every().saturday,
                         "su": schedule.every().sunday,
                     }
-
-                    for i in range(0, len(days), 2):
-                        day_code = days[i:i+2]
+                    # assume repeat is a concatenated string of two-letter day codes
+                    for i in range(0, len(repeat), 2):
+                        day_code = repeat[i:i+2].lower()
                         if day_code in day_map:
-                            day_map[day_code].at(time).do(action_callable, self)
+                            day_map[day_code].at(time_str).do(action_callable, self)
 
     def update(self):
         schedule.run_pending()
