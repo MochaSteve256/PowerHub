@@ -70,15 +70,15 @@ class Alarm:
 
     # Default schedules with human‐readable names (now with spaces) and action keys
     default_schedule = [
-        {"name": "PSU On", "action": "psu_on", "repeat": "daily", "time": "06:55", "enabled": True},
+        {"name": "PSU On", "action": "psu_on", "repeat": "daily", "time": "06:59", "enabled": True},
         {"name": "Sunrise", "action": "sunrise", "repeat": "daily", "time": "07:00", "enabled": True},
         {"name": "Alarm", "action": "alarm", "repeat": "daily", "time": "07:01", "enabled": True},
         {"name": "Cold White", "action": "cold_white", "repeat": "daily", "time": "07:02", "enabled": True},
         {"name": "School Power Off", "action": "lights_off", "repeat": "daily", "time": "07:45", "enabled": True},
-        {"name": "PSU Off School", "action": "psu_off", "repeat": "daily", "time": "07:50", "enabled": True},
+        {"name": "PSU Off School", "action": "psu_off", "repeat": "daily", "time": "07:46", "enabled": True},
         {"name": "Warm White", "action": "warm_white", "repeat": "daily", "time": "22:00", "enabled": True},
         {"name": "Sunset", "action": "sunset", "repeat": "daily", "time": "23:00", "enabled": True},
-        {"name": "PSU Off Sunset", "action": "psu_off", "repeat": "daily", "time": "23:05", "enabled": True},
+        {"name": "PSU Off Sunset", "action": "psu_off", "repeat": "daily", "time": "23:02", "enabled": True},
     ]
 
     def add_schedule(self, name: str, action: str, repeat: str, time: str, enabled: bool = True):
