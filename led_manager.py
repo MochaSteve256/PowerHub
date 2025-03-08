@@ -214,6 +214,7 @@ class LED_Stripe:
         return arr
     
     def update(self, dim):
+        print("updating")
         self.t = time.time() - self.t_offset
         if self.effects.overtime:
             self.target_color = None
