@@ -52,6 +52,7 @@ def index_api():
 
 @app.route('/dim', methods=['GET', 'POST'])
 def dim_api():
+    global dim_factor
     # check auth
     if not api_auth_check(flask.request): # type: ignore
         return "Unauthorized", 401
@@ -63,7 +64,6 @@ def dim_api():
 
     # post
     elif flask.request.method == "POST":
-        global dim_factor
         dim_factor = flask.request.json["dim"] # type: ignore
         return "OK", 200
     
