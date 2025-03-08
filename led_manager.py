@@ -205,15 +205,8 @@ class LED_Stripe:
         self.effects.LedState.target = self.effects.LedState.ALARM
     
     def apply_dim(self, dim: float, arr):
-        if type(arr[0]) == int:
-            #color system
-            print("color system")
-            return [[int(x * dim) for x in Adafruit_WS2801.color_to_RGB(arr[i])] for i in range(len(arr))]
-        elif type(arr[0]) == tuple:
-            #rgb system
-            print("rgb system")
-            return [(int(x[0] * dim), int(x[1] * dim), int(x[2] * dim)) for x in arr]
-        return arr
+        rgb_arr = [Adafruit_WS2801.color_to_RGB(x) for x in arr]
+        return [(int(x[0] * dim), int(x[1] * dim), int(x[2] * dim)) for x in rgb_arr]
     
     def update(self, dim):
         self.t = time.time() - self.t_offset
