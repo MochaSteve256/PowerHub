@@ -207,9 +207,11 @@ class LED_Stripe:
     def apply_dim(self, dim: float, arr):
         if type(arr[0]) == int:
             #color system
+            print("color system")
             return [[int(x * dim) for x in Adafruit_WS2801.color_to_RGB(arr[i])] for i in range(len(arr))]
         elif type(arr[0]) == tuple:
             #rgb system
+            print("rgb system")
             return [(int(x[0] * dim), int(x[1] * dim), int(x[2] * dim)) for x in arr]
         return arr
     
@@ -218,7 +220,7 @@ class LED_Stripe:
         if self.effects.overtime:
             self.target_color = None
         arr = self.effects._generate_array(self.t, self.effects.LedState, target_color=self.target_color)
-        #arr = self.apply_dim(dim, arr)
+        arr = self.apply_dim(dim, arr)
         if type(arr[0]) == tuple:
             led_stripe.set_array(arr)
         elif type(arr[0]) == int:
