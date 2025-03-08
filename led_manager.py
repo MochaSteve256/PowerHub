@@ -214,12 +214,11 @@ class LED_Stripe:
         return arr
     
     def update(self, dim):
-        print("updating")
         self.t = time.time() - self.t_offset
         if self.effects.overtime:
             self.target_color = None
         arr = self.effects._generate_array(self.t, self.effects.LedState, target_color=self.target_color)
-        arr = self.apply_dim(dim, arr)
+        #arr = self.apply_dim(dim, arr)
         if type(arr[0]) == tuple:
             led_stripe.set_array(arr)
         elif type(arr[0]) == int:
