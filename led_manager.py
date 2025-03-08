@@ -205,6 +205,7 @@ class LED_Stripe:
         self.effects.LedState.target = self.effects.LedState.ALARM
     
     def apply_dim(self, dim: float, arr):
+        rgb_arr = arr
         if type(arr[0]) == int:
             rgb_arr = [Adafruit_WS2801.color_to_RGB(x) for x in arr]
         return [(int(x[0] * dim), int(x[1] * dim), int(x[2] * dim)) for x in rgb_arr]
