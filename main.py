@@ -34,6 +34,8 @@ class WeatherState:
 
 weather = WeatherState()
 
+dim_factor = 1
+
 def api_auth_check(req):
     token = req.headers.get("token")
     if token == "br4d9c2ayqrk7iswse7v8t2x":
@@ -47,6 +49,25 @@ app = flask.Flask(__name__)
 @app.route('/')
 def index_api():
     return "Hello World!", 200
+
+@app.route('/dim', methods=['GET', 'POST'])
+def dim_api():
+    # check auth
+    if not api_auth_check(flask.request): # type: ignore
+        return "Unauthorized", 401
+    # get
+    if flask.request.method == "GET":
+        return dict(
+            dim = dim_factor
+        ), 200
+
+    # post
+    elif flask.request.method == "POST":
+        global dim_factor
+        dim_factor = flask.request.json["dim"] # type: ignore
+        return "OK", 200
+    
+    return "retard", 400
 
 @app.route('/psu', methods=['GET', 'POST'])# type: ignore
 def psu_api():
@@ -224,7 +245,7 @@ if __name__ == "__main__":
     
     def led_update():
         while True:
-            led.update()
+            led.update(dim_factor)
             time.sleep(.01)
     
     try:
@@ -233,7 +254,7 @@ if __name__ == "__main__":
         while True:
             ky040.update()
             ui.update()
-            led.update()
+            led.update(dim_factor)
             alarmManager.update()
             time.sleep(.01)#!
 

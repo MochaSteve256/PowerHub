@@ -204,7 +204,7 @@ class LED_Stripe:
         self.effects.LedState.current = self.effects.LedState.ALARM
         self.effects.LedState.target = self.effects.LedState.ALARM
     
-    def update(self):
+    def update(self, dim):
         self.t = time.time() - self.t_offset
         if self.effects.overtime:
             self.target_color = None
@@ -213,6 +213,7 @@ class LED_Stripe:
             led_stripe.set_array(arr)
         elif type(arr[0]) == int:
             led_stripe.set_array_color(arr)
+        led_stripe.apply_dim(dim)
 
 
 if __name__ == '__main__':
@@ -220,7 +221,7 @@ if __name__ == '__main__':
     
     def thread():
         while True:
-            stripe.update()
+            stripe.update(1)
             time.sleep(0.01)
             
     t = threading.Thread(target=thread)
