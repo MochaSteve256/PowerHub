@@ -68,15 +68,6 @@ def clear():
         pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color( 0, 0, 0 ))
     pixels.show()
 
-def apply_dim(dim: float):
-    for i in range(PIXEL_COUNT):
-        r, g, b = pixels.get_pixel_rgb(i)
-        r = int(max(0, r * dim))
-        g = int(max(0, g * dim))
-        b = int(max(0, b * dim))
-        pixels.set_pixel(i, Adafruit_WS2801.RGB_to_color( r, g, b ))
-    pixels.show()
-
 ## Transitions
 
 def fade_cx_cy(x, start, end, time):
