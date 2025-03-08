@@ -207,7 +207,7 @@ class LED_Stripe:
     def apply_dim(self, dim: float, arr):
         if type(arr[0]) == int:
             #color system
-            return [(int(x * dim) for x in Adafruit_WS2801.color_to_RGB(arr[i])) for i in range(len(arr))]
+            return [[int(x * dim) for x in Adafruit_WS2801.color_to_RGB(arr[i])] for i in range(len(arr))]
         elif type(arr[0]) == tuple:
             #rgb system
             return [(int(x[0] * dim), int(x[1] * dim), int(x[2] * dim)) for x in arr]
