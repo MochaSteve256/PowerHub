@@ -87,40 +87,27 @@ class UI:
             self.state = uiState.LED
             self.update()
         elif self.state == uiState.LED:
-            self.state = uiState.CLCK
-            self.update()
-        elif self.state == uiState.LED_SLCT:
-            self.ledEffectNum += 1
-            if self.ledEffectNum == 6:
-                self.ledEffectNum = 0
-            self.led_t_offset = time.time()
-        elif self.state == uiState.CLCK:
-            self.state = uiState.WETH
-            self.update()
-        elif self.state == uiState.WETH:
             self.state = uiState.PSU
             self.update()
+        elif self.state == uiState.LED_SLCT:
+            self.ledEffectNum = (self.ledEffectNum + 1) % 6
+            self.led_t_offset = time.time()
+            self.update()
+
     def counterclockwise(self):
         if self._stby_check():
             return
-
         if self.state == uiState.PSU:
-            self.state = uiState.WETH
+            self.state = uiState.LED
             self.update()
         elif self.state == uiState.LED:
             self.state = uiState.PSU
             self.update()
         elif self.state == uiState.LED_SLCT:
-            self.ledEffectNum -= 1
-            if self.ledEffectNum == -1:
-                self.ledEffectNum = 5
+            self.ledEffectNum = (self.ledEffectNum - 1) % 6
             self.led_t_offset = time.time()
-        elif self.state == uiState.CLCK:
-            self.state = uiState.LED
             self.update()
-        elif self.state == uiState.WETH:
-            self.state = uiState.CLCK
-            self.update()
+
     def select(self):
         if self._stby_check():
             return
@@ -180,7 +167,7 @@ class UI:
     def update(self):
         # auto standby
         if self.auto_stby:
-            if time.time() - self.last_click > 10:
+            if time.time() - self.last_click > 5:
                 if not self.standby:
                     self._stby_callback()
 
@@ -189,15 +176,15 @@ class UI:
             if not self._nighttime_check():
                 self.clock_show_date = False
                 self.state = uiState.CLCK
-                if time.time() - self._last_standby_switch > 8:
+                if time.time() - self._last_standby_switch > 3:
                     self.clock_show_date = True
-                if time.time() - self._last_standby_switch > 10:
+                if time.time() - self._last_standby_switch > 6:
                     self.weth_show_tomorrow = False
                     self.state = uiState.WETH
                     self.clock_show_date = False
-                if time.time() - self._last_standby_switch > 12:
+                if time.time() - self._last_standby_switch > 9:
                     self.weth_show_tomorrow = True
-                if time.time() - self._last_standby_switch > 16:
+                if time.time() - self._last_standby_switch > 12:
                     self._last_standby_switch = time.time()
             else:
                 self.clock_show_date = False
