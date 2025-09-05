@@ -134,62 +134,127 @@ def led_api():
 
     return "Hello World!"
 
-@app.route('/alarm', methods=['GET', 'POST', 'DELETE', 'PATCH'])  # type: ignore
-def alarm_api():
+@app.route('/alarm', methods=['GET', 'POST'])  # type: ignore
+@app.route('/alarm/<schedule_id>', methods=['GET', 'DELETE', 'PATCH', 'PUT'])  # type: ignore
+def alarm_api(schedule_id=None):
     # Check authentication
     if not api_auth_check(flask.request):  # type: ignore
         return "Unauthorized", 401
 
-    # Handle GET request: List all schedules
+    # Handle GET request: List all schedules or get specific schedule
     if flask.request.method == "GET":
-        return {
-            "schedules": [
-                {
-                    "name": entry["name"],
-                    "action": entry["action"],
-                    "repeat": entry["repeat"],
-                    "time": entry["time"],
-                    "enabled": entry["enabled"],
-                }
-                for entry in alarmManager.schedule_entries
-            ]
-        }, 200
+        if schedule_id:
+            # Get specific schedule by ID
+            schedule = alarmManager.get_schedule(schedule_id)
+            if not schedule:
+                return "Schedule not found", 404
+            return {"schedule": schedule}, 200
+        else:
+            # Get all schedules
+            return {
+                "schedules": alarmManager.get_all_schedules()
+            }, 200
 
     # Handle POST request: Add a new schedule
     elif flask.request.method == "POST":
+        if schedule_id:
+            return "Method not allowed for specific schedule ID", 405
+            
         data = flask.request.json  # type: ignore
-        if not all(key in data for key in ["name", "action", "repeat", "time", "enabled"]): # type: ignore
-            return "Invalid request body", 400
+        if not all(key in data for key in ["name", "action", "repeat", "time"]): # type: ignore
+            return "Missing required fields: name, action, repeat, time", 400
 
-        alarmManager.add_schedule(
+        # enabled is optional, defaults to True
+        enabled = data.get("enabled", True) # type: ignore
+
+        new_id = alarmManager.add_schedule(
             name=data["name"], # type: ignore
             action=data["action"], # type: ignore
             repeat=data["repeat"], # type: ignore
             time=data["time"], # type: ignore
-            enabled=data["enabled"], # type: ignore
+            enabled=enabled,
         )
-        return "Schedule added", 201
+        return {"message": "Schedule added", "id": new_id}, 201
 
-    # Handle DELETE request: Remove a schedule
+    # Handle DELETE request: Remove a schedule by ID
     elif flask.request.method == "DELETE":
-        data = flask.request.json  # type: ignore
-        if "name" not in data: # type: ignore
-            return "Invalid request body", 400
+        if not schedule_id:
+            return "Schedule ID required for deletion", 400
 
-        alarmManager.remove_schedule(data["name"]) # type: ignore
+        success = alarmManager.remove_schedule(schedule_id)
+        if not success:
+            return "Schedule not found", 404
         return "Schedule removed", 200
 
-    # Handle PATCH request: Enable/disable a schedule
+    # Handle PATCH request: Partially update a schedule (enable/disable or edit specific fields)
     elif flask.request.method == "PATCH":
-        data = flask.request.json  # type: ignore
-        if not all(key in data for key in ["name", "enabled"]): # type: ignore
-            return "Invalid request body", 400
+        if not schedule_id:
+            return "Schedule ID required for update", 400
 
-        if data["enabled"]: # type: ignore
-            alarmManager.enable_schedule(data["name"]) # type: ignore
+        data = flask.request.json  # type: ignore
+        if not data: # type: ignore
+            return "Request body required", 400
+
+        # Check if schedule exists
+        if not alarmManager.get_schedule(schedule_id):
+            return "Schedule not found", 404
+
+        # Handle simple enable/disable (backward compatibility)
+        if "enabled" in data and len(data) == 1: # type: ignore
+            if data["enabled"]: # type: ignore
+                success = alarmManager.enable_schedule(schedule_id)
+            else:
+                success = alarmManager.disable_schedule(schedule_id)
+            
+            if success:
+                return "Schedule updated", 200
+            else:
+                return "Schedule not found", 404
+        
+        # Handle partial update of any fields
+        success = alarmManager.edit_schedule(
+            schedule_id=schedule_id,
+            name=data.get("name"), # type: ignore
+            action=data.get("action"), # type: ignore
+            repeat=data.get("repeat"), # type: ignore
+            time=data.get("time"), # type: ignore
+            enabled=data.get("enabled") # type: ignore
+        )
+        
+        if success:
+            return "Schedule updated", 200
         else:
-            alarmManager.disable_schedule(data["name"]) # type: ignore
-        return "Schedule updated", 200
+            return "Schedule not found", 404
+
+    # Handle PUT request: Complete replacement of a schedule
+    elif flask.request.method == "PUT":
+        if not schedule_id:
+            return "Schedule ID required for replacement", 400
+
+        data = flask.request.json  # type: ignore
+        if not all(key in data for key in ["name", "action", "repeat", "time"]): # type: ignore
+            return "Missing required fields: name, action, repeat, time", 400
+
+        # Check if schedule exists
+        if not alarmManager.get_schedule(schedule_id):
+            return "Schedule not found", 404
+
+        # enabled is optional, defaults to True
+        enabled = data.get("enabled", True) # type: ignore
+
+        success = alarmManager.edit_schedule(
+            schedule_id=schedule_id,
+            name=data["name"], # type: ignore
+            action=data["action"], # type: ignore
+            repeat=data["repeat"], # type: ignore
+            time=data["time"], # type: ignore
+            enabled=enabled
+        )
+        
+        if success:
+            return "Schedule replaced", 200
+        else:
+            return "Schedule not found", 404
 
     # Unsupported HTTP method
     return "Method not allowed", 405
