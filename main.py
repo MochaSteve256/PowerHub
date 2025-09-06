@@ -112,11 +112,9 @@ def led_api():
         elif flask.request.json["target"] == "ALARM": # type: ignore
             led.alarm()
         elif flask.request.json["target"] == "CUSTOM": # type: ignore
-            if "color" in flask.request.json: # type: ignore
-                if len(flask.request.json["color"]) == 3: # type: ignore
-                    led.new_color(flask.request.json["color"]) # type: ignore
-                else:
-                    return "Invalid color", 400
+            color = flask.request.json["color"] # type: ignore
+            if color and isinstance(color, list) and len(color) == 3:
+                led.new_color(color)
             else:
                 return "Invalid color", 400
         elif flask.request.json["target"] == "WARM_WHITE": # type: ignore
