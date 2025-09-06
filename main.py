@@ -129,6 +129,7 @@ def led_api():
         elif flask.request.json["target"] == "ARGB": # type: ignore
             led.argb_cycle()
         else:
+            print(flask.request.json)
             return "Invalid target", 400
         return "OK", 200
 
