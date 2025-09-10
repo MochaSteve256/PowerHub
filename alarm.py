@@ -130,8 +130,7 @@ class Alarm:
                 return True
         return False
 
-    def edit_schedule(self, schedule_id: str, name: str = None, action: str = None,  # type: ignore
-                     repeat: str = None, time: str = None, enabled: bool = None) -> bool: # type: ignore
+    def edit_schedule(self, schedule_id: str, name: str = None, action: str = None, repeat: str = None, time: str = None, enabled: bool = None) -> bool: # type: ignore
         """Edit a schedule entry by ID. Only updates provided parameters. Returns True if found, False otherwise"""
         for s in self.schedule_entries:
             if s["id"] == schedule_id:
