@@ -313,12 +313,11 @@ if __name__ == "__main__":
     ky040 = ky040.KY040(ui.clockwise, ui.counterclockwise, press, release)
     alarmManager = alarm.Alarm(led, ui)
     
+    target_dim = 0.0
     def led_update():
-        target_dim = 0.0
-        while True:
-            target_dim += (dim_factor - target_dim) * 0.1
-            led.update(target_dim)
-            time.sleep(.01)
+        global target_dim
+        target_dim += (dim_factor - target_dim) * 0.1
+        led.update(target_dim)
     
     try:
         #ledUT = threading.Thread(target=led_update)
