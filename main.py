@@ -329,7 +329,7 @@ if __name__ == "__main__":
         while True:
             ky040.update()
             ui.update()
-            led.update(dim_factor)
+            led_update()
             alarmManager.update()
             time.sleep(.01)#!
 
