@@ -318,9 +318,9 @@ if __name__ == "__main__":
         global target_dim
         if abs(target_dim - dim_factor) > 0.01:
             if target_dim < dim_factor:
-                target_dim += 0.02
+                target_dim += 0.2
             elif target_dim > dim_factor:
-                target_dim -= 0.02
+                target_dim -= 0.2
         led.update(target_dim)
     
     try:
