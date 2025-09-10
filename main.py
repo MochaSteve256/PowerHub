@@ -314,8 +314,10 @@ if __name__ == "__main__":
     alarmManager = alarm.Alarm(led, ui)
     
     def led_update():
+        target_dim = 0.0
         while True:
-            led.update(dim_factor)
+            target_dim += (dim_factor - target_dim) * 0.1
+            led.update(target_dim)
             time.sleep(.01)
     
     try:
