@@ -316,22 +316,33 @@ if __name__ == "__main__":
     target_dim = 0.0
     def led_update():
         global target_dim
-        if abs(target_dim - dim_factor) > 0.01:
+        if abs(target_dim - dim_factor) > 0.05:
             if target_dim < dim_factor:
-                target_dim += 0.2
+                target_dim += 0.04
             elif target_dim > dim_factor:
-                target_dim -= 0.2
+                target_dim -= 0.04
         led.update(target_dim)
     
     try:
         #ledUT = threading.Thread(target=led_update)
         #ledUT.start()
+        TARGET_DT = 0.01  # 10 ms per frame
+        last_time = time.time()
+
         while True:
+            # --- do work ---
             ky040.update()
             ui.update()
             led_update()
             alarmManager.update()
-            time.sleep(.01)#!
+
+            # --- timing ---
+            now = time.time()
+            elapsed = now - last_time
+            sleep_time = TARGET_DT - elapsed
+            if sleep_time > 0:
+                time.sleep(sleep_time)
+            last_time = now
 
     finally:
         ky040.stop()
