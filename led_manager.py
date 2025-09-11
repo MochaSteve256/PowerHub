@@ -229,6 +229,9 @@ class LED_Stripe:
 class LED_Queue:
     _queue = []
     _queue_data = []
+
+    def __init__(self, ledStripe: LED_Stripe):
+        self.ledStripe = ledStripe
     
     """
     def new_color(self, rgb):
@@ -277,7 +280,7 @@ class LED_Queue:
         self._queue.append(effect)
         self._queue_data.append(data)
         
-    def process(self):
+    def wait_and_process(self):
         if len(self._queue) > 5:
             self._queue = self._queue[-5:]
             self._queue_data = self._queue_data[-5:]
@@ -286,7 +289,9 @@ class LED_Queue:
             if self._queue_data[0] is not None:
                 arr = [self._queue_data[0]]
             
-            self._queue[0](*arr)
+            #only start next effect if the previous one has finished
+            if not self.ledStripe.is_transitioning():
+                self._queue[0](*arr)
             
             self._queue.pop(0)
             self._queue_data.pop(0)

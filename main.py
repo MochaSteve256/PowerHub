@@ -46,7 +46,6 @@ def api_auth_check(req):
 
 app = flask.Flask(__name__)
 
-led_queue = led_manager.LED_Queue()
 
 @app.route('/')
 def index_api():
@@ -325,6 +324,7 @@ if __name__ == "__main__":
     ui = ui_manager.UI(led, weather)
     ky040 = ky040.KY040(ui.clockwise, ui.counterclockwise, press, release)
     alarmManager = alarm.Alarm(led, ui)
+    led_queue = led_manager.LED_Queue(led)
     
     target_dim = 0.0
     def led_update():
@@ -347,7 +347,7 @@ if __name__ == "__main__":
             ky040.update()
             ui.update()
             led_update()
-            led_queue.process()
+            led_queue.wait_and_process()
             alarmManager.update()
 
             # --- timing ---
