@@ -292,9 +292,8 @@ class LED_Queue:
             #only start next effect if the previous one has finished
             if not self.ledStripe.is_transitioning():
                 self._queue[0](*arr)
-            
-            self._queue.pop(0)
-            self._queue_data.pop(0)
+                self._queue.pop(0)
+                self._queue_data.pop(0)
 
 
 if __name__ == '__main__':
