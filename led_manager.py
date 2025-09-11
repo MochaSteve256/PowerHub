@@ -4,6 +4,7 @@ import time
 import copy
 
 import Adafruit_WS2801 # type: ignore
+from typing import Callable
 
 # colors
 ww = (255, 140, 30)
@@ -204,6 +205,9 @@ class LED_Stripe:
         self.effects.LedState.current = self.effects.LedState.ALARM
         self.effects.LedState.target = self.effects.LedState.ALARM
     
+    def is_transitioning(self):
+        return self.target_color is not None
+
     def apply_dim(self, dim: float, arr):
         rgb_arr = arr
         if type(arr[0]) == int:
@@ -220,6 +224,72 @@ class LED_Stripe:
             led_stripe.set_array(arr)
         elif type(arr[0]) == int:
             led_stripe.set_array_color(arr)
+
+
+class LED_Queue:
+    _queue = []
+    _queue_data = []
+    
+    """
+    def new_color(self, rgb):
+        self._queue.append(LED_Stripe.new_color)
+        self._queue_data.append(rgb)
+
+    def rgb_cycle(self):
+        self._queue.append(LED_Stripe.rgb_cycle)
+        self._queue_data.append(None)
+    
+    def argb_cycle(self):
+        self._queue.append(LED_Stripe.argb_cycle)
+        self._queue_data.append(None)
+    
+    def warm_white(self):
+        self._queue.append(LED_Stripe.warm_white)
+        self._queue_data.append(None)
+    
+    def white(self):
+        self._queue.append(LED_Stripe.white)
+        self._queue_data.append(None)
+    
+    def cold_white(self):
+        self._queue.append(LED_Stripe.cold_white)
+        self._queue_data.append(cw)
+    
+    def black(self):
+        self._queue.append(LED_Stripe.black)
+        self._queue_data.append(None)
+    
+    def sunrise(self):
+        self._queue.append(LED_Stripe.sunrise)
+        self._queue_data.append(None)
+    
+    def sunset(self):
+        self._queue.append(LED_Stripe.sunset)
+        self._queue_data.append(None)
+    
+    def alarm(self):
+        self._queue.append(LED_Stripe.alarm)
+        self._queue_data.append(None)
+    """
+    
+    
+    def enqueue(self, effect: Callable, data=None):
+        self._queue.append(effect)
+        self._queue_data.append(data)
+        
+    def process(self):
+        if len(self._queue) > 5:
+            self._queue = self._queue[-5:]
+            self._queue_data = self._queue_data[-5:]
+        if len(self._queue) > 0:
+            arr = []
+            if self._queue_data[0] is not None:
+                arr = [self._queue_data[0]]
+            
+            self._queue[0](*arr)
+            
+            self._queue.pop(0)
+            self._queue_data.pop(0)
 
 
 if __name__ == '__main__':

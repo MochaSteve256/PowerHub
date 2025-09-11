@@ -46,6 +46,8 @@ def api_auth_check(req):
 
 app = flask.Flask(__name__)
 
+led_queue = led_manager.LED_Queue()
+
 @app.route('/')
 def index_api():
     return "Hello World!", 200
@@ -106,29 +108,40 @@ def led_api():
     # post
     elif flask.request.method == "POST":
         if flask.request.json["target"] == "SUNRISE": # type: ignore
-            led.sunrise()
+            #led.sunrise()
+            led_queue.enqueue(led.sunrise)
         elif flask.request.json["target"] == "SUNSET": # type: ignore
-            led.sunset()
+            # led.sunset()
+            led_queue.enqueue(led.sunset)
         elif flask.request.json["target"] == "ALARM": # type: ignore
-            led.alarm()
+            # led.alarm()
+            led_queue.enqueue(led.alarm)
         elif flask.request.json["target"] == "CUSTOM": # type: ignore
             color = flask.request.json["color"] # type: ignore
             if color and isinstance(color, list) and len(color) == 3:
-                led.new_color(color)
+                # led.new_color(color)
+                led_queue.enqueue(led.new_color, color)
             else:
                 return "Invalid color", 400
         elif flask.request.json["target"] == "WARM_WHITE": # type: ignore
-            led.warm_white()
+            # led.warm_white()
+            led_queue.enqueue(led.warm_white)
         elif flask.request.json["target"] == "COLD_WHITE": # type: ignore
-            led.cold_white()
+            # led.cold_white()
+            led_queue.enqueue(led.cold_white)
         elif flask.request.json["target"] == "WHITE": # type: ignore
-            led.white()
+            # led.white()
+            led_queue.enqueue(led.white)
         elif flask.request.json["target"] == "BLACK": # type: ignore
-            led.black()
+            # led.black()
+            led_queue.enqueue(led.black)
         elif flask.request.json["target"] == "RGB": # type: ignore
-            led.rgb_cycle()
+            # led.rgb_cycle()
+            led_queue.enqueue(led.rgb_cycle)
         elif flask.request.json["target"] == "ARGB": # type: ignore
-            led.argb_cycle()
+            # led.argb_cycle()
+            led_queue.enqueue(led.argb_cycle)
+        
         else:
             print(flask.request.json)
             return "Invalid target", 400
@@ -334,6 +347,7 @@ if __name__ == "__main__":
             ky040.update()
             ui.update()
             led_update()
+            led_queue.process()
             alarmManager.update()
 
             # --- timing ---
